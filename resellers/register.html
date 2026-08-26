@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Register | SMMMARIA Reseller</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/variables.css">
+    <link rel="stylesheet" href="assets/css/typography.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/buttons.css">
+    <link rel="stylesheet" href="assets/css/forms.css">
+    <link rel="stylesheet" href="assets/css/modal.css">
+    <link rel="stylesheet" href="assets/css/notifications.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/auth.css">
+
+    <style>
+        /* Register Page Specific Layout */
+        body { 
+            background: #08164A; 
+            display: block; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 40px 20px;
+        }
+        
+        .register-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Top Promo Banner */
+        .top-banner {
+            background: linear-gradient(135deg, rgba(245, 166, 35, 0.1), rgba(8, 22, 74, 0.5));
+            border: 1px solid rgba(245, 166, 35, 0.3);
+            border-radius: 16px;
+            padding: 20px 30px;
+            margin-bottom: 40px;
+            text-align: center;
+            color: #fff;
+        }
+        .top-banner h3 {
+            color: #F5A623;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        .top-banner p {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .register-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            width: 100%;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+        .auth-marketing {
+            color: #fff;
+            text-align: left;
+        }
+        .auth-marketing h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            line-height: 1.2;
+            background: linear-gradient(90deg, #fff, #F5A623);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .auth-marketing p {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .promo-image-box {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .promo-image-box img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .badges-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .badge-card {
+            background: rgba(245, 166, 35, 0.1);
+            border: 1px solid rgba(245, 166, 35, 0.3);
+            color: #F5A623;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .payments-box {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .payments-box h4 { color: #fff; margin-bottom: 15px; font-size: 15px; }
+        .payment-icons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .payment-icon {
+            background: #fff;
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .socials-row {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .social-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            transition: all 0.2s;
+        }
+        .social-btn:hover { background: #F5A623; transform: translateY(-3px); }
+        .social-btn svg { width: 20px; height: 20px; fill: currentColor; }
+
+        /* Form Card Styling */
+        .auth-card {
+            max-width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+        .founder-toggle-btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.8);
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .founder-toggle-btn:hover { border-color: #F5A623; color: #F5A623; }
+
+        /* Founder Card */
+        .founder-card {
+            display: none;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #F5A623;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .founder-card.active { display: block; animation: fadeIn 0.3s ease; }
+        .founder-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 2px solid #F5A623;
+        }
+        .founder-card h4 { color: #fff; margin-bottom: 5px; }
+        .founder-card span { color: #F5A623; font-size: 13px; display: block; margin-bottom: 10px; }
+        .founder-card p { color: rgba(255,255,255,0.7); font-size: 13px; line-height: 1.5; margin-bottom: 15px; }
+
+        /* Bottom Features Grid */
+        .features-section {
+            margin-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 40px;
+        }
+        .features-section h3 {
+            text-align: center;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        .feature-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            background: rgba(245, 166, 35, 0.05);
+            border-color: rgba(245, 166, 35, 0.2);
+        }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .feature-card h4 {
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        .feature-card p {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* Bottom Note */
+        .bottom-note {
+            text-align: center;
+            margin-top: 50px;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.85rem;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 900px) {
+            .register-wrapper { grid-template-columns: 1fr; gap: 20px; }
+            .auth-marketing { text-align: center; }
+            .auth-marketing h1 { font-size: 2rem; }
+            .badges-row, .payments-box, .socials-row { justify-content: center; }
+        }
+    </style>
+</head>
+<body data-page="auth">
+    <div class="register-container">
+
+        <!-- Top Promo Banner -->
+        <div class="top-banner">
+            <h3>🎉 Limited Time Offer: Get $0.20 Free Bonus on Your First Deposit! 🎉</h3>
+            <p>Join thousands of resellers boosting their social media presence today.</p>
+        </div>
+
+        <div class="register-wrapper">
+            
+            <!-- Left Side: Marketing & Branding -->
+            <div class="auth-marketing">
+                <h1>Grow Your Social Media Instantly</h1>
+                <p>Join the #1 SMM panel for high-quality, instant followers, likes, and views. Trusted by thousands of resellers worldwide.</p>
+                
+                <!-- Promo Image Placeholder -->
+                <div class="promo-image-box">
+                    <!-- Replace src with your promotional banner or dashboard screenshot -->
+                    <img src="https://ik.imagekit.io/s95tumxuk/IMG_4153.png" alt="SMMMARIA Panel Preview">
+                </div>
+
+                <!-- Trust Badges -->
+                <div class="badges-row">
+                    <div class="badge-card">⚡ Services are Cheap!</div>
+                    <div class="badge-card">🚀 Instant Delivery</div>
+                    <div class="badge-card">🔒 100% Secure</div>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="payments-box">
+                    <h4>We Accept:</h4>
+                    <div class="payment-icons">
+                        <span class="payment-icon">VISA</span>
+                        <span class="payment-icon">MASTERCARD</span>
+                        <span class="payment-icon">MTN MOMO</span>
+                        <span class="payment-icon">AIRTEL MONEY</span>
+                        <span class="payment-icon">CRYPTO</span>
+                    </div>
+                </div>
+
+                <!-- Social Media Links -->
+                <div class="socials-row">
+                    <a href="#" class="social-btn" title="Telegram">
+                        <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                    </a>
+                    <a href="#" class="social-btn" title="WhatsApp">
+                        <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                    </a>
+                    <a href="#" class="social-btn" title="Instagram">
+                        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                    <a href="#" class="social-btn" title="Twitter">
+                        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Side: Registration Form & Founder -->
+            <div class="auth-content">
+                <div class="auth-card">
+                    <div class="brand-logo">
+                        SMM<span>MARIA</span> 
+                        <small>Reseller Panel</small>
+                    </div>
+                    <h2>Create Account</h2>
+                    <p>Sign up to start growing your social media</p>
+                    
+                    <form id="register-form">
+                        <div class="form-group">
+                            <label class="form-label" for="username">Username</label>
+                            <input type="text" id="username" class="form-input" placeholder="john_doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email</label>
+                            <input type="email" id="email" class="form-input" placeholder="john@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="password">Password</label>
+                            <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn btn--primary btn--block">Create Account</button>
+                    </form>
+                    
+                    <div class="auth-footer">
+                        <p>Already have an account? <a href="login.html">Sign In</a></p>
+                    </div>
+                </div>
+
+                <!-- Founder Toggle Button -->
+                <button class="founder-toggle-btn" id="founderToggleBtn">👑 Meet the Founder</button>
+
+                <!-- Founder Card (Hidden by default) -->
+                <div class="founder-card" id="founderCard">
+                    <!-- Replace src with the founder's photo -->
+                    <img src="https://via.placeholder.com/80?text=CEO" alt="Founder">
+                    <h4>Mark Mellon</h4>
+                    <span>Founder & CEO, SMMMARIA</span>
+                    <p>Driven by a passion for digital growth and innovation, Mark founded SMMMARIA to empower entrepreneurs and creators with enterprise-grade social media marketing tools.</p>
+                    <a href="https://your-website.com" target="_blank" class="btn btn--outline btn--sm btn--block">Visit Founder's Website</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Features Grid -->
+        <div class="features-section">
+            <h3>Why Choose SMMMARIA?</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🚀</span>
+                    <h4>Lightning Fast</h4>
+                    <p>Automated system ensures your orders start instantly within seconds.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">💰</span>
+                    <h4>Unbeatable Prices</h4>
+                    <p>Get the highest quality services at wholesale prices you can't find elsewhere.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🛡️</span>
+                    <h4>Secure & Encrypted</h4>
+                    <p>Your data and transactions are protected with enterprise-grade security.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🌍</span>
+                    <h4>Global Services</h4>
+                    <p>We support all major social media platforms used around the world.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Note -->
+        <div class="bottom-note">
+            <p>&copy; 2023 SMMMARIA Panel. All rights reserved. By registering, you agree to our Terms & Conditions.</p>
+        </div>
+
+    </div>
+
+    <!-- JS Imports -->
+    <script type="module" src="assets/js/app.js"></script>
+    
+    <!-- Small script for Founder Toggle -->
+    <script>
+        document.getElementById('founderToggleBtn').addEventListener('click', () => {
+            document.getElementById('founderCard').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

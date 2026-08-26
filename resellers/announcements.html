@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+  
+    <title>Announcements | SMMMARIA Reseller</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/variables.css">
+    <link rel="stylesheet" href="assets/css/typography.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/sidebar.css">
+    <link rel="stylesheet" href="assets/css/navbar.css">
+    <link rel="stylesheet" href="assets/css/cards.css">
+    <link rel="stylesheet" href="assets/css/buttons.css">
+    <link rel="stylesheet" href="assets/css/forms.css">
+    <link rel="stylesheet" href="assets/css/tables.css">
+    <link rel="stylesheet" href="assets/css/modal.css">
+    <link rel="stylesheet" href="assets/css/notifications.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body data-page="announcements">
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar__header">
+                <a href="dashboard.html" class="sidebar__logo">SMM<span class="text-gold">MARIA</span></a>
+                <button class="sidebar__collapse-btn" id="collapse-btn"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+            </div>
+            <nav class="sidebar__nav">
+                <ul class="sidebar__menu">
+                    <li class="sidebar__item"><a href="dashboard.html" class="sidebar__link"><span class="link-text">Dashboard</span></a></li>
+                    <li class="sidebar__item"><a href="users.html" class="sidebar__link"><span class="link-text">Users</span></a></li>
+                    <li class="sidebar__item"><a href="orders.html" class="sidebar__link"><span class="link-text">Orders</span></a></li>
+                    <li class="sidebar__item"><a href="services.html" class="sidebar__link"><span class="link-text">Services & Pricing</span></a></li>
+                    <li class="sidebar__item"><a href="wallet.html" class="sidebar__link"><span class="link-text">Wallet</span></a></li>
+                    <li class="sidebar__item active"><a href="announcements.html" class="sidebar__link"><span class="link-text">Announcements</span></a></li>
+                    <li class="sidebar__item"><a href="tickets.html" class="sidebar__link"><span class="link-text">Tickets</span></a></li>
+                    <li class="sidebar__item"><a href="settings.html" class="sidebar__link"><span class="link-text">Settings</span></a></li>
+                    <li class="sidebar__item"><a href="login.html" class="sidebar__link sidebar__link--logout" onclick="handleLogout()"><span class="link-text">Logout</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-wrapper">
+            <header class="navbar">
+                <div class="navbar__left">
+                    <button class="navbar__toggle" id="mobile-menu-toggle"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+                    <h1 class="navbar__title">Announcements</h1>
+                </div>
+                <div class="navbar__right">
+                    <div class="navbar__balance">
+                        <span class="balance-label">Balance:</span> <strong class="text-gold">$0.00</strong>
+                    </div>
+                </div>
+            </header>
+
+            <main class="content-area">
+                <div class="card table-card">
+                    <div class="table-toolbar">
+                        <button class="btn btn--primary btn--sm" style="margin-left: auto;" data-modal-target="#createAnnouncementModal">+ New Announcement</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table datatable">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Message</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="announcementsTableBody">
+                                <tr><td colspan="4" class="text-center text-muted">Loading announcements...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+            <footer class="footer"><p class="footer__text">© 2023 SMMMARIA Panel. All rights reserved.</p></footer>
+        </div>
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    </div>
+
+    <!-- Create Announcement Modal -->
+    <div class="modal-overlay" id="createAnnouncementModal">
+        <div class="modal">
+            <div class="modal__header">
+                <h3 class="modal__title">Create Announcement</h3>
+                <button class="modal__close" data-modal-close>&times;</button>
+            </div>
+            <div class="modal__body">
+                <form id="createAnnouncementForm">
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input type="text" id="annTitle" class="form-input" placeholder="Scheduled Maintenance" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Message</label>
+                        <textarea id="annMessage" class="form-input" rows="4" placeholder="Write your message here..." required style="resize: vertical;"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--block">Publish Announcement</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>
