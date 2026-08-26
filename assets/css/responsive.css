@@ -610,4 +610,9 @@ textarea:focus {
     .platform-icon-btn {
         padding: 6px 2px !important;
     }
+} 
+/* Card Payment Bottom Sheet Animation */
+@keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0.8; }
+    to { transform: translateY(0); opacity: 1; }
 }
