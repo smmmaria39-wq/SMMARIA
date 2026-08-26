@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google-site-verification" content="_4VcrmvY2S8GSdic0AMrBR1BlTx5-5-dA4GR_ZXe2TU" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Not Found | SMMMARIA Panel</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Keep your core variables and resets -->
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/variables.css">
+    <link rel="stylesheet" href="assets/css/typography.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/buttons.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+
+    <style>
+        /* Advanced 404 Page Styling */
+        body.error-body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-body);
+            /* Animated Tech Grid Background */
+            background-image: 
+                linear-gradient(rgba(244, 179, 66, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(244, 179, 66, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Glowing orbs in the background */
+        body.error-body::before, body.error-body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.4;
+            animation: floatOrb 10s ease-in-out infinite;
+        }
+        body.error-body::before {
+            width: 400px; height: 400px;
+            background: var(--color-gold);
+            top: -100px; left: -100px;
+        }
+        body.error-body::after {
+            width: 300px; height: 300px;
+            background: var(--color-primary);
+            bottom: -50px; right: -50px;
+            animation-delay: -5s;
+        }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(40px, 40px); }
+        }
+
+        .error-container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 20px;
+            max-width: 540px;
+            width: 100%;
+        }
+
+        /* Glassmorphism Card */
+        .error-card {
+            background: rgba(var(--bg-card-rgb, 255, 255, 255), 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border-radius: 24px;
+            padding: 50px 40px;
+            animation: fadeUp 1s ease-out;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Floating Illustration */
+        .error-illustration {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Massive Gradient 404 Text */
+        .error-code {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(6rem, 20vw, 10rem);
+            font-weight: 800;
+            line-height: 1;
+            margin: 0;
+            background: linear-gradient(135deg, var(--color-gold) 0%, #fbbf24 50%, var(--color-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 10px 20px rgba(244, 179, 66, 0.3));
+            letter-spacing: -5px;
+        }
+
+        .error-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 10px 0 15px;
+        }
+
+        .error-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 380px;
+            margin: 0 auto 35px;
+            line-height: 1.6;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Status Pill */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        .status-pill .dot {
+            width: 8px; height: 8px; background: #10b981; border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 480px) {
+            .error-card {
+                padding: 35px 25px;
+            }
+            .error-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            .error-actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body class="error-body">
+    <div class="error-container">
+        <div class="error-card">
+            <!-- Status Pill -->
+            <div class="status-pill">
+                <span class="dot"></span>
+                System Operational
+            </div>
+
+            <!-- Floating Astronaut/SVG Illustration -->
+            <div class="error-illustration">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--color-gold);">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5"></path>
+                    <path d="M2 12l10 5 10-5"></path>
+                </svg>
+            </div>
+
+            <h1 class="error-code">404</h1>
+            <h2 class="error-title">Lost in the Digital Space</h2>
+            <p class="error-text">
+                The page you are looking for might have been removed, had its name changed, or is temporarily unavailable. Let's get you back on track.
+            </p>
+            
+            <div class="error-actions">
+                <a href="dashboard.html" class="btn btn--primary">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    Back to Dashboard
+                </a>
+                <a href="tickets.html" class="btn btn--outline">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    Contact Support
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

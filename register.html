@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <!-- ==========================================
+         1. BASIC META & MOBILE VIEWPORT
+         ========================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+   <meta name="google-site-verification" content="_4VcrmvY2S8GSdic0AMrBR1BlTx5-5-dA4GR_ZXe2TU" />
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <title>REGISTER | SMMMARIA Panel</title>
+    
+    <!-- ==========================================
+         2. SEO METADATA
+         ========================================== -->
+    <meta name="description" content="SMM-MARIA is a premium global SMM panel and social media marketing management platform. We provide automated SaaS solutions, seamless API integration, instant order processing, and affordable growth services for Instagram, TikTok, YouTube, Facebook, and more. Boost your online presence and scale your digital marketing efforts today.">
+    <meta name="keywords" content="SMM Panel, Social Media Marketing, SMM-MARIA, Best SMM Panel, Cheap SMM Panel, SaaS Platform, Social Media Growth, API Integration, Automated Marketing, Instagram Followers, TikTok Views, YouTube Subscribers, Facebook Likes, SEO Services, Digital Marketing Platform, SMM Reseller Panel, Social Media Management, Increase Twitter Followers, Twitch Viewers">
+    <meta name="author" content="SMM-MARIA">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://smmaria.netlify.app/register">
+    
+    <!-- ==========================================
+         3. THEME COLOR & WINDOWS TILES
+         ========================================== -->
+    <meta name="theme-color" content="#0f172a">
+    <meta name="msapplication-TileColor" content="#0f172a">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+    
+    <!-- ==========================================
+         4. APPLE / IOS SUPPORT
+         ========================================== -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SMM-MARIA">
+    
+    <!-- ==========================================
+         5. FAVICON SYSTEM (Modern Browsers)
+         Ensure these files exist in assets/icons/
+         ========================================== -->
+    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
+    <link rel="shortcut icon" href="assets/icons/favicon.ico">
+    
+    <!-- ==========================================
+         6. PWA SUPPORT (Android/Installable)
+         ========================================== -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- ==========================================
+         7. SOCIAL SHARING & "BUTTON" UI PREVIEW
+         The og-image.png MUST be a 1200x630 graphic
+         designed to visually look like an app card 
+         with Login and Get Started buttons.
+         ========================================== -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="SMM-MARIA">
+    <meta property="og:title" content="SMM-MARIA | SMM Platform">
+    <meta property="og:description" content="Access the professional SMM platform. Log in or get started instantly to automate your social media marketing.">
+    <meta property="og:image" content="assets/images/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://smmaria.netlify.app/register">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SMM-MARIA | SMM Platform">
+    <meta name="twitter:description" content="Access the professional SMM platform. Log in or get started instantly to automate your social media marketing.">
+    <meta name="twitter:image" content="assets/images/og-image.png">
+    
+    <!-- ==========================================
+         8. GOOGLE FONTS: Inter & Poppins
+         ========================================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- ==========================================
+         9. CSS IMPORTS
+         ========================================== -->
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/variables.css">
+    <link rel="stylesheet" href="assets/css/typography.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/sidebar.css">
+    <link rel="stylesheet" href="assets/css/navbar.css">
+    <link rel="stylesheet" href="assets/css/cards.css">
+    <link rel="stylesheet" href="assets/css/buttons.css">
+    <link rel="stylesheet" href="assets/css/forms.css">
+    <link rel="stylesheet" href="assets/css/tables.css">
+    <link rel="stylesheet" href="assets/css/modal.css">
+    <link rel="stylesheet" href="assets/css/notifications.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+   
+    <style>
+        .landing-layout {
+            display: flex;
+            min-height: 100vh;
+            background: #08164A;
+        }
+
+        /* --- BRANDING PANE (Left/Scrollable) --- */
+        .branding-pane {
+            flex: 1.4;
+            padding: 50px;
+            overflow-y: auto;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+        }
+
+        .brand-logo img {
+            max-height: 50px;
+            filter: drop-shadow(0 4px 10px rgba(245, 166, 35, 0.3));
+        }
+        
+        .brand-logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .hero-section h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #fff, #F5A623);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-section p {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.7);
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 40px;
+            padding: 30px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .stat-box h2 { font-size: 2.5rem; color: var(--color-gold); margin-bottom: 5px; }
+        .stat-box p { color: rgba(255,255,255,0.6); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        .section-title {
+            font-size: 1.5rem; font-weight: 700; margin-bottom: 25px; color: #fff;
+        }
+
+        /* --- Social Icons (Small & Circular) --- */
+        .platforms-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .platform-card {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            color: #fff;
+        }
+        .platform-card:hover {
+            background: var(--color-gold);
+            border-color: var(--color-gold);
+            color: #08164A;
+            transform: translateY(-3px);
+        }
+        .platform-card svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .feature-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid var(--color-gold);
+            padding: 25px;
+            border-radius: 0 16px 16px 0;
+        }
+        .feature-card h3 { color: #fff; font-size: 1.1rem; margin-bottom: 10px; }
+        .feature-card p { color: rgba(255,255,255,0.6); font-size: 0.9rem; line-height: 1.5; }
+
+        /* --- AUTH PANE (Right/Sticky) --- */
+        .auth-pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column; /* Stack cards vertically */
+            align-items: center;
+            justify-content: center;
+            gap: 20px; /* Space between the 3 cards */
+            padding: 50px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto; /* Allow scroll if form is long */
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Shared Card Styling */
+        .glass-card {
+            width: 100%;
+            max-width: 460px; /* Increased width from 420px to 460px */
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border-radius: 16px;
+            box-sizing: border-box;
+        }
+
+        /* 1. Brand Name Card */
+        .brand-card-top {
+            padding: 20px;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        .brand-card-top span { color: var(--color-gold); }
+
+        /* 2. Media Box Card */
+        .media-card {
+            height: 200px; /* Slightly taller */
+            overflow: hidden;
+            padding: 0; /* Remove padding for video */
+            background: #000;
+        }
+        .media-card video, .media-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 3. Registration Form Card */
+        .auth-card {
+            overflow: hidden;
+            padding: 10px; /* Add a little inner breathing room */
+        }
+        .auth-card .auth__header { 
+            padding: 20px 30px 0 30px; /* Reduced horizontal padding to give inputs more space */
+        }
+        .auth-card .auth__form { 
+            padding: 20px 30px; /* Reduced horizontal padding */
+        }
+        .auth-card .auth__footer { 
+            padding: 0 30px 20px 30px; 
+        }
+
+        /* Force inputs to be full width inside the auth card */
+        .auth-card .form-input,
+        .auth-card .input-wrapper {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        /* Ensure checkbox wrapper aligns nicely */
+        .auth-card .form-options {
+            padding: 0 0 20px 0;
+        }
+
+        /* --- Tablet Responsive --- */
+        @media (max-width: 900px) {
+            .landing-layout { flex-direction: column; height: auto; }
+            .branding-pane { padding: 30px; overflow-y: visible; gap: 30px; }
+            .auth-pane { 
+                position: relative; 
+                height: auto; 
+                padding: 30px; 
+                border-left: none; 
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+            .hero-section h1 { font-size: 2.5rem; }
+            .features-grid { grid-template-columns: 1fr; }
+        }
+
+        /* --- Small Phone Responsive (Login Form Optimization) --- */
+        @media (max-width: 480px) {
+            .branding-pane { padding: 20px; gap: 25px; }
+            .auth-pane { padding: 15px; gap: 15px; }
+            
+            /* Tighten the glass cards so they fit perfectly on narrow screens */
+            .glass-card {
+                max-width: 100%;
+                border-radius: 12px; /* Slightly sharper on mobile */
+            }
+
+            /* Reduce internal padding of the login form so inputs have max room */
+            .auth-card { padding: 5px; }
+            .auth-card .auth__header { padding: 15px 20px 0 20px; }
+            .auth-card .auth__form { padding: 15px 20px; }
+            .auth-card .auth__footer { padding: 0 20px 15px 20px; }
+
+            /* Adjust typography for small screens to prevent wrapping issues */
+            .hero-section h1 { font-size: 2rem; }
+            .hero-section p { font-size: 1rem; }
+            .brand-card-top { font-size: 1.5rem; padding: 15px; }
+            
+            /* Make media card slightly shorter to save vertical space */
+            .media-card { height: 150px; }
+            
+            /* Ensure stats don't overflow */
+            .stats-row { gap: 20px; padding: 20px 0; }
+            .stat-box h2 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-layout">
+        
+        <!-- ==========================================
+             BRANDING & ADVERTISING PANE (Left)
+             ========================================== -->
+        <div class="branding-pane">
+            
+            <!-- 1. Logo Header -->
+            <div class="brand-logo">
+                <!-- INSTRUCTION: Replace this with your actual logo image -->
+                <!-- <img src="assets/images/smmmaria-logo.png" alt="SMMMARIA Logo"> -->
+                <div class="brand-logo-text"><span class="text-gold"></span></div>
+            </div>
+
+            <!-- 2. Hero Text -->
+            <div class="hero-section">
+                <h1>The Ultimate SMM Growth Engine.</h1>
+                <p>Boost your social media presence with the fastest, most reliable SMM panel in the industry. Real results, instant delivery, and 24/7 automated API access.</p>
+            </div>
+
+            <!-- 3. Live Stats -->
+            <div class="stats-row">
+                <div class="stat-box">
+                    <h2>1.2M+</h2>
+                    <p>Orders Delivered</p>
+                </div>
+                <div class="stat-box">
+                    <h2>45K+</h2>
+                    <p>Active Users</p>
+                </div>
+                <div class="stat-box">
+                    <h2>99</h2>
+                    <p>API Uptime</p>
+                </div>
+            </div>
+
+            <!-- 4. Supported Platforms (Real SVG Icons) -->
+            <div class="platforms-section">
+                <h2 class="section-title">Supported Platforms</h2>
+                <div class="platforms-grid">
+                    <!-- Instagram -->
+                    <div class="platform-card" title="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></div>
+                    <!-- TikTok -->
+                    <div class="platform-card" title="TikTok"><svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.1z"/></svg></div>
+                    <!-- YouTube -->
+                    <div class="platform-card" title="YouTube"><svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
+                    <!-- Twitter X -->
+                    <div class="platform-card" title="Twitter"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+                    <!-- Facebook -->
+                    <div class="platform-card" title="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
+                    <!-- Telegram -->
+                    <div class="platform-card" title="Telegram"><svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></div>
+                    <!-- Spotify -->
+                    <div class="platform-card" title="Spotify"><svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z"/></svg></div>
+                    <!-- Twitch -->
+                    <div class="platform-card" title="Twitch"><svg viewBox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg></div>
+                    <!-- LinkedIn -->
+                    <div class="platform-card" title="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div>
+                    <!-- Discord -->
+                    <div class="platform-card" title="Discord"><svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.010c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.331c-1.182 0-2.157-1.086-2.157-2.419 0-1.332.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.332-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.086-2.157-2.419 0-1.332.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.332-.946 2.418-2.157 2.418z"/></svg></div>
+                </div>
+            </div>
+
+            <!-- 5. Features Grid -->
+            <div class="features-section">
+                <h2 class="section-title">Why Choose SMMMARIA?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>⚡ Instant Processing</h3>
+                        <p>Our system processes orders in milliseconds. No manual waiting, everything is fully automated.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🛡️ Premium Quality</h3>
+                        <p>High-retention, non-drop engagement from real active accounts to keep your metrics looking organic.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🤖 Developer API</h3>
+                        <p>Integrate our services into your own platform with our lightning-fast REST API documentation.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>💳 Easy Payments</h3>
+                        <p>Top up your wallet securely with Cards, PayPal, or Crypto and start scaling instantly.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. How it works -->
+            <div class="features-section">
+                <h2 class="section-title">Get Started in 3 Steps</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>1. Create Account</h3>
+                        <p>Sign up for free and get instant access to our dashboard and wholesale pricing.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>2. Add Funds</h3>
+                        <p>Deposit funds using your preferred payment method. No minimum deposit limits.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>3. Launch Order</h3>
+                        <p>Select a service, paste your link, and watch your social proof grow instantly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             REGISTER AUTH PANE (Right/Sticky)
+             ========================================== -->
+        <div class="auth-pane">
+            
+            <!-- 1. Brand Name Card (Standalone) -->
+            <div class="glass-card brand-card-top">
+                SMM<span>MARIA</span>
+            </div>
+
+            <!-- 2. Media Box Card (Standalone) -->
+            <div class="glass-card media-card">
+                <!-- 
+                  INSTRUCTION: 
+                  To use a video, replace the src below with your video URL (e.g., an MP4 from your GitHub repo).
+                  To use an image, delete the <video> tag and use <img src="YOUR_IMAGE_URL">
+                -->
+                <!-- 2. Media Box Card (Standalone) -->
+<div class="glass-card media-card">
+    <!-- Replace the video tag with the img tag below -->
+    <img src="https://ik.imagekit.io/s95tumxuk/IMG_4153.png" alt="SMMMARIA Panel Preview">
+</div>
+            </div>
+
+            <!-- 3. Registration Form Card (Standalone) -->
+            <div class="glass-card auth-card">
+                <div class="auth__header">
+                    <h2 class="auth__title">Create an Account</h2>
+                    <p class="auth__subtitle">Join the #1 SMM Panel today</p>
+                </div>
+                
+               <form class="auth__form" id="register-form" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="fullname" class="form-label">Full Name</label>
+                        <input type="text" id="fullname" class="form-input" placeholder="John Mathew" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <!-- Force lowercase -->
+                        <input type="email" id="email" class="form-input" placeholder="john@example.com" oninput="this.value = this.value.toLowerCase();" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username</label>
+                        <!-- Force lowercase -->
+                        <input type="text" id="username" class="form-input" placeholder="john123" oninput="this.value = this.value.toLowerCase();" required>
+                    </div>
+                    
+                    <!-- NEW: Country Input -->
+                    <div class="form-group">
+                        <label for="country" class="form-label">Country</label>
+                        <input type="text" id="country" class="form-input" placeholder="e.g., Uganda" required>
+                    </div>
+                    
+                    <!-- NEW: Phone Number Input -->
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="tel" id="phone" class="form-input" placeholder="+2567XXXXXXXX" required>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-label-row">
+                            <label for="password" class="form-label">Password</label>
+                        </div>
+                        <div class="input-wrapper">
+                            <!-- Force lowercase -->
+                            <input type="password" id="password" class="form-input" placeholder="••••••••" oninput="this.value = this.value.toLowerCase();" required>
+                            <button type="button" class="input-action" aria-label="Toggle Password Visibility" onclick="togglePasswordVisibility(this)">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" class="form-checkbox" required>
+                            <span class="checkbox-custom"></span>
+                            <span class="checkbox-label">I agree to the <a href="#" class="form-link">Terms & Conditions</a></span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn--block">Create Account</button>
+                    
+                    <div class="auth__divider"><span>OR</span></div>
+                    
+                    <button type="button" id="google-login-btn" class="btn btn--outline btn--block" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+    <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+    <span>Continue with Google</span>
+</button>
+                
+                <div class="auth__footer">
+                    <p>Already have an account? <a href="login.html" class="form-link">Sign in</a></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Small script for password visibility toggle -->
+    <script>
+        function togglePasswordVisibility(btn) {
+            const input = btn.parentElement.querySelector('input');
+            if (input.type === 'password') {
+                input.type = 'text';
+            } else {
+                input.type = 'password';
+            }
+        }
+    </script>
+<!-- Google Identity Services Script -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>

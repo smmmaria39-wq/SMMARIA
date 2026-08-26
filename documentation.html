@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <!-- ==========================================
+         1. BASIC META & MOBILE VIEWPORT
+         ========================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <title>DOCUMENTATION | SMMMARIA Panel</title>
+    
+    <!-- ==========================================
+         2. SEO METADATA
+         ========================================== -->
+    <meta name="description" content="SMM-MARIA is a premium global SMM panel and social media marketing management platform. We provide automated SaaS solutions, seamless API integration, instant order processing, and affordable growth services for Instagram, TikTok, YouTube, Facebook, and more. Boost your online presence and scale your digital marketing efforts today.">
+    <meta name="keywords" content="SMM Panel, Social Media Marketing, SMM-MARIA, Best SMM Panel, Cheap SMM Panel, SaaS Platform, Social Media Growth, API Integration, Automated Marketing, Instagram Followers, TikTok Views, YouTube Subscribers, Facebook Likes, SEO Services, Digital Marketing Platform, SMM Reseller Panel, Social Media Management, Increase Twitter Followers, Twitch Viewers">
+    <meta name="author" content="SMM-MARIA">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://smmaria.netlify.app/documentation">
+    
+    <!-- ==========================================
+         3. THEME COLOR & WINDOWS TILES
+         ========================================== -->
+    <meta name="theme-color" content="#0f172a">
+    <meta name="msapplication-TileColor" content="#0f172a">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+    
+    <!-- ==========================================
+         4. APPLE / IOS SUPPORT
+         ========================================== -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SMM-MARIA">
+    
+    <!-- ==========================================
+         5. FAVICON SYSTEM (Modern Browsers)
+         Ensure these files exist in assets/icons/
+         ========================================== -->
+    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
+    <link rel="shortcut icon" href="assets/icons/favicon.ico">
+    
+    <!-- ==========================================
+         6. PWA SUPPORT (Android/Installable)
+         ========================================== -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- ==========================================
+         7. SOCIAL SHARING & "BUTTON" UI PREVIEW
+         The og-image.png MUST be a 1200x630 graphic
+         designed to visually look like an app card 
+         with Login and Get Started buttons.
+         ========================================== -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="SMM-MARIA">
+    <meta property="og:title" content="SMM-MARIA | SMM Platform">
+    <meta property="og:description" content="Access the professional SMM platform. Log in or get started instantly to automate your social media marketing.">
+    <meta property="og:image" content="assets/images/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://smmaria.netlify.app/documentation">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SMM-MARIA | SMM Platform">
+    <meta name="twitter:description" content="Access the professional SMM platform. Log in or get started instantly to automate your social media marketing.">
+    <meta name="twitter:image" content="assets/images/og-image.png">
+    
+    <!-- ==========================================
+         8. GOOGLE FONTS: Inter & Poppins
+         ========================================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- ==========================================
+         9. CSS IMPORTS
+         ========================================== -->
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/variables.css">
+    <link rel="stylesheet" href="assets/css/typography.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/sidebar.css">
+    <link rel="stylesheet" href="assets/css/navbar.css">
+    <link rel="stylesheet" href="assets/css/cards.css">
+    <link rel="stylesheet" href="assets/css/buttons.css">
+    <link rel="stylesheet" href="assets/css/forms.css">
+    <link rel="stylesheet" href="assets/css/tables.css">
+    <link rel="stylesheet" href="assets/css/modal.css">
+    <link rel="stylesheet" href="assets/css/notifications.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+  
+
+      <!-- Documentation Specific Styles -->
+    <style>
+        .doc-hero {
+            background: linear-gradient(135deg, rgba(245, 166, 35, 0.08), transparent);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: clamp(24px, 4vw, 40px);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .doc-hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.5rem, 3vw, 2.25rem);
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+        .doc-hero p {
+            font-size: clamp(0.875rem, 1.5vw, 1rem);
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Announcement Banner inside Docs */
+        .doc-announcement {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--color-gold);
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+        .doc-announcement svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            color: var(--color-gold);
+        }
+        .doc-announcement div p {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .doc-announcement div small {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        /* Documentation Layout */
+        .doc-grid {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* Table of Contents */
+        .doc-toc {
+            position: sticky;
+            top: 80px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+        .doc-toc h3 {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        .doc-toc ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .doc-toc ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+        .doc-toc ul li a:hover {
+            background: var(--bg-body);
+            color: var(--color-gold);
+        }
+
+        /* Content Sections */
+        .doc-section {
+            margin-bottom: 32px;
+            scroll-margin-top: 80px;
+        }
+        .doc-section h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.25rem, 2vw, 1.5rem);
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-primary);
+        }
+        .doc-section h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 10px;
+            color: var(--color-gold);
+        }
+        .doc-section p {
+            font-size: 14.5px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        /* Image Frame / Screenshot Placeholder */
+        .doc-image-frame {
+            background: var(--bg-body);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .doc-image-frame img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        /* Step by Step List */
+        .doc-steps {
+            list-style: none;
+            counter-reset: step-counter;
+            padding-left: 0;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .doc-steps li {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 48px;
+            font-size: 14.5px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .doc-steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: -2px;
+            width: 32px;
+            height: 32px;
+            background: var(--bg-card);
+            border: 1px solid var(--color-gold);
+            color: var(--color-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .doc-steps li strong {
+            color: var(--text-primary);
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 900px) {
+            .doc-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            /* Instead of hiding the TOC, let's make it a clean horizontal scroll or just stack it cleanly */
+            .doc-toc {
+                position: static;
+                max-height: none;
+                overflow-y: visible;
+                margin-bottom: 20px;
+            }
+            .doc-toc ul {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .doc-toc ul li a {
+                background: var(--bg-body);
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .doc-hero {
+                padding: 20px;
+            }
+            .doc-section p {
+                font-size: 14px;
+            }
+        }
+    </style> 
+</head>
+<body data-page="documentation">
+    <div class="app-container">
+        
+       <!-- SIDEBAR COMPONENT -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar__header">
+                <a href="dashboard.html" class="sidebar__logo">
+                    <span class="logo-text">SMM<span class="text-gold">MARIA</span></span>
+                </a>
+                <button class="sidebar__collapse-btn" id="collapse-btn" aria-label="Collapse Sidebar">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+            </div>
+            
+            <nav class="sidebar__nav">
+                <ul class="sidebar__menu">
+                    <li class="sidebar__item "><a href="dashboard.html" class="sidebar__link"><svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg><span class="link-text">Dashboard</span></a></li>
+                    <li class="sidebar__item"><a href="new-order.html" class="sidebar__link"><svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg><span class="link-text">New Order</span></a></li>
+                    <li class="sidebar__item"><a href="mass-order.html" class="sidebar__link"><svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg><span class="link-text">Mass Order</span></a></li>
+                    <li class="sidebar__item"><a href="services.html" class="sidebar__link"><svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg><span class="link-text">Services</span></a></li>
+                    <li class="sidebar__item"><a href="orders.html" class="sidebar__link"><svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-4"></path><polyline points="9 11 12 14 15 11"></polyline><line x1="12" y1="2" x2="12" y2="14"></line></svg><span class="link-text">Orders</span></a></li>
+                     <li class="sidebar__item"><a href="buy-account.html" class="sidebar__link"><svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg><span class="link-text">Buy Account</span></a></li>
+                    <li class="sidebar__item"><a href="my-accounts.html" class="sidebar__link"><svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span class="link-text">My Accounts</span></a></li>
+                    <li class="sidebar__item"><a href="tickets.html" class="sidebar__link"><svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><span class="link-text">Tickets</span><span class="badge badge--notification">3</span></a></li>
+                    <li class="sidebar__item"><a href="wallet.html" class="sidebar__link"><svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg><span class="link-text">Wallet</span></a></li>
+                    <li class="sidebar__item"><a href="refill.html" class="sidebar__link"><svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg><span class="link-text">Refill</span></a></li>
+                    <li class="sidebar__item"><a href="api.html" class="sidebar__link"><svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg><span class="link-text">API</span></a></li>
+                    <li class="sidebar__item"><a href="affiliate.html" class="sidebar__link"><svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg><span class="link-text">Affiliate</span></a></li>
+                    <li class="sidebar__item">
+                        <a href="buy-child-panel.html" class="sidebar__link">
+                            <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                            <span class="link-text"> Child Panel</span>
+                        </a>
+                    </li>
+                    <li class="sidebar__item active"><a href="documentation.html" class="sidebar__link"><svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg><span class="link-text">Documentation</span></a></li>
+                    <li class="sidebar__item"><a href="settings.html" class="sidebar__link"><svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg><span class="link-text">Settings/Notifications</span></a></li>
+                    <li class="sidebar__item "><a href="invoice.html" class="sidebar__link"><svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="16" y2="17"></line></svg><span class="link-text">Invoice</span></a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar__widgets">
+                <div class="sidebar__widget">
+                    <span class="sidebar__widget-label">Account Balance</span>
+                    <div class="widget-balance" data-widget="balance">
+                        <span class="widget-balance__amount" data-widget="balance-value">$0.00</span>
+                        <a href="wallet.html" class="widget-balance__btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+                            Add Funds
+                        </a>
+                    </div>
+                </div>
+
+
+
+                <div class="sidebar__widget" data-widget-section="currency">
+                    <span class="sidebar__widget-label">
+                        <svg class="widget-label__icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                        Currency
+                    </span>
+                    <div class="widget-currency" data-widget="currency">
+                        <button class="widget-currency__selected" id="currencySelectedBtn" type="button">
+                            <span class="widget-currency__flag" id="currencyFlag">USD</span>
+                            <span class="widget-currency__code" id="currencyCode">USD</span>
+                            <svg class="widget-currency__chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div class="widget-currency__dropdown" id="currencyDropdown">
+                            <div class="widget-currency__search">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                <input type="text" class="widget-currency__search-input" id="currencySearchInput" placeholder="Search currency..." autocomplete="off">
+                            </div>
+                            <div class="widget-currency__list" id="currencyList">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar__widget" data-widget-section="statistics">
+                    <span class="sidebar__widget-label">
+                        <svg class="widget-label__icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
+                        Statistics
+                    </span>
+                    <div class="widget-stats">
+                        <div class="widget-stat">
+                            <span class="widget-stat__label">Total</span>
+                            <span class="widget-stat__value" data-stat="total-orders">0</span>
+                        </div>
+                        <div class="widget-stat">
+                            <span class="widget-stat__label">Completed</span>
+                            <span class="widget-stat__value" data-stat="completed-orders">0</span>
+                        </div>
+                        <div class="widget-stat">
+                            <span class="widget-stat__label">Processing</span>
+                            <span class="widget-stat__value" data-stat="processing-orders">0</span>
+                        </div>
+                        <div class="widget-stat">
+                            <span class="widget-stat__label">Success</span>
+                            <span class="widget-stat__value widget-stat__value--accent" data-stat="success-rate">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar__widget" data-widget-section="services">
+                    <span class="sidebar__widget-label">
+                        <svg class="widget-label__icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+                        Service Status
+                    </span>
+                    <div class="widget-services">
+                        <div class="widget-service" data-service-status="instagram" data-status="online">
+                            <span class="widget-service__dot" data-status-indicator></span>
+                            <span class="widget-service__name">Instagram</span>
+                            <span class="widget-service__status">Online</span>
+                        </div>
+                        <div class="widget-service" data-service-status="tiktok" data-status="online">
+                            <span class="widget-service__dot" data-status-indicator></span>
+                            <span class="widget-service__name">TikTok</span>
+                            <span class="widget-service__status">Online</span>
+                        </div>
+                        <div class="widget-service" data-service-status="facebook" data-status="online">
+                            <span class="widget-service__dot" data-status-indicator></span>
+                            <span class="widget-service__name">Facebook</span>
+                            <span class="widget-service__status">Online</span>
+                        </div>
+                        <div class="widget-service" data-service-status="youtube" data-status="online">
+                            <span class="widget-service__dot" data-status-indicator></span>
+                            <span class="widget-service__name">YouTube</span>
+                            <span class="widget-service__status">Online</span>
+                        </div>
+                        <div class="widget-service" data-service-status="telegram" data-status="online">
+                            <span class="widget-service__dot" data-status-indicator"></span>
+                            <span class="widget-service__name">Telegram</span>
+                            <span class="widget-service__status">Online</span>
+                        </div>
+                        <div class="widget-service" data-service-status="twitter" data-status="online">
+                            <span class="widget-service__dot" data-status-indicator></span>
+                            <span class="widget-service__name">Twitter/X</span>
+                            <span class="widget-service__status">Online</span>
+                        </div>
+                        <div class="widget-service" data-service-status="spotify" data-status="online">
+                            <span class="widget-service__dot" data-status-indicator></span>
+                            <span class="widget-service__name">Spotify</span>
+                            <span class="widget-service__status">Online</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar__widget" data-widget-section="help">
+                    <span class="sidebar__widget-label">
+                        <svg class="widget-label__icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        Help & Support
+                    </span>
+                <div class="widget-help">
+                     <a href="support.html" class="widget-help__btn widget-help__btn--chat">
+                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                         Live Chat
+                    </a>
+                        <button class="widget-help__btn widget-help__btn--ticket" data-widget="open-ticket">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                            Open Ticket
+                        </button>
+                        <button class="widget-help__btn widget-help__btn--whatsapp" data-widget="whatsapp-support">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+                            WhatsApp Support
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sidebar__widget" data-widget-section="community">
+                    <span class="sidebar__widget-label">
+                        <svg class="widget-label__icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        Community
+                    </span>
+                    <div class="widget-community">
+                        <a href="#" class="widget-community__link" data-community="telegram" title="Telegram">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                        </a>
+                        <a href="#" class="widget-community__link" data-community="whatsapp" title="WhatsApp Group">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+                        </a>
+                        <a href="#" class="widget-community__link" data-community="discord" title="Discord">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar__footer">
+               <a href="login.html" class="sidebar__link sidebar__link--logout" onclick="handleLogout()"><svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg><span class="link-text">Logout</span></a>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="main-wrapper">
+            
+            <!-- NAVBAR COMPONENT -->
+            <header class="navbar">
+                <div class="navbar__left">
+                    <button class="navbar__toggle" id="mobile-menu-toggle" aria-label="Open Menu">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                    <div class="navbar__search">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" placeholder="Search documentation..." class="navbar__search-input" aria-label="Search">
+                    </div>
+                </div>
+                
+                <div class="navbar__right">
+                    <div class="navbar__balance">
+                        <span class="balance-label">Balance:</span>
+                       <span class="balance-amount text-gold">0.00</span>
+                    </div>
+                    
+                    <!-- NEW NOTIFICATION BUTTON -->
+        <a href="notifications.html" class="navbar__icon-btn" id="notif-btn" aria-label="Notifications" style="position: relative;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <!-- Badge will be injected here by JS -->
+        </a>
+                    
+                    <div class="navbar__profile">
+                        <div class="avatar">..</div>
+                        <div class="profile__info">
+                            <span class="profile__name">Guest</span>
+                            <span class="profile__role">User</span>
+                        </div>
+                     
+                    </div>
+                </div>
+            </header>
+
+            <!-- PAGE SPECIFIC CONTENT -->
+            <main class="content-area" id="page-content">
+                <!-- Dynamic Announcement Banner (Will be filled by JS) -->
+                <div id="doc-announcement-banner" class="doc-announcement" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                    <div>
+                        <p id="doc-announce-text">Loading announcements...</p>
+                        <small id="doc-announce-date"></small>
+                    </div>
+                </div>
+
+                <div class="doc-hero">
+                    <h1>Documentation & Guides</h1>
+                    <p>Welcome to SMMMARIA! Learn how to deposit funds, place orders, and grow your social media presence effectively.</p>
+                </div>
+
+                <div class="doc-grid">
+                    <!-- Table of Contents -->
+                    <aside class="doc-toc">
+                        <h3>Quick Links</h3>
+                        <ul>
+                            <li><a href="#section-deposit">How to Deposit</a></li>
+                            <li><a href="#section-order">How to Place an Order</a></li>
+                            <li><a href="#section-services">Understanding Services</a></li>
+                            <li><a href="#section-pages">Page Explanations</a></li>
+                            <li><a href="#section-policy">Refund & Policy</a></li>
+                            <li><a href="#section-cookies">Cookies & Privacy</a></li>
+                        </ul>
+                    </aside>
+
+                    <!-- Documentation Content -->
+                    <div class="doc-content">
+                        
+                        <!-- Deposit Section -->
+                        <section id="section-deposit" class="doc-section">
+                            <h2>💳 How to Deposit Funds</h2>
+                            <p>To start placing orders, you need funds in your SMMMARIA wallet. Follow these simple steps to deposit money securely.</p>
+                            
+                            <ol class="doc-steps">
+                                <li><strong>Go to the Wallet Page:</strong> Click on the "Wallet" link in the sidebar menu.</li>
+                                <li><strong>Select Payment Method:</strong> Choose between MTN Mobile Money, Airtel Money, Visa/Mastercard, or Manual Upload.</li>
+                                <li><strong>Enter Amount:</strong> Type the amount you wish to deposit (Minimum is $1.00). You will see a bonus calculated automatically.</li>
+                                <li><strong>Enter Details:</strong> If you selected MTN/Airtel, enter your phone number. If Manual, follow the instructions to send the money via WhatsApp.</li>
+                                <li><strong>Process Deposit:</strong> Click the "Process Deposit" button. For Mobile Money, a prompt will appear on your phone to enter your PIN.</li>
+                                <li><strong>Wallet Credited:</strong> Once approved, your wallet balance will update automatically.</li>
+                            </ol>
+
+                            <div class="doc-image-frame">
+                                <!-- Replace src with your actual screenshot URL -->
+                                <img src="https://via.placeholder.com/800x400?text=Wallet+Deposit+Screenshot" alt="Deposit Funds Screenshot">
+                            </div>
+                        </section>
+
+                        <!-- Order Section -->
+                        <section id="section-order" class="doc-section">
+                            <h2>🚀 How to Place an Order</h2>
+                            <p>Once your wallet is funded, you can start growing your social media accounts.</p>
+                            
+                            <ol class="doc-steps">
+                                <li><strong>Navigate to New Order:</strong> Click "New Order" in the sidebar.</li>
+                                <li><strong>Select Category & Service:</strong> Choose the platform (e.g., Instagram) and the specific service (e.g., Followers).</li>
+                                <li><strong>Enter Link:</strong> Paste the link to your post or profile. Ensure your account is public!</li>
+                                <li><strong>Enter Quantity:</strong> Type the amount you want. Make sure it is between the Min and Max limits shown.</li>
+                                <li><strong>Submit:</strong> The estimated charge will be calculated. Click "Submit Order" to deduct the funds from your wallet and start the order.</li>
+                            </ol>
+
+                            <div class="doc-image-frame">
+                                <!-- Replace src with your actual screenshot URL -->
+                                <img src="https://via.placeholder.com/800x400?text=New+Order+Screenshot" alt="Place Order Screenshot">
+                            </div>
+                        </section>
+
+                        <!-- Services Section -->
+                        <section id="section-services" class="doc-section">
+                            <h2>📚 Understanding Services</h2>
+                            <p>The Services page displays all available growth services we offer.</p>
+                            <ul>
+                                <li><strong>Search & Filter:</strong> Use the search bar to find services by name or Service ID.</li>
+                                <li><strong>Live Pricing:</strong> Prices are shown in both USD and UGX (Ugandan Shillings).</li>
+                                <li><strong>Average Time:</strong> This is an estimate of how long the order will take to complete.</li>
+                                <li><strong>Refill:</strong> Services marked with "Refill: Yes" mean that if your followers drop, the system will automatically replace them for free within the refill period.</li>
+                            </ul>
+                        </section>
+
+                        <!-- Pages Section -->
+                        <section id="section-pages" class="doc-section">
+                            <h2>📁 Page Explanations</h2>
+                            
+                            <h3>Dashboard</h3>
+                            <p>Your central hub. It shows your wallet balance, total spent, order statistics (completed, pending, canceled), and recent platform announcements.</p>
+                            
+                            <h3>Services</h3>
+                            <p>This is your catalog. The Services page displays all available growth services we offer. You can use the search bar to find services by name or Service ID, filter by platform (Instagram, TikTok, etc.), and view live pricing in both USD and UGX.</p>
+                            
+                            <h3>New Order</h3>
+                            <p>This is where you place a single order. You select a category, choose a specific service, paste your link, enter the quantity, and submit. The estimated charge is calculated for you before you confirm.</p>
+                            
+                            <h3>Mass Order</h3>
+                            <p>Need to place multiple orders at once? The Mass Order page allows you to submit bulk orders by pasting a list in the format: <strong>ServiceID|Link|Quantity</strong> (one per line). This is a huge time saver for resellers and agencies.</p>
+                            
+                            <h3>Orders</h3>
+                            <p>Here you can track the status of all your orders. You can view the order ID, service name, status (Processing, Completed, Partial), and the exact amount charged.</p>
+                            
+                            <h3>Refill</h3>
+                            <p>Some services come with a "Refill" guarantee. If your followers or likes drop, you can use the Refill page to automatically request that the dropped amount be added back to your account for free, as long as the refill period is active.</p>
+                            
+                            <h3>Tickets</h3>
+                            <p>If you encounter any issues, use the Tickets page to open a support request. Our admin team will respond to your inquiries directly through the platform.</p>
+                            
+                            <h3>API</h3>
+                            <p>For developers. This page provides your unique API key and documentation on how to send orders programmatically to SMMMARIA from your own scripts or reseller websites.</p>
+                        </section>
+
+                        <!-- Policy Section -->
+                        <section id="section-policy" class="doc-section">
+                            <h2>🔒 Refund & Order Policy</h2>
+                            <p>Please read our policy carefully to ensure a smooth experience. By using our platform, you agree to the following terms:</p>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                                    <strong style="color: var(--text-primary);">No Refunds for Unlisted Services:</strong> 
+                                    <span style="color: var(--text-secondary);">If you place an order using a Service ID that is not actively listed on our panel, the order will be rejected or lost, and no refund will be issued.</span>
+                                </li>
+                                <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                                    <strong style="color: var(--text-primary);">Incorrect Links:</strong> 
+                                    <span style="color: var(--text-secondary);">Ensure the link you provide is correct and the account/post is public. We do not refund orders placed on private accounts.</span>
+                                </li>
+                                <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                                    <strong style="color: var(--text-primary);">Quantity Limits:</strong> 
+                                    <span style="color: var(--text-secondary);">Always check the Min and Max limits. Orders placed below the minimum or above the maximum will be canceled automatically without a guarantee of immediate refund.</span>
+                                </li>
+                            </ul>
+                            
+                            <div style="margin-top: 20px; background: rgba(37, 211, 102, 0.1); padding: 20px; border-radius: 12px; text-align: center; border: 1px solid rgba(37, 211, 102, 0.3);">
+                                <h3 style="margin-top: 0;">Need Help?</h3>
+                                <p style="margin-bottom: 15px;">If you are unsure about a service or link, contact us on WhatsApp before placing the order!</p>
+                                <a href="https://wa.me/256770898186" target="_blank" class="btn btn--success" style="background-color: #25D366; color: white; border: none; display: inline-flex; align-items: center; gap: 8px;">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                                    Chat with Support
+                                </a>
+                            </div>
+                        </section>
+
+                        <!-- Cookies Section -->
+                        <section id="section-cookies" class="doc-section">
+                            <h2>🍪 Cookies & Data Privacy</h2>
+                            <p>We take your privacy seriously. Here is how we handle your data when you use SMMMARIA:</p>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                                    <strong style="color: var(--text-primary);">Authentication Tokens:</strong> 
+                                    <span style="color: var(--text-secondary);">We use your browser's local storage to save your secure login token (JWT). This keeps you logged in safely without requiring you to enter your password on every page. We do not store your plain text password locally.</span>
+                                </li>
+                                <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                                    <strong style="color: var(--text-primary);">User Preferences:</strong> 
+                                    <span style="color: var(--text-secondary);">Cookies are used to remember your preferences, such as whether you prefer Dark Mode or Light Mode for the dashboard.</span>
+                                </li>
+                                <li style="margin-bottom: 15px; padding-left: 25px; position: relative;">
+                                    <strong style="color: var(--text-primary);">No Third-Party Tracking:</strong> 
+                                    <span style="color: var(--text-secondary);">We do not sell your data to third parties. Our payment gateways (PesaJet) use their own secure cookies solely to process your transactions safely.</span>
+                                </li>
+                            </ul>
+                        </section>
+                    </div>
+                </div>
+            </main>
+
+               <!-- DESKTOP FOOTER COMPONENT -->
+            <footer class="footer">
+                <p class="footer__text">© 2026 SMMMARIA Panel. All rights reserved.</p>
+                <div class="footer__links">
+                    <a href="terms.html">Terms</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </footer>
+        </div>
+
+        <!-- MOBILE BOTTOM NAVIGATION -->
+        <nav class="mobile-nav">
+            <a href="dashboard.html" class="mobile-nav__link">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="services.html" class="mobile-nav__link">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <span>Services</span>
+            </a>
+            <a href="orders.html" class="mobile-nav__link">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-4"></path><polyline points="9 11 12 14 15 11"></polyline><line x1="12" y1="2" x2="12" y2="14"></line></svg>
+                <span>Orders</span>
+            </a>
+            <a href="wallet.html" class="mobile-nav__link">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                <span>Wallet</span>
+            </a>
+        </nav>
+
+        <!-- MOBILE OVERLAY -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    </div>
+
+    <!-- JS Imports -->
+    <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>

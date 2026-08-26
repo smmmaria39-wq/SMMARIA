@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google-site-verification" content="_4VcrmvY2S8GSdic0AMrBR1BlTx5-5-dA4GR_ZXe2TU" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMMMARIA Panel | Loading...</title>
+    
+    <!-- Redirect to dashboard -->
+    <meta http-equiv="refresh" content="1; url=dashboard.html">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #0f172a; /* Deep dark blue */
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 20px; /* Prevents edge touching on mobile */
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        /* Logo Styling */
+        .logo {
+            margin-bottom: 40px;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+        .logo img {
+            max-width: 220px; /* Default desktop size */
+            width: 60%; /* Responsive scaling */
+            height: auto;
+            transition: all 0.3s ease;
+        }
+
+        /* Spinner Styling */
+        .spinner-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #F5A623; /* SMMMARIA Gold */
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        .loading-text {
+            font-size: 14px;
+            color: #94a3b8; /* Muted slate color */
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        /* Animations */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===============================================
+           MOBILE RESPONSIVENESS
+           =============================================== */
+        @media (max-width: 768px) {
+            .logo img {
+                max-width: 180px;
+                width: 70%; /* Slightly larger relative to screen on tablets */
+            }
+            .spinner {
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo img {
+                max-width: 150px;
+                margin-bottom: 30px;
+            }
+            .spinner {
+                width: 40px;
+                height: 40px;
+                border-width: 3px;
+            }
+            .loading-text {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <a href="dashboard.html" class="logo">
+        <img src="https://ik.imagekit.io/s95tumxuk/IMG_4715.png" alt="SMMMARIA Logo">
+    </a>
+
+    <div class="spinner-container">
+        <div class="spinner"></div>
+        <p class="loading-text">Preparing your dashboard...</p>
+    </div>
+
+    <!-- Fallback redirect if meta refresh fails -->
+    <script>
+        setTimeout(() => {
+            window.location.href = 'dashboard.html';
+        }, 1000);
+    </script>
+</body>
+</html>
