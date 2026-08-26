@@ -168,57 +168,93 @@ export default async function initWallet() {
    
    const method = selectedMethodInput.value;
    
-   // ===============================================
-   // MARZPAY CARD PAYMENT INTERCEPTION (BOTTOM SHEET)
-   // ===============================================
-   if (method === 'card') {
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = originalBtnText;
-    
-    const sheet = document.getElementById('cardPaymentSheet');
-    const sheetAmount = document.getElementById('cardSheetAmount');
-    const confirmBtn = document.getElementById('confirmCardPayBtn');
-    const cancelBtn = document.getElementById('cancelCardPayBtn');
-    
-    if (sheet && confirmBtn) {
-     sheetAmount.textContent = formatCurrency(amount);
-     sheet.style.display = 'flex';
-     
-     // Handle Cancel
-     cancelBtn.onclick = () => {
-      sheet.style.display = 'none';
-      confirmBtn.disabled = false;
-      confirmBtn.innerText = 'Continue to Secure Checkout';
-     };
-     
-     // Handle Click Outside to Close
-     sheet.onclick = (e) => {
-      if (e.target === sheet) cancelBtn.click();
-     };
-     
-     // Handle Continue to MarzPay
-     confirmBtn.onclick = async () => {
-      confirmBtn.disabled = true;
-      confirmBtn.innerText = 'Redirecting to secure checkout...';
-      
-      try {
-       // Call backend to get MarzPay redirect_url
-       const res = await api.createDeposit({ amount, method: 'card', email: userEmail });
-       
-       if (res.data && res.data.redirect_url) {
-        window.location.href = res.data.redirect_url;
-       } else {
-        throw new Error('Redirect URL not received from server.');
-       }
-      } catch (error) {
-       showToast(error.message || 'Failed to initiate card payment.', 'error');
-       confirmBtn.disabled = false;
-       confirmBtn.innerText = 'Continue to Secure Checkout';
-      }
-     };
-    }
-    return; // Exit function so MTN/Airtel/manual code doesn't run
+  // ===============================================
+// MARZPAY CARD PAYMENT INTERCEPTION (BOTTOM SHEET)
+// ===============================================
+if (method === 'card') {
+ submitBtn.disabled = false;
+ submitBtn.innerHTML = originalBtnText;
+ 
+ const sheet = document.getElementById('cardPaymentSheet');
+ const sheetAmount = document.getElementById('cardSheetAmount');
+ const confirmBtn = document.getElementById('confirmCardPayBtn');
+ const cancelBtn = document.getElementById('cancelCardPayBtn');
+ 
+ if (sheet && confirmBtn) {
+  
+  // Update amount
+  sheetAmount.textContent = formatCurrency(amount);
+  
+  // Show sheet
+  sheet.style.display = 'flex';
+  
+  // Trigger CSS transition
+  requestAnimationFrame(() => {
+   sheet.classList.add('active');
+  });
+  
+  // Close function
+  const closeSheet = () => {
+   sheet.classList.remove('active');
+   
+   setTimeout(() => {
+    sheet.style.display = 'none';
+   }, 200);
+   
+   confirmBtn.disabled = false;
+   confirmBtn.innerText = 'Continue to Secure Checkout';
+  };
+  
+  // Cancel button
+  if (cancelBtn) {
+   cancelBtn.onclick = closeSheet;
+  }
+  
+  // Click outside
+  sheet.onclick = (e) => {
+   if (e.target === sheet) {
+    closeSheet();
    }
+  };
+  
+  // Continue to MarzPay
+  confirmBtn.onclick = async () => {
+   
+   if (confirmBtn.disabled) return;
+   
+   confirmBtn.disabled = true;
+   confirmBtn.innerText = 'Redirecting to secure checkout...';
+   
+   try {
+    
+    const res = await api.createDeposit({
+     amount,
+     method: 'card',
+     email: userEmail
+    });
+    
+    if (res?.data?.redirect_url) {
+     window.location.href = res.data.redirect_url;
+     return;
+    }
+    
+    throw new Error('Redirect URL not received from server.');
+    
+   } catch (error) {
+    
+    showToast(
+     error.message || 'Failed to initiate card payment.',
+     'error'
+    );
+    
+    confirmBtn.disabled = false;
+    confirmBtn.innerText = 'Continue to Secure Checkout';
+   }
+  };
+ }
+ 
+ return;
+}
    
    // Show processing message INSTANTLY so you know the click worked
    showToast('Processing deposit request...', 'info');
