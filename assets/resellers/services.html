@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <title>Services & Pricing | SMMMARIA Reseller</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/variables.css">
+    <link rel="stylesheet" href="assets/css/typography.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/sidebar.css">
+    <link rel="stylesheet" href="assets/css/navbar.css">
+    <link rel="stylesheet" href="assets/css/cards.css">
+    <link rel="stylesheet" href="assets/css/buttons.css">
+    <link rel="stylesheet" href="assets/css/forms.css">
+    <link rel="stylesheet" href="assets/css/tables.css">
+    <link rel="stylesheet" href="assets/css/modal.css">
+    <link rel="stylesheet" href="assets/css/notifications.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body data-page="services">
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar__header">
+                <a href="dashboard.html" class="sidebar__logo">SMM<span class="text-gold">MARIA</span></a>
+                <button class="sidebar__collapse-btn" id="collapse-btn"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+            </div>
+            <nav class="sidebar__nav">
+                <ul class="sidebar__menu">
+                    <li class="sidebar__item"><a href="dashboard.html" class="sidebar__link"><span class="link-text">Dashboard</span></a></li>
+                    <li class="sidebar__item"><a href="users.html" class="sidebar__link"><span class="link-text">Users</span></a></li>
+                    <li class="sidebar__item"><a href="orders.html" class="sidebar__link"><span class="link-text">Orders</span></a></li>
+                    <li class="sidebar__item active"><a href="services.html" class="sidebar__link"><span class="link-text">Services & Pricing</span></a></li>
+                    <li class="sidebar__item"><a href="wallet.html" class="sidebar__link"><span class="link-text">Wallet</span></a></li>
+                    <li class="sidebar__item"><a href="announcements.html" class="sidebar__link"><span class="link-text">Announcements</span></a></li>
+                    <li class="sidebar__item"><a href="tickets.html" class="sidebar__link"><span class="link-text">Tickets</span></a></li>
+                    <li class="sidebar__item"><a href="settings.html" class="sidebar__link"><span class="link-text">Settings</span></a></li>
+                    <li class="sidebar__item"><a href="login.html" class="sidebar__link sidebar__link--logout" onclick="handleLogout()"><span class="link-text">Logout</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-wrapper">
+            <header class="navbar">
+                <div class="navbar__left">
+                    <button class="navbar__toggle" id="mobile-menu-toggle"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+                    <h1 class="navbar__title">Services & Pricing</h1>
+                </div>
+                <div class="navbar__right">
+                    <div class="navbar__balance">
+                        <span class="balance-label">Balance:</span> <strong class="text-gold">$0.00</strong>
+                    </div>
+                </div>
+            </header>
+
+            <main class="content-area">
+                <div class="card table-card">
+                    
+                    <!-- UPDATED TOOLBAR: Search, Categories, Bulk Markup, Save -->
+                    <div class="table-toolbar" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px;">
+                        
+                        <!-- Search Bar -->
+                        <div class="form-group" style="flex: 1; min-width: 200px; margin-bottom: 0;">
+                            <div class="form-input-wrap">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="form-input-icon"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                <input type="text" id="serviceSearch" class="form-input" placeholder="Search by service name or ID...">
+                            </div>
+                        </div>
+
+                        <!-- Category Filter Dropdown -->
+                        <div class="form-group" style="min-width: 180px; margin-bottom: 0;">
+                            <select id="categoryFilter" class="form-input">
+                                <option value="all">All Categories</option>
+                            </select>
+                        </div>
+
+                        <!-- Bulk Percentage Markup -->
+                        <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-bottom: 0;">
+                            <div class="form-input-wrap form-input-wrap--suffix" style="width: 130px;">
+                                <input type="number" id="bulkMarkupInput" class="form-input" placeholder="e.g. 20" min="0" step="0.1">
+                                <span class="form-input-suffix">%</span>
+                            </div>
+                            <button class="btn btn--outline btn--sm" id="applyMarkupBtn">Apply Bulk %</button>
+                        </div>
+
+                        <!-- Save Changes Button -->
+                        <button class="btn btn--primary btn--sm" id="savePricesBtn" style="margin-left: auto;">
+                            Save Changes
+                        </button>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-responsive">
+                        <table class="table datatable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Cost Price</th>
+                                    <th>Your Selling Price</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="6" class="text-center text-muted">No services found.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+            
+            <footer class="footer">
+                <p class="footer__text">© 2023 SMMMARIA Panel. All rights reserved.</p>
+            </footer>
+        </div>
+        
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    </div>
+    <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>
