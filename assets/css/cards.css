@@ -1,0 +1,520 @@
+/* ===============================================
+   Cards CSS
+   =============================================== */
+
+.card {
+    background-color: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color-light);
+    transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.card__header {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    border-bottom: 1px solid var(--border-color-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.card__title { font-size: var(--fs-lg); font-weight: 600; }
+.card__dropdown, .card__actions { display: flex; gap: var(--spacing-sm); }
+
+/* Stat Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.stat-card { padding: var(--spacing-lg); }
+.stat-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+.stat-card__label { color: var(--text-muted); font-size: var(--fs-sm); font-weight: 500; }
+.stat-card__icon {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+}
+.stat-card__icon--primary { background: var(--color-navy); color: #fff; }
+.stat-card__icon--info { background: var(--color-info-bg); color: var(--color-info); }
+.stat-card__icon--success { background: var(--color-success-bg); color: var(--color-success); }
+.stat-card__icon--warning { background: var(--color-warning-bg); color: var(--color-warning); }
+.stat-card__icon--danger { background: var(--color-danger-bg); color: var(--color-danger); }
+.stat-card__icon--gold { background: var(--color-gold-light); color: var(--color-gold); }
+
+.stat-card__value { font-size: var(--fs-2xl); font-weight: 700; margin-bottom: var(--spacing-xs); }
+.stat-card__trend { font-size: var(--fs-xs); font-weight: 500; }
+
+/* Dashboard Layout Rows */
+.dashboard-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+.dashboard-row:last-child { margin-bottom: 0; }
+
+.chart-card { padding: var(--spacing-lg); }
+.chart-placeholder { height: 300px; margin-top: var(--spacing-lg); }
+
+/* Quick Actions */
+.quick-actions-card { padding: var(--spacing-lg); }
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+.quick-action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    transition: all var(--transition-fast);
+}
+.quick-action-btn:hover {
+    border-color: var(--color-gold);
+    color: var(--color-gold);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Recent Activity Lists */
+.notification-list { padding: var(--spacing-lg); }
+.notification-item {
+    display: flex;
+    gap: var(--spacing-md);
+    padding-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color-light);
+}
+.notification-item:last-child { border-bottom: none; margin-bottom: 0; }
+.notification__icon {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; flex-shrink: 0;
+}
+.notification__icon--success { background: var(--color-success-bg); color: var(--color-success); }
+.notification__icon--warning { background: var(--color-warning-bg); color: var(--color-warning); }
+.notification__icon--info { background: var(--color-info-bg); color: var(--color-info); }
+.notification__content p { font-size: var(--fs-sm); margin-bottom: 2px; }
+.notification__time { font-size: var(--fs-xs); color: var(--text-muted); }
+
+/* ===============================================
+   API Documentation Cards
+   =============================================== */
+.api-doc-card { 
+    margin-top: 24px; 
+}
+
+.api-doc-card h4 { 
+    margin-top: 16px; 
+    margin-bottom: 8px; 
+    font-size: 1.1rem; 
+    color: var(--text-primary); 
+    font-weight: 600;
+}
+
+.api-doc-card .table { 
+    margin-bottom: 16px; 
+    font-size: 14px; 
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.api-doc-card .table th, 
+.api-doc-card .table td { 
+    padding: 10px 12px; 
+    border: 1px solid var(--border-color); 
+    text-align: left;
+}
+
+.api-doc-card .table th {
+    background-color: var(--bg-input);
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* Code Block Styling (Dark theme for code snippets) */
+.api-doc-card .code-block,
+.api-code-card .code-block {
+    background: #1e1e2e; 
+    color: #a6accd; 
+    padding: 16px; 
+    border-radius: 8px; 
+    overflow-x: auto; /* Allows horizontal scrolling on mobile for long code lines */
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.api-code-card .code-block code {
+    background: transparent;
+    padding: 0;
+    color: inherit;
+}
+
+/* Progress Bar Styling */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: var(--bg-input);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+.progress-bar__fill {
+    height: 100%;
+    background-color: var(--color-gold); /* Uses your brand gold color */
+    border-radius: 4px;
+    transition: width 0.3s ease; /* Smooth animation when status updates */
+}
+
+/* ===============================================
+   Service ID & UGX Currency Utility Styles
+   =============================================== */
+
+/* --- Service ID Input Box (Services Page Cards) --- */
+.service-id-input {
+    width: 65px;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-input, #f8f9fa);
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: var(--radius-sm, 6px);
+    text-align: center;
+    cursor: default; /* Shows it's read-only */
+    transition: border-color 0.2s ease;
+}
+
+/* Optional: subtle highlight if user clicks it */
+.service-id-input:focus {
+    outline: none;
+    border-color: var(--color-gold, #f5a623);
+}
+
+/* --- Clickable Service ID Link (Orders Page Table) --- */
+.service-id-link {
+    font-weight: 600;
+    color: var(--color-gold, #f5a623);
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.service-id-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+/* --- UGX Currency Text (Tables & Cards) --- */
+/* Used in Orders table, Wallet table, and Services cards */
+.charge-ugx,
+.rate-value-ugx {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary, #6b7280);
+    margin-top: 2px;
+    letter-spacing: 0.2px;
+}
+
+/* Specific styling for the New Order live calculator UGX text */
+#charge-amount-ugx {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary, #6b7280);
+    margin-top: 4px;
+    text-align: right;
+}
+
+/* --- UGX Amount on Dashboard Stat Cards --- */
+.ugx-amount {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary, #6b7280);
+    margin-bottom: 8px; /* Pushes the "All time" text down slightly */
+}
+
+/* ===============================================
+   Announcements Horizontal Scroller
+   =============================================== */
+
+.announcements-scroller-card {
+    margin-top: 24px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(245, 166, 35, 0.05), transparent);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md, 12px);
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.announcements-scroller-header {
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    margin-bottom: 15px;
+}
+
+.announcements-scroller-header h3 {
+    margin: 0; 
+    font-size: 16px; 
+    font-weight: 700; 
+    color: var(--text-primary);
+}
+
+.announcements-scroller-header span {
+    font-size: 12px; 
+    color: var(--text-secondary); 
+    opacity: 0.8;
+}
+
+.announcements-scroller-container {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-gold) transparent;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+/* Webkit Scrollbar Styling */
+.announcements-scroller-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.announcements-scroller-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.announcements-scroller-container::-webkit-scrollbar-thumb {
+    background-color: var(--color-gold);
+    border-radius: 10px;
+}
+
+.announcement-pill {
+    flex: 0 0 auto;
+    background: var(--bg-card, #fff);
+    border: 1px solid var(--border-color, #e5e7eb);
+    padding: 15px 20px;
+    border-radius: 12px;
+    min-width: 260px;
+    max-width: 300px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.announcement-pill:hover {
+    transform: translateY(-3px);
+    border-color: var(--color-gold);
+}
+
+.announcement-pill h4 { 
+    margin: 0 0 8px 0; 
+    font-size: 14px; 
+    color: var(--color-gold, #f5a623); 
+    display: flex; 
+    align-items: center; 
+    gap: 5px; 
+    font-weight: 700;
+}
+
+.announcement-pill p { 
+    margin: 0; 
+    font-size: 13px; 
+    color: var(--text-secondary, #6b7280); 
+    line-height: 1.5; 
+}
+
+@keyframes fadeInUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* ===============================================
+   MOBILE APP DASHBOARD OPTIMIZATION
+   Polished, lightweight native-app feel
+   =============================================== */
+
+/* Base Mobile Tap Highlight & Selection Removal */
+.stat-card,
+.service-card,
+.quick-action-btn,
+.announcement-pill {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Accessibility Focus */
+.btn:focus-visible,
+.stat-card:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+    /* Base Card Polish */
+    .card {
+        border-radius: 14px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+        padding: 14px !important;
+    }
+
+    /* Stats Grid: Strict 2 columns on mobile */
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+        margin-bottom: 16px !important;
+    }
+
+    /* Stat Card Compactness */
+    .stat-card {
+        padding: 12px !important;
+        border-radius: 14px !important;
+        transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+    }
+
+    /* Touch Feedback (Scale down slightly when pressed) */
+    .stat-card:active,
+    .service-card:active,
+    .quick-action-btn:active,
+    .btn:active {
+        transform: scale(0.985) !important;
+    }
+
+    /* Only apply hover effects on devices that actually support hover (Desktop) */
+    @media (hover: hover) {
+        .stat-card:hover,
+        .service-card:hover,
+        .quick-action-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+        }
+    }
+
+    /* Stat Card Internals */
+    .stat-card__top {
+        margin-bottom: 8px !important;
+    }
+
+    .stat-card__label {
+        font-size: 11px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .stat-card__icon {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 14px !important;
+        border-radius: 8px !important;
+    }
+
+    /* Responsive Numbers (Prevent UGX Overflow) */
+    .stat-card__value,
+    .balance-card__amount {
+        font-size: clamp(16px, 4.5vw, 20px) !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        letter-spacing: -0.5px !important;
+    }
+
+    /* Dashboard Rows */
+    .dashboard-row {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* Chart Card Compactness */
+    .chart-card {
+        padding: 12px !important;
+    }
+    .chart-placeholder, 
+    #chart-revenue {
+        height: 200px !important;
+        min-height: 180px !important;
+        margin-top: 12px !important;
+    }
+
+    /* Quick Actions */
+    .quick-actions-grid {
+        gap: 10px !important;
+    }
+    .quick-action-btn {
+        padding: 12px !important;
+        border-radius: 12px !important;
+    }
+
+    /* Announcement Pills (Smooth iOS Scrolling) */
+    .announcements-scroller-container {
+        gap: 10px !important;
+        padding: 4px 0 10px 0 !important; /* Prevent vertical clipping */
+    }
+    .announcement-pill {
+        min-width: 280px !important;
+        max-width: 320px !important;
+        padding: 12px 16px !important;
+        border-radius: 12px !important;
+    }
+}
+
+/* Ultra-Small Screen Adjustments (Below 360px) */
+@media (max-width: 360px) {
+    .stats-grid {
+        gap: 8px !important;
+    }
+    .stat-card {
+        padding: 10px !important;
+    }
+    .stat-card__label {
+        font-size: 10px !important;
+    }
+    /* Allow numbers to shrink slightly more if needed */
+    .stat-card__value,
+    .balance-card__amount {
+        font-size: 15px !important;
+    }
+    .announcement-pill {
+        min-width: 260px !important;
+    }
+}
+
+/* Mobile Safe Area & Bottom Nav Spacing */
+@media (max-width: 768px) {
+    .main-wrapper {
+        padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px)) !important;
+    }
+}
