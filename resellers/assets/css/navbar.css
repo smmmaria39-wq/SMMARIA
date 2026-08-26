@@ -1,0 +1,173 @@
+/* ===============================================
+   Navbar CSS (Fully Responsive)
+   =============================================== */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+.navbar {
+    height: var(--navbar-height);
+    background-color: var(--bg-navbar);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--spacing-xl);
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    gap: var(--spacing-md); /* Ensures spacing between left and right groups */
+}
+
+.navbar__left, .navbar__right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    min-width: 0; /* Prevents flex children from overflowing */
+}
+
+.navbar__toggle {
+    display: none; /* Hidden on desktop, shown on mobile */
+    color: var(--text-primary);
+    padding: var(--spacing-xs);
+    cursor: pointer;
+}
+
+.navbar__search {
+    position: relative;
+    flex: 1; /* Allows search bar to shrink and grow */
+    max-width: 300px;
+    width: 100%;
+}
+.navbar__search svg {
+    position: absolute;
+    left: var(--spacing-sm);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+.navbar__search-input {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) var(--spacing-2xl);
+    background-color: var(--bg-input);
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+    min-width: 0; 
+}
+.navbar__search-input:focus {
+    background-color: var(--bg-card);
+    border-color: var(--color-gold);
+    outline: none;
+}
+
+.navbar__balance {
+    background: var(--bg-input);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    white-space: nowrap; /* Prevents text wrapping */
+}
+
+.navbar__icon-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    position: relative;
+    transition: all var(--transition-fast);
+    flex-shrink: 0; /* Prevents icons from squishing */
+    cursor: pointer;
+}
+.navbar__icon-btn:hover {
+    background-color: var(--bg-hover);
+    color: var(--color-gold);
+}
+
+.badge--dot {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-danger);
+    border-radius: 50%;
+    border: 2px solid var(--bg-navbar);
+}
+
+.navbar__profile {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background var(--transition-fast);
+    flex-shrink: 0;
+}
+.navbar__profile:hover { background-color: var(--bg-hover); }
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-navy), var(--color-gold));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: var(--fs-sm);
+}
+
+.profile__info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+.profile__name { font-weight: 600; font-size: var(--fs-sm); color: var(--text-primary); }
+.profile__role { font-size: var(--fs-xs); color: var(--text-muted); }
+
+/* ===============================================
+   Mobile Responsiveness for Navbar
+   =============================================== */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0 var(--spacing-md); /* Tighter padding on mobile */
+        gap: var(--spacing-sm);
+    }
+    
+    .navbar__left, .navbar__right {
+        gap: var(--spacing-sm); /* Tighter gap between icons on mobile */
+    }
+    
+    /* Show the hamburger menu on mobile */
+    .navbar__toggle {
+        display: flex;
+    }
+    
+    /* Hide the search bar on mobile to save space */
+    .navbar__search {
+        display: none;
+    }
+    
+    /* Hide the user's name and role, keep only the avatar */
+    .profile__info {
+        display: none;
+    }
+    
+    .navbar__balance {
+        font-size: var(--fs-xs); /* Slightly smaller balance text on mobile */
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+    
+    .navbar__icon-btn {
+        width: 36px; /* Slightly smaller icons on mobile */
+        height: 36px;
+    }
+}

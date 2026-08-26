@@ -1,0 +1,224 @@
+/* ===============================================
+   Layout CSS
+   Main app grid, content area, auth layouts
+   =============================================== */
+
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: var(--sidebar-width);
+    transition: margin-left var(--transition-base);
+    min-width: 0; /* Prevents flex overflow */
+}
+
+.app-container.sidebar-collapsed .main-wrapper {
+    margin-left: var(--sidebar-width-collapsed);
+}
+
+.content-area {
+    flex: 1;
+    padding: var(--spacing-xl);
+    background-color: var(--bg-body);
+    transition: background-color var(--transition-base);
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.page-title {
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+}
+
+.breadcrumbs {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    margin-top: var(--spacing-xs);
+}
+.breadcrumbs a {
+    color: var(--text-secondary);
+}
+.breadcrumbs a:hover {
+    color: var(--color-gold);
+}
+
+/* Footer */
+.footer {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    background-color: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+}
+
+.footer__links {
+    display: flex;
+    gap: var(--spacing-lg);
+}
+.footer__links a:hover {
+    color: var(--color-gold);
+}
+
+/* Auth Layout (Login, Register) */
+.auth-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-light) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Animated background bubbles for auth */
+.auth-body::before, .auth-body::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(245, 166, 35, 0.1);
+    animation: float 8s infinite ease-in-out;
+}
+.auth-body::before { width: 400px; height: 400px; top: -100px; left: -100px; }
+.auth-body::after { width: 300px; height: 300px; bottom: -50px; right: -50px; animation-delay: 4s; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-30px); }
+}
+
+.auth-container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 440px;
+    padding: var(--spacing-md);
+}
+
+.auth-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-2xl);
+    box-shadow: var(--shadow-xl);
+}
+
+html[data-theme="dark"] .auth-card {
+    background: rgba(30, 41, 59, 0.8);
+}
+
+.auth__header { text-align: center; margin-bottom: var(--spacing-xl); }
+.auth__logo {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: var(--fs-3xl);
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: var(--spacing-lg);
+}
+.auth__title { color: #fff; font-size: var(--fs-xl); margin-bottom: var(--spacing-xs); }
+.auth__subtitle { color: rgba(255, 255, 255, 0.7); font-size: var(--fs-sm); }
+
+.auth__form { display: flex; flex-direction: column; gap: var(--spacing-lg); }
+.auth__divider {
+    display: flex; align-items: center; text-align: center;
+    color: rgba(255, 255, 255, 0.5); margin: var(--spacing-md) 0;
+}
+.auth__divider::before, .auth__divider::after {
+    content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.auth__divider span { padding: 0 var(--spacing-md); font-size: var(--fs-sm); }
+
+.auth__footer { text-align: center; margin-top: var(--spacing-xl); color: rgba(255, 255, 255, 0.7); font-size: var(--fs-sm); }
+.auth__footer .form-link { color: var(--color-gold); }
+
+/* Error 404 Layout */
+.error-body {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; text-align: center; background-color: var(--bg-body);
+}
+.error-code { font-size: 8rem; font-weight: 700; line-height: 1; margin-bottom: var(--spacing-md); }
+.error-title { font-size: var(--fs-2xl); margin-bottom: var(--spacing-sm); }
+.error-text { color: var(--text-muted); margin-bottom: var(--spacing-xl); }
+/* ==========================================
+   Service Toolbar, Category & Percentage Bar
+   ========================================== */
+
+/* Clean Flexbox layout for the toolbar (replaces inline styles) */
+.table-toolbar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+}
+
+/* Input with Suffix (e.g., Percentage sign) */
+.form-input-wrap--suffix {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.form-input-wrap--suffix .form-input {
+    padding-right: 35px; /* Ensures text doesn't go under the % sign */
+    width: 100%;
+}
+
+.form-input-suffix {
+    position: absolute;
+    right: 12px;
+    font-size: var(--fs-sm, 14px);
+    color: var(--text-muted, #6b7280);
+    pointer-events: none; /* Prevents clicking the % sign from messing up input focus */
+    font-weight: 500;
+}
+
+/* Responsive: Stack filters nicely on mobile */
+@media (max-width: 768px) {
+    .table-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .table-toolbar .form-group {
+        width: 100%;
+        margin-bottom: 0;
+    }
+
+    /* Keep the percentage input and button side-by-side on mobile */
+    .table-toolbar .form-group:nth-child(3) {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+    }
+    
+    .table-toolbar .form-group:nth-child(3) .form-input-wrap--suffix {
+        flex: 1;
+    }
+
+    /* Force the Save button to take full width on mobile */
+    .table-toolbar .btn[id="savePricesBtn"] {
+        margin-left: 0 !important;
+        width: 100%;
+        justify-content: center;
+    }
+}

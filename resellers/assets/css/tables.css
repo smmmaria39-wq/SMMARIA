@@ -1,0 +1,183 @@
+/* ===============================================
+   Tables CSS
+   =============================================== */
+
+.table-card { padding: var(--spacing-lg); }
+
+.table-filters {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+.form-input--sm { padding: var(--spacing-xs) var(--spacing-sm); font-size: var(--fs-sm); }
+
+.table-responsive {
+    overflow-x: auto;
+    border-radius: var(--radius-md);
+}
+
+.table {
+    width: 100%;
+    font-size: var(--fs-sm);
+}
+
+.table thead th {
+    background-color: var(--bg-input);
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: var(--fs-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table tbody td {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color-light);
+    color: var(--text-primary);
+}
+.table tbody tr:last-child td { border-bottom: none; }
+.table tbody tr:hover { background-color: var(--bg-hover); }
+
+/* Badges */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    line-height: 1;
+}
+.badge--success { background: var(--color-success-bg); color: var(--color-success); }
+.badge--warning { background: var(--color-warning-bg); color: var(--color-warning); }
+.badge--danger { background: var(--color-danger-bg); color: var(--color-danger); }
+.badge--info { background: var(--color-info-bg); color: var(--color-info); }
+
+/* Notification badge in sidebar */
+.sidebar__link .badge {
+    margin-left: auto;
+    background: var(--color-danger);
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 6px;
+}
+
+/* Progress Bar */
+.progress-bar {
+    width: 100px;
+    height: 6px;
+    background-color: var(--bg-input);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+.progress-bar__fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-navy), var(--color-gold));
+    border-radius: var(--radius-full);
+    transition: width var(--transition-slow);
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-lg);
+}
+.pagination .btn { min-width: 36px; padding: var(--spacing-xs); }
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: var(--spacing-xs);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-lg);
+}
+.tab {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-weight: 500;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+    transition: all var(--transition-fast);
+}
+.tab:hover { color: var(--text-primary); }
+.tab.active { color: var(--color-gold); border-color: var(--color-gold); }
+
+.tabs--vertical {
+    flex-direction: column;
+    border-bottom: none;
+    border-right: 1px solid var(--border-color);
+    min-width: 200px;
+}
+.tabs--vertical .tab { border-bottom: none; border-right: 2px solid transparent; text-align: left; }
+.tabs--vertical .tab.active { border-right-color: var(--color-gold); }
+/* ===============================================
+   Service ID & UGX Currency Utility Styles
+   =============================================== */
+
+/* --- Service ID Input Box (Services Page Cards) --- */
+.service-id-input {
+    width: 65px;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-input, #f8f9fa);
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: var(--radius-sm, 6px);
+    text-align: center;
+    cursor: default; /* Shows it's read-only */
+    transition: border-color 0.2s ease;
+}
+
+/* Optional: subtle highlight if user clicks it */
+.service-id-input:focus {
+    outline: none;
+    border-color: var(--color-gold, #f5a623);
+}
+
+/* --- Clickable Service ID Link (Orders Page Table) --- */
+.service-id-link {
+    font-weight: 600;
+    color: var(--color-gold, #f5a623);
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.service-id-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+/* --- UGX Currency Text (Tables & Cards) --- */
+/* Used in Orders table, Wallet table, and Services cards */
+.charge-ugx,
+.rate-value-ugx {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary, #6b7280);
+    margin-top: 2px;
+    letter-spacing: 0.2px;
+}
+
+/* Specific styling for the New Order live calculator UGX text */
+#charge-amount-ugx {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary, #6b7280);
+    margin-top: 4px;
+    text-align: right;
+}
+
+/* --- UGX Amount on Dashboard Stat Cards --- */
+.ugx-amount {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary, #6b7280);
+    margin-bottom: 8px; /* Pushes the "All time" text down slightly */
+}
