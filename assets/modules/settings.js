@@ -9,19 +9,12 @@ import { showToast } from '../components/toast.js';
 
 export default async function initSettings() {
  const profileForm = $('#profile-form');
- const notifList = $('#settings-notifications-list');
  let userData = null;
- let notifications = [];
  
- // 1. Fetch real user data AND notifications simultaneously
+ // 1. Fetch real user data
  try {
-  const [meRes, notifRes] = await Promise.all([
-   api.getMe(),
-   api.getNotifications()
-  ]);
-  
+  const meRes = await api.getMe();
   userData = meRes.data;
-  notifications = notifRes.data || [];
   
   if (userData) {
    // --- Populate Profile Tab ---
@@ -42,51 +35,11 @@ export default async function initSettings() {
     avatarEl.textContent = userData.username.substring(0, 2).toUpperCase();
    }
   }
-  
-  // 2. Render Notifications List
-  if (notifList) {
-   if (notifications.length === 0) {
-    notifList.innerHTML = `<li class="text-muted text-center">No notifications found.</li>`;
-   } else {
-    notifList.innerHTML = notifications.map(n => {
-     const iconClass = n.type === 'announcement' ? 'notification__icon--warning' : 'notification__icon--info';
-     const iconText = n.type === 'announcement' ? '📢' : 'i';
-     return `
-            <li class="notification-item">
-              <div class="notification__icon ${iconClass}">${iconText}</div>
-              <div class="notification__content">
-                <p><strong>${n.title || 'Notification'}</strong>: ${n.message}</p>
-                <span class="notification__time">${formatDate(n.createdAt)}</span>
-              </div>
-            </li>
-          `;
-    }).join('');
-   }
-  }
-  
-  // 3. Inject Notification Counter to Navbar Bell Icon
-  const unreadCount = notifications.filter(n => !n.isRead).length;
-  const navBell = document.querySelector('.navbar__icon-btn[aria-label="Notifications"]');
-  
-  if (navBell) {
-   // Remove existing badge if any
-   const existingBadge = navBell.querySelector('.badge');
-   if (existingBadge) existingBadge.remove();
-   
-   if (unreadCount > 0) {
-    const badge = document.createElement('span');
-    badge.className = 'badge badge--notification';
-    badge.textContent = unreadCount;
-    navBell.appendChild(badge);
-   }
-  }
-  
  } catch (error) {
-  showToast('Failed to load profile data or notifications', 'error');
-  if (notifList) notifList.innerHTML = `<li class="text-muted text-center">Failed to load notifications.</li>`;
+  showToast('Failed to load profile data', 'error');
  }
  
- // 4. Handle Form Submit (Update Profile)
+ // 2. Handle Form Submit (Update Profile)
  if (profileForm) {
   profileForm.addEventListener('submit', async (e) => {
    e.preventDefault();
@@ -106,6 +59,30 @@ export default async function initSettings() {
    }
   });
  }
+
+ // 3. Handle Account Deletion
+ const deleteBtn = document.getElementById('deleteAccountBtn');
+ if (deleteBtn) {
+  deleteBtn.addEventListener('click', async () => {
+   if (!confirm('Are you absolutely sure? This action CANNOT be undone. Type OK to confirm.')) return;
+   
+   if (prompt('Please type your password to confirm deletion:') === null) return;
+
+   try {
+    showToast('Deleting account...', 'info');
+    await api.deleteAccount();
+    showToast('Account deleted successfully. Redirecting...', 'success');
+    
+    // Clear local storage and redirect to login
+    localStorage.removeItem('smmmaria_token');
+    setTimeout(() => {
+     window.location.href = 'login.html';
+    }, 2000);
+   } catch (error) {
+    showToast(error.message || 'Failed to delete account. Please contact support.', 'error');
+   }
+  });
+ }
  
  // Note: Tab switching logic is already handled by the inline script in settings.html
-}
+} 
