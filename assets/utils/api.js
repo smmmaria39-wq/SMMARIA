@@ -3,7 +3,7 @@
 // Connects directly to your Node.js + Express backend
 // ===============================================
 
-const API_BASE_URL = 'https://smmmaria-backend-production.up.railway.app/api/v1';
+const API_BASE_URL = 'smmmaria-backend-production-3ae4.up.railway.app';
 
 /**
  * Fetch wrapper to automatically include the JWT token in headers
