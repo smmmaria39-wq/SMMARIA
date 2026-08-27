@@ -88,6 +88,7 @@ export const api = {
  
  // Profile / Settings
  updateProfile: (data) => request('/users/profile', 'PUT', data),
+  deleteAccount: () => request('/users/me', 'DELETE'),
  
  // API Key
  regenerateApiKey: () => request('/users/apikey', 'POST'),
