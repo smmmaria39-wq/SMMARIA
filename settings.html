@@ -380,13 +380,13 @@
                 </div>
             </header>
 
-            <!-- PAGE SPECIFIC CONTENT -->
+              <!-- PAGE SPECIFIC CONTENT -->
             <main class="content-area" id="page-content">
                 <div class="page-header">
                     <h1 class="page-title">Settings</h1>
                     <div class="breadcrumbs"><a href="dashboard.html">Dashboard</a> / <span>Settings</span></div>
                 </div>
-
+                
                 <!-- MAIN SETTINGS CARD -->
                 <div class="card settings-card" style="display: flex; flex-wrap: wrap; gap: 30px; padding: 30px;">
                     <!-- Vertical Tabs -->
@@ -430,7 +430,7 @@
                                 </div>
                             </form>
                         </div>
-
+                        
                         <!-- SECURITY TAB -->
                         <div class="tab-content" id="security-tab">
                             <form class="form-grid">
@@ -450,7 +450,7 @@
                                     <label class="form-label">Referral Code</label>
                                     <input type="text" id="settings-referral-code" class="form-input" readonly>
                                 </div>
-
+                                
                                 <div class="form-group form-group--full" style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">
                                     <h3 style="margin-bottom: 15px;">Change Password</h3>
                                 </div>
@@ -466,28 +466,23 @@
                                     <button type="submit" class="btn btn--primary">Update Password</button>
                                 </div>
                             </form>
+                            
+                            <!-- DANGER ZONE -->
+                            <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid rgba(239, 68, 68, 0.2);">
+                                <h3 style="color: #ef4444; margin-bottom: 10px;">Danger Zone</h3>
+                                <p class="text-muted" style="font-size: 14px; margin-bottom: 15px;">Deleting your account is permanent and cannot be undone. All your orders, wallet balance, and data will be lost.</p>
+                                <button id="deleteAccountBtn" class="btn btn--danger">Delete My Account</button>
+                            </div>
                         </div>
-
+                        
                         <!-- BILLING TAB -->
                         <div class="tab-content" id="billing-tab">
                             <p class="text-muted">Billing settings coming soon.</p>
                         </div>
-
+                        
                     </div>
                 </div>
-
-                <!-- SEPARATE NOTIFICATIONS CARD -->
-                <div class="card" style="margin-top: 24px;">
-                    <div class="card__header">
-                        <h3 class="card__title">All Notifications & Announcements</h3>
-                    </div>
-                    <div class="card__body" style="padding-top: 0;">
-                        <ul class="notification-list" id="settings-notifications-list" style="display: flex; flex-direction: column; gap: 15px;">
-                            <li class="text-muted text-center">Loading notifications...</li>
-                        </ul>
-                    </div>
-                </div>
-
+                
             </main>
 
            <!-- DESKTOP FOOTER COMPONENT -->
