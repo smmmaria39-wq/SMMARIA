@@ -6,10 +6,10 @@
          ========================================== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-   <meta name="google-site-verification" content="_4VcrmvY2S8GSdic0AMrBR1BlTx5-5-dA4GR_ZXe2TU" />
+    <meta name="google-site-verification" content="_4VcrmvY2S8GSdic0AMrBR1BlTx5-5-dA4GR_ZXe2TU" />
     <meta name="referrer" content="strict-origin-when-cross-origin">
     
-    <title>REGISTER | SMMMARIA Panel</title>
+    <title>LOGIN | SMMMARIA Panel</title>
     
     <!-- ==========================================
          2. SEO METADATA
@@ -18,7 +18,7 @@
     <meta name="keywords" content="SMM Panel, Social Media Marketing, SMM-MARIA, Best SMM Panel, Cheap SMM Panel, SaaS Platform, Social Media Growth, API Integration, Automated Marketing, Instagram Followers, TikTok Views, YouTube Subscribers, Facebook Likes, SEO Services, Digital Marketing Platform, SMM Reseller Panel, Social Media Management, Increase Twitter Followers, Twitch Viewers">
     <meta name="author" content="SMM-MARIA">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://smmaria.netlify.app/register">
+    <link rel="canonical" href="https://smmaria.netlify.app/login">
     
     <!-- ==========================================
          3. THEME COLOR & WINDOWS TILES
@@ -62,7 +62,7 @@
     <meta property="og:image" content="assets/images/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:url" content="https://smmaria.netlify.app/register">
+    <meta property="og:url" content="https://smmaria.netlify.app/login">
     
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="SMM-MARIA | SMM Platform">
@@ -93,8 +93,8 @@
     <link rel="stylesheet" href="assets/css/notifications.css">
     <link rel="stylesheet" href="assets/css/dashboard.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
-   
-    <style>
+
+      <style>
         .landing-layout {
             display: flex;
             min-height: 100vh;
@@ -186,9 +186,28 @@
             fill: currentColor;
         }
 
+        /* --- Clickable Info Trigger Cards --- */
+        .info-trigger-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid var(--color-gold);
+            padding: 25px;
+            border-radius: 0 16px 16px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        .info-trigger-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-2px);
+        }
+        .info-trigger-card h3 { color: #fff; font-size: 1.1rem; margin-bottom: 10px; }
+        .info-trigger-card p { color: rgba(255,255,255,0.6); font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; }
+        .info-trigger-card .view-link { color: var(--color-gold); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; }
+
+        /* Features Grid (Used inside the Bottom Sheet) */
         .features-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 20px;
         }
         .feature-card {
@@ -204,15 +223,14 @@
         .auth-pane {
             flex: 1;
             display: flex;
-            flex-direction: column; /* Stack cards vertically */
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 20px; /* Space between the 3 cards */
+            gap: 20px;
             padding: 50px;
             position: sticky;
             top: 0;
             height: 100vh;
-            overflow-y: auto; /* Allow scroll if form is long */
             background: rgba(0,0,0,0.2);
             backdrop-filter: blur(10px);
             border-left: 1px solid rgba(255,255,255,0.05);
@@ -221,7 +239,7 @@
         /* Shared Card Styling */
         .glass-card {
             width: 100%;
-            max-width: 460px; /* Increased width from 420px to 460px */
+            max-width: 420px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255,255,255,0.1);
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
@@ -243,9 +261,9 @@
 
         /* 2. Media Box Card */
         .media-card {
-            height: 200px; /* Slightly taller */
+            height: 180px;
             overflow: hidden;
-            padding: 0; /* Remove padding for video */
+            padding: 0;
             background: #000;
         }
         .media-card video, .media-card img {
@@ -254,78 +272,136 @@
             object-fit: cover;
         }
 
-        /* 3. Registration Form Card */
-        .auth-card {
-            overflow: hidden;
-            padding: 10px; /* Add a little inner breathing room */
-        }
-        .auth-card .auth__header { 
-            padding: 20px 30px 0 30px; /* Reduced horizontal padding to give inputs more space */
-        }
-        .auth-card .auth__form { 
-            padding: 20px 30px; /* Reduced horizontal padding */
-        }
-        .auth-card .auth__footer { 
-            padding: 0 30px 20px 30px; 
-        }
-
-        /* Force inputs to be full width inside the auth card */
-        .auth-card .form-input,
-        .auth-card .input-wrapper {
-            width: 100%;
-            box-sizing: border-box;
-        }
-        
-        /* Ensure checkbox wrapper aligns nicely */
-        .auth-card .form-options {
-            padding: 0 0 20px 0;
-        }
-
-        /* --- Tablet Responsive --- */
+        /* --- MOBILE RESPONSIVE --- */
         @media (max-width: 900px) {
-            .landing-layout { flex-direction: column; height: auto; }
+            .landing-layout { flex-direction: column; height: auto; min-height: 100vh; }
             .branding-pane { padding: 30px; overflow-y: visible; gap: 30px; }
             .auth-pane { 
                 position: relative; 
                 height: auto; 
-                padding: 30px; 
+                padding: 30px 20px 120px 20px; /* Extra bottom padding so content isn't hidden behind fixed button */
                 border-left: none; 
-                border-bottom: 1px solid rgba(255,255,255,0.1);
+                border-top: 1px solid rgba(255,255,255,0.1);
+                background: rgba(8, 22, 74, 0.8);
+                backdrop-filter: blur(10px);
+                gap: 15px;
             }
             .hero-section h1 { font-size: 2.5rem; }
-            .features-grid { grid-template-columns: 1fr; }
         }
 
-        /* --- Small Phone Responsive (Login Form Optimization) --- */
         @media (max-width: 480px) {
-            .branding-pane { padding: 20px; gap: 25px; }
-            .auth-pane { padding: 15px; gap: 15px; }
-            
-            /* Tighten the glass cards so they fit perfectly on narrow screens */
-            .glass-card {
-                max-width: 100%;
-                border-radius: 12px; /* Slightly sharper on mobile */
-            }
-
-            /* Reduce internal padding of the login form so inputs have max room */
-            .auth-card { padding: 5px; }
-            .auth-card .auth__header { padding: 15px 20px 0 20px; }
-            .auth-card .auth__form { padding: 15px 20px; }
-            .auth-card .auth__footer { padding: 0 20px 15px 20px; }
-
-            /* Adjust typography for small screens to prevent wrapping issues */
+            .branding-pane { padding: 20px; }
+            .glass-card { max-width: 100%; border-radius: 12px; }
             .hero-section h1 { font-size: 2rem; }
             .hero-section p { font-size: 1rem; }
             .brand-card-top { font-size: 1.5rem; padding: 15px; }
-            
-            /* Make media card slightly shorter to save vertical space */
-            .media-card { height: 150px; }
-            
-            /* Ensure stats don't overflow */
+            .media-card { height: 140px; }
             .stats-row { gap: 20px; padding: 20px 0; }
             .stat-box h2 { font-size: 1.8rem; }
         }
-    </style>
+
+        /* ==========================================
+           LOGIN BUTTON & BOTTOM SHEET STYLES
+           ========================================== */
+        
+        /* Primary Gold Button Styling */
+        #openLoginBtn {
+            background-color: var(--color-gold); /* Yellowish/Gold */
+            color: #08164A; /* Dark text for contrast */
+            font-weight: 700;
+            font-size: 16px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            border: none;
+            width: 50%;
+            max-width: 420px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 15px rgba(245, 166, 35, 0.3);
+        }
+        #openLoginBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 166, 35, 0.5);
+        }
+        #openLoginBtn:active {
+            transform: scale(0.98);
+        }
+
+        /* Mobile floating button to open login */
+        @media (max-width: 900px) {
+            #openLoginBtn {
+                position: fixed;
+                bottom: max(20px, env(safe-area-inset-bottom)); /* Respects iPhone notch */
+                left: 20px;
+                right: 20px;
+                z-index: 900;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+                margin: 0 auto; /* Centers it if max-width applies */
+            }
+        }
+        
+        @media (min-width: 901px) {
+            #openLoginBtn {
+                position: static;
+                box-shadow: 0 4px 15px rgba(245, 166, 35, 0.3);
+                margin-top: 10px;
+            }
+        }
+
+        /* Shared Bottom Sheet Backdrop & Container (For both Login and Info) */
+        .sheet-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .sheet-backdrop.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            max-width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 24px 24px 0 0;
+            background: rgba(16, 24, 40, 0.85); /* Dark glass for the sheet */
+            backdrop-filter: blur(20px);
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
+        }
+        .bottom-sheet.active {
+            transform: translateY(0);
+        }
+
+        .sheet-handle {
+            width: 40px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            margin: 12px auto 0;
+            cursor: pointer;
+        }
+
+        .auth-card {
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+            max-width: 480px !important;
+            margin: 0 auto;
+            padding-bottom: 30px;
+        }
+    </style> 
 </head>
 <body>
     <div class="landing-layout">
@@ -339,7 +415,7 @@
             <div class="brand-logo">
                 <!-- INSTRUCTION: Replace this with your actual logo image -->
                 <!-- <img src="assets/images/smmmaria-logo.png" alt="SMMMARIA Logo"> -->
-                <div class="brand-logo-text"><span class="text-gold"></span></div>
+                <div class="brand-logo-text">SMM<span class="text-gold">MARIA</span>PANEL </div>
             </div>
 
             <!-- 2. Hero Text -->
@@ -355,12 +431,12 @@
                     <p>Orders Delivered</p>
                 </div>
                 <div class="stat-box">
-                    <h2>45K+</h2>
+                    <h2>15K+</h2>
                     <p>Active Users</p>
                 </div>
                 <div class="stat-box">
                     <h2>99</h2>
-                    <p>API Uptime</p>
+                    <p>Service Uptime</p>
                 </div>
             </div>
 
@@ -387,55 +463,33 @@
                     <!-- LinkedIn -->
                     <div class="platform-card" title="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div>
                     <!-- Discord -->
-                    <div class="platform-card" title="Discord"><svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.010c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.331c-1.182 0-2.157-1.086-2.157-2.419 0-1.332.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.332-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.086-2.157-2.419 0-1.332.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.332-.946 2.418-2.157 2.418z"/></svg></div>
+                    <div class="platform-card" title="Discord"><svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.010c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.010c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.331c-1.182 0-2.157-1.086-2.157-2.419 0-1.332.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.332-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.086-2.157-2.419 0-1.332.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.332-.946 2.418-2.157 2.418z"/></svg></div>
                 </div>
             </div>
 
-            <!-- 5. Features Grid -->
+            <!-- 5. Features Trigger -->
             <div class="features-section">
                 <h2 class="section-title">Why Choose SMMMARIA?</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <h3>⚡ Instant Processing</h3>
-                        <p>Our system processes orders in milliseconds. No manual waiting, everything is fully automated.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>🛡️ Premium Quality</h3>
-                        <p>High-retention, non-drop engagement from real active accounts to keep your metrics looking organic.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>🤖 Developer API</h3>
-                        <p>Integrate our services into your own platform with our lightning-fast REST API documentation.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>💳 Easy Payments</h3>
-                        <p>Top up your wallet securely with Cards, PayPal, or Crypto and start scaling instantly.</p>
-                    </div>
+                <div class="info-trigger-card" onclick="openInfoSheet('why-choose')">
+                    <h3>⚡ Discover Our Features</h3>
+                    <p>Instant processing, premium quality, developer API, and easy payments. Find out what makes us the best.</p>
+                    <span class="view-link">View Details &rarr;</span>
                 </div>
             </div>
 
-            <!-- 6. How it works -->
+            <!-- 6. How it works Trigger -->
             <div class="features-section">
                 <h2 class="section-title">Get Started in 3 Steps</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <h3>1. Create Account</h3>
-                        <p>Sign up for free and get instant access to our dashboard and wholesale pricing.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>2. Add Funds</h3>
-                        <p>Deposit funds using your preferred payment method. No minimum deposit limits.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>3. Launch Order</h3>
-                        <p>Select a service, paste your link, and watch your social proof grow instantly.</p>
-                    </div>
+                <div class="info-trigger-card" onclick="openInfoSheet('get-started')">
+                    <h3>🚀 How It Works</h3>
+                    <p>Create an account, add funds, and launch your order. It's that simple to start growing.</p>
+                    <span class="view-link">View Steps &rarr;</span>
                 </div>
             </div>
         </div>
 
         <!-- ==========================================
-             REGISTER AUTH PANE (Right/Sticky)
+             AUTH PANE (Right/Sticky)
              ========================================== -->
         <div class="auth-pane">
             
@@ -446,92 +500,98 @@
 
             <!-- 2. Media Box Card (Standalone) -->
             <div class="glass-card media-card">
-                <!-- 
-                  INSTRUCTION: 
-                  To use a video, replace the src below with your video URL (e.g., an MP4 from your GitHub repo).
-                  To use an image, delete the <video> tag and use <img src="YOUR_IMAGE_URL">
-                -->
-                <!-- 2. Media Box Card (Standalone) -->
-<div class="glass-card media-card">
-    <!-- Replace the video tag with the img tag below -->
-    <img src="https://ik.imagekit.io/s95tumxuk/IMG_4153.png" alt="SMMMARIA Panel Preview">
-</div>
+                <img src="https://ik.imagekit.io/s95tumxuk/IMG_4153.png" alt="SMMMARIA Panel Preview">
             </div>
 
-            <!-- 3. Registration Form Card (Standalone) -->
-            <div class="glass-card auth-card">
-                <div class="auth__header">
-                    <h2 class="auth__title">Create an Account</h2>
-                    <p class="auth__subtitle">Join the #1 SMM Panel today</p>
-                </div>
-                
-               <form class="auth__form" id="register-form" onsubmit="handleRegister(event)">
-                    <div class="form-group">
-                        <label for="fullname" class="form-label">Full Name</label>
-                        <input type="text" id="fullname" class="form-input" placeholder="John Mathew" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email" class="form-label">Email Address</label>
-                        <!-- Force lowercase -->
-                        <input type="email" id="email" class="form-input" placeholder="john@example.com" oninput="this.value = this.value.toLowerCase();" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="username" class="form-label">Username</label>
-                        <!-- Force lowercase -->
-                        <input type="text" id="username" class="form-input" placeholder="john123" oninput="this.value = this.value.toLowerCase();" required>
-                    </div>
-                    
-                    <!-- NEW: Country Input -->
-                    <div class="form-group">
-                        <label for="country" class="form-label">Country</label>
-                        <input type="text" id="country" class="form-input" placeholder="e.g., Uganda" required>
-                    </div>
-                    
-                    <!-- NEW: Phone Number Input -->
-                    <div class="form-group">
-                        <label for="phone" class="form-label">Phone Number</label>
-                        <input type="tel" id="phone" class="form-input" placeholder="+2567XXXXXXXX" required>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="form-label-row">
-                            <label for="password" class="form-label">Password</label>
-                        </div>
-                        <div class="input-wrapper">
-                            <!-- Force lowercase -->
-                            <input type="password" id="password" class="form-input" placeholder="••••••••" oninput="this.value = this.value.toLowerCase();" required>
-                            <button type="button" class="input-action" aria-label="Toggle Password Visibility" onclick="togglePasswordVisibility(this)">
-                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="form-options">
-                        <label class="checkbox-wrapper">
-                            <input type="checkbox" class="form-checkbox" required>
-                            <span class="checkbox-custom"></span>
-                            <span class="checkbox-label">I agree to the <a href="#" class="form-link">Terms & Conditions</a></span>
-                        </label>
-                    </div>
-
-                    <button type="submit" class="btn btn--primary btn--block">Create Account</button>
-                    
-                    <div class="auth__divider"><span>OR</span></div>
-                    
-                    <button type="button" id="google-login-btn" class="btn btn--outline btn--block" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-    <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-    <span>Continue with Google</span>
-</button>
-                
-                <div class="auth__footer">
-                    <p>Already have an account? <a href="login.html" class="form-link">Sign in</a></p>
-                </div>
-            </div>
+            <!-- 3. Action Button (Replaces Static Login Card) -->
+            <button id="openLoginBtn" class="btn btn--primary btn--block" onclick="openLoginSheet()">
+                Login to Dashboard
+            </button>
+            
+            <p style="color: rgba(255,255,255,0.6); font-size: 14px; text-align: center;">
+                Don't have an account? <a href="register.html" class="form-link" style="color: var(--color-gold);">Sign up now</a>
+            </p>
         </div>
-
     </div>
 
-    <!-- Small script for password visibility toggle -->
+    <!-- ==========================================
+         BOTTOM SHEET LOGIN MODAL
+         ========================================== -->
+    <div id="loginBackdrop" class="sheet-backdrop" onclick="closeLoginSheet()"></div>
+    
+    <div id="loginSheet" class="bottom-sheet">
+        <div class="sheet-handle" onclick="closeLoginSheet()"></div>
+        
+        <div class="glass-card auth-card">
+            <div class="auth__header">
+                <h2 class="auth__title">Welcome Back!</h2>
+                <p class="auth__subtitle">Sign in to access your dashboard</p>
+            </div>
+            
+            <form class="auth__form" id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="identifier" class="form-label">Email, Username, or Account ID</label>
+                    <!-- Force lowercase on input -->
+                    <input type="text" id="identifier" name="identifier" class="form-input" placeholder="john@example.com / john_doe / acc-123" oninput="this.value = this.value.toLowerCase();" required>
+                    <small style="display: block; margin-top: 5px; font-size: 12px; color: rgba(255,255,255,0.5);">
+                        * Enter your Account ID to login without a password.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <div class="form-label-row">
+                        <label for="password" class="form-label">Password</label>
+                        <a href="forgot-password.html" class="form-link">Forgot password?</a>
+                    </div>
+                    <div class="input-wrapper">
+                        <!-- Removed 'required' attribute so Account ID can login without it -->
+                        <!-- Force lowercase on input -->
+                        <input type="password" id="password" name="password" class="form-input" placeholder="•••••••• (Leave blank if using Account ID)" oninput="this.value = this.value.toLowerCase();">
+                        <button type="button" class="input-action" aria-label="Toggle Password Visibility" onclick="togglePasswordVisibility(this)">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-options">
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" class="form-checkbox">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Remember me</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn--primary btn--block">Sign In</button>
+                
+                <div class="auth__divider"><span>OR</span></div>
+                
+                <button type="button" id="google-login-btn" class="btn btn--outline btn--block" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    <span>Continue with Google</span>
+                </button>
+                
+                <div class="auth__footer">
+                    <p>Don't have an account? <a href="register.html" class="form-link">Sign up now</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         BOTTOM SHEET INFO MODAL (For Feature Cards)
+         ========================================== -->
+    <div id="infoBackdrop" class="sheet-backdrop" onclick="closeInfoSheet()"></div>
+    
+    <div id="infoSheet" class="bottom-sheet">
+        <div class="sheet-handle" onclick="closeInfoSheet()"></div>
+        
+        <div class="glass-card auth-card">
+            <div id="infoSheetContent">
+                <!-- Content injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script>
         function togglePasswordVisibility(btn) {
             const input = btn.parentElement.querySelector('input');
@@ -541,9 +601,86 @@
                 input.type = 'password';
             }
         }
+
+        // --- Login Sheet Logic ---
+        function openLoginSheet() {
+            document.getElementById('loginBackdrop').classList.add('active');
+            document.getElementById('loginSheet').classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scroll
+        }
+
+        function closeLoginSheet() {
+            document.getElementById('loginBackdrop').classList.remove('active');
+            document.getElementById('loginSheet').classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restore scroll
+        }
+
+        // --- Info Sheet Logic ---
+        function openInfoSheet(type) {
+            const contentDiv = document.getElementById('infoSheetContent');
+            
+            if (type === 'why-choose') {
+                contentDiv.innerHTML = `
+                    <div class="auth__header" style="margin-bottom: 20px;">
+                        <h2 class="auth__title" style="color: #fff;">Why Choose SMMMARIA?</h2>
+                        <p class="auth__subtitle">Discover what makes us the ultimate growth engine.</p>
+                    </div>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <h3>⚡ Instant Processing</h3>
+                            <p>Our system processes orders in milliseconds. No manual waiting, everything is fully automated.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3>🛡️ Premium Quality</h3>
+                            <p>High-retention, non-drop engagement from real active accounts to keep your metrics looking organic.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3>🤖 Developer API</h3>
+                            <p>Integrate our services into your own platform with our lightning-fast REST API documentation.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3>💳 Easy Payments</h3>
+                            <p>Top up your wallet securely with Cards, PayPal, or Crypto and start scaling instantly.</p>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'get-started') {
+                contentDiv.innerHTML = `
+                    <div class="auth__header" style="margin-bottom: 20px;">
+                        <h2 class="auth__title" style="color: #fff;">Get Started in 3 Steps</h2>
+                        <p class="auth__subtitle">It's incredibly easy to start growing.</p>
+                    </div>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <h3>1. Create Account</h3>
+                            <p>Sign up for free and get instant access to our dashboard and wholesale pricing.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3>2. Add Funds</h3>
+                            <p>Deposit funds using your preferred payment method. No minimum deposit limits.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3>3. Launch Order</h3>
+                            <p>Select a service, paste your link, and watch your social proof grow instantly.</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('infoBackdrop').classList.add('active');
+            document.getElementById('infoSheet').classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scroll
+        }
+
+        function closeInfoSheet() {
+            document.getElementById('infoBackdrop').classList.remove('active');
+            document.getElementById('infoSheet').classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restore scroll
+        }
     </script>
-<!-- Google Identity Services Script -->
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!-- Google Identity Services Script -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script type="module" src="assets/js/app.js"></script>
 </body>
 </html>
