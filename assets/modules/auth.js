@@ -78,85 +78,71 @@ function initGoogleAuth() {
  const googleBtn = document.getElementById('google-login-btn');
  if (!googleBtn) return;
  
- // 1. Check if Google SDK loaded successfully
- if (!window.google || !window.google.accounts || !window.google.accounts.oauth2) {
-  googleBtn.addEventListener('click', () => {
-   showToast('Google services failed to load. Please refresh the page.', 'error');
-  });
-  return;
- }
- 
- // 2. Initialize the Google OAuth 2.0 client only once when the page loads
- codeClient = window.google.accounts.oauth2.initCodeClient({
-  client_id: '354475709339-2g48o0nrugv0f1kg9n4nbn798c9upaud.apps.googleusercontent.com',
-  scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
-  ux_mode: 'popup',
-  callback: async (response) => {
-   // Reset authentication state
-   isAuthenticating = false;
-   googleBtn.disabled = false;
-   
-   // Handle errors (popup closed, blocked, etc.)
-   if (response.error) {
-    if (response.error === 'popup_closed_by_user') {
-     return showToast('Google sign-in cancelled.', 'info');
+ // Helper to initialize the client
+ const initializeClient = () => {
+  if (window.google && window.google.accounts && window.google.accounts.oauth2) {
+   codeClient = window.google.accounts.oauth2.initCodeClient({
+    client_id: '354475709339-2g48o0nrugv0f1kg9n4nbn798c9upaud.apps.googleusercontent.com',
+    scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
+    ux_mode: 'popup',
+    callback: async (response) => {
+     isAuthenticating = false;
+     googleBtn.disabled = false;
+     
+     if (response.error) {
+      if (response.error === 'popup_closed_by_user') {
+       return showToast('Google sign-in cancelled.', 'info');
+      }
+      return showToast(`Google login failed: ${response.error}`, 'error');
+     }
+     
+     if (!response.code) {
+      return showToast('Failed to obtain Google authorization code.', 'error');
+     }
+     
+     try {
+      showToast('Verifying Google account...', 'info');
+      const res = await api.googleAuth(response.code);
+      
+      if (res.data && res.data.token) {
+       localStorage.setItem('smmmaria_token', res.data.token);
+       showToast('Login successful! Redirecting...', 'success');
+       setTimeout(() => {
+        window.location.href = 'services.html';
+       }, 1000);
+      } else {
+       throw new Error('Invalid response from server');
+      }
+     } catch (error) {
+      showToast(error.message || 'Backend authentication failed', 'error');
+     }
     }
-    
-    // Fallback to redirect flow if popup is blocked
-    if (response.error === 'popup_blocked_by_user' || response.error === 'popup_failed_to_open') {
-     showToast('Popup blocked. Redirecting to Google...', 'info');
-     const redirectClient = window.google.accounts.oauth2.initCodeClient({
-      client_id: '354475709339-2g48o0nrugv0f1kg9n4nbn798c9upaud.apps.googleusercontent.com',
-      scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
-      ux_mode: 'redirect',
-      redirect_uri: window.location.origin + '/login.html'
-     });
-     redirectClient.requestCode();
-     return;
-    }
-    
-    return showToast(`Google login failed: ${response.error}`, 'error');
-   }
-   
-   // Obtain authorization code
-   if (!response.code) {
-    return showToast('Failed to obtain Google authorization code.', 'error');
-   }
-   
-   try {
-    showToast('Verifying Google account...', 'info');
-    
-    // Send the secure authorization code to your backend
-    const res = await api.googleAuth(response.code);
-    
-    if (res.data && res.data.token) {
-     localStorage.setItem('smmmaria_token', res.data.token);
-     showToast('Login successful! Redirecting...', 'success');
-     setTimeout(() => {
-      window.location.href = 'services.html';
-     }, 1000);
-    } else {
-     throw new Error('Invalid response from server');
-    }
-   } catch (error) {
-    showToast(error.message || 'Backend authentication failed', 'error');
-   }
+   });
+   return true;
   }
- });
+  return false;
+ };
+ 
+ // Try to initialize immediately
+ if (!initializeClient()) {
+  // If it fails, wait for the window to fully load, then try again
+  window.addEventListener('load', initializeClient);
+ }
  
  // 3. When the user clicks "Continue with Google", open the popup
  googleBtn.addEventListener('click', () => {
+  // If client isn't ready yet, try to initialize it one last time
   if (!codeClient) {
-   return showToast('Google services are still loading. Please try again in a moment.', 'error');
+   if (!initializeClient()) {
+    return showToast('Google services are still loading. Please try again in a moment.', 'error');
+   }
   }
   
-  // Prevent multiple clicks while authentication is in progress
   if (isAuthenticating) return;
   isAuthenticating = true;
   googleBtn.disabled = true;
   
   try {
-   // Open the Google account chooser popup
    codeClient.requestCode();
   } catch (error) {
    isAuthenticating = false;
