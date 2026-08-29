@@ -54,9 +54,9 @@ async function request(endpoint, method = 'GET', body = null) {
 export const api = {
  // Auth
  login: (identifier, password) => request('/auth/login', 'POST', { identifier, password }),
- register: (data) => request('/auth/register', 'POST', data),
- googleAuth: (credential) => request('/auth/google', 'POST', { credential }),
- getMe: () => request('/auth/me'),
+  register: (data) => request('/auth/register', 'POST', data),
+  googleAuth: (code) => request('/auth/google', 'POST', { code }),
+  getMe: () => request('/auth/me'),
  
  // Services & Orders
  getServices: () => request('/services'),
