@@ -69,47 +69,106 @@ export function handleLogout() {
 }
 
 // ===============================================
-// Google Authentication Logic
+// Google Authentication Logic (OAuth 2.0 Popup Flow)
 // ===============================================
+let codeClient = null;
+let isAuthenticating = false;
+
 function initGoogleAuth() {
  const googleBtn = document.getElementById('google-login-btn');
  if (!googleBtn) return;
  
+ // 1. Check if Google SDK loaded successfully
+ if (!window.google || !window.google.accounts || !window.google.accounts.oauth2) {
+  googleBtn.addEventListener('click', () => {
+   showToast('Google services failed to load. Please refresh the page.', 'error');
+  });
+  return;
+ }
+ 
+ // 2. Initialize the Google OAuth 2.0 client only once when the page loads
+ codeClient = window.google.accounts.oauth2.initCodeClient({
+  client_id: '354475709339-2g48o0nrugv0f1kg9n4nbn798c9upaud.apps.googleusercontent.com',
+  scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
+  ux_mode: 'popup',
+  callback: async (response) => {
+   // Reset authentication state
+   isAuthenticating = false;
+   googleBtn.disabled = false;
+   
+   // Handle errors (popup closed, blocked, etc.)
+   if (response.error) {
+    if (response.error === 'popup_closed_by_user') {
+     return showToast('Google sign-in cancelled.', 'info');
+    }
+    
+    // Fallback to redirect flow if popup is blocked
+    if (response.error === 'popup_blocked_by_user' || response.error === 'popup_failed_to_open') {
+     showToast('Popup blocked. Redirecting to Google...', 'info');
+     const redirectClient = window.google.accounts.oauth2.initCodeClient({
+      client_id: '354475709339-2g48o0nrugv0f1kg9n4nbn798c9upaud.apps.googleusercontent.com',
+      scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
+      ux_mode: 'redirect',
+      redirect_uri: window.location.origin + '/login.html'
+     });
+     redirectClient.requestCode();
+     return;
+    }
+    
+    return showToast(`Google login failed: ${response.error}`, 'error');
+   }
+   
+   // Obtain authorization code
+   if (!response.code) {
+    return showToast('Failed to obtain Google authorization code.', 'error');
+   }
+   
+   try {
+    showToast('Verifying Google account...', 'info');
+    
+    // Send the secure authorization code to your backend
+    const res = await api.googleAuth(response.code);
+    
+    if (res.data && res.data.token) {
+     localStorage.setItem('smmmaria_token', res.data.token);
+     showToast('Login successful! Redirecting...', 'success');
+     setTimeout(() => {
+      window.location.href = 'services.html';
+     }, 1000);
+    } else {
+     throw new Error('Invalid response from server');
+    }
+   } catch (error) {
+    showToast(error.message || 'Backend authentication failed', 'error');
+   }
+  }
+ });
+ 
+ // 3. When the user clicks "Continue with Google", open the popup
  googleBtn.addEventListener('click', () => {
-  if (!window.google) {
+  if (!codeClient) {
    return showToast('Google services are still loading. Please try again in a moment.', 'error');
   }
   
-  // Initialize Google Identity Services
-  window.google.accounts.id.initialize({
-   // INSTRUCTION: Replace this with your actual Google OAuth Client ID from Google Cloud Console
-   client_id: '464869417910-ac27a2tuce107jfdqf0fm46m1gggi0d6.apps.googleusercontent.com',
-   callback: async (response) => {
-    try {
-     showToast('Verifying Google account...', 'info');
-     // Send the secure Google token to your backend
-     const res = await api.googleAuth(response.credential);
-     
-     if (res.data && res.data.token) {
-      localStorage.setItem('smmmaria_token', res.data.token);
-      showToast('Login successful! Redirecting...', 'success');
-      setTimeout(() => {
-       window.location.href = 'services.html';
-      }, 1000);
-     }
-    } catch (error) {
-     showToast(error.message || 'Google login failed', 'error');
-    }
-   }
-  });
+  // Prevent multiple clicks while authentication is in progress
+  if (isAuthenticating) return;
+  isAuthenticating = true;
+  googleBtn.disabled = true;
   
-  // Open the Google account chooser popup
-  window.google.accounts.id.prompt();
+  try {
+   // Open the Google account chooser popup
+   codeClient.requestCode();
+  } catch (error) {
+   isAuthenticating = false;
+   googleBtn.disabled = false;
+   showToast('Failed to open Google popup. Please check your popup blocker.', 'error');
+  }
  });
 }
 
 // Initialize Google button listener
 initGoogleAuth();
+
 
 // Expose functions to the global window object so inline HTML onsubmit attributes can access them
 window.handleLogin = handleLogin;
