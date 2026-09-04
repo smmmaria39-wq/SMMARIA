@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ==========================================
+         1. BASIC META & MOBILE VIEWPORT
+         ========================================== -->
+    <meta charset="UTF-8">
+  
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <title>SMMMARIA Panel Gallery | SMM Dashboard & API Interface Images</title>
+    
+    <!-- ==========================================
+         2. SEO METADATA (Crucial for Google Images)
+         ========================================== -->
+    <meta name="description" content="Explore the SMMMARIA Panel image gallery. View screenshots of our SMM dashboard, API integration interfaces, automated order processing, and social media growth analytics.">
+    <meta name="keywords" content="SMM Panel Images, SMMMARIA Dashboard, SMM Panel Screenshot, Social Media Marketing Panel, SMM API Interface, SMM Panel UI">
+    <meta name="author" content="SMM-MARIA">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://smmariay.site/gallery.html">
+    
+    <!-- ==========================================
+         3. SOCIAL SHARING
+         ========================================== -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="SMM-MARIA">
+    <meta property="og:title" content="SMMMARIA Panel Gallery | SMM Dashboard Images">
+    <meta property="og:description" content="View screenshots of our SMM dashboard, API integration interfaces, and automated order processing.">
+    <meta property="og:image" content="https://ik.imagekit.io/s95tumxuk/IMG_4153.png">
+    <meta property="og:url" content="https://smmaria.site/gallery.html">
+    
+    <!-- ==========================================
+         4. FAVICON & FONTS
+         ========================================== -->
+    <link rel="icon" type="image/png" href="assets/icons/favicon-32x32.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- ==========================================
+         5. STYLES (Matching SMMMARIA Design System)
+         ========================================== -->
+    <style>
+        :root {
+            --color-bg: #08164A;
+            --color-gold: #F5A623;
+            --color-text: #ffffff;
+            --color-text-muted: rgba(255, 255, 255, 0.7);
+            --color-glass-bg: rgba(255, 255, 255, 0.05);
+            --color-glass-border: rgba(255, 255, 255, 0.1);
+            
+            --space-sm: 16px;
+            --space-md: 24px;
+            --space-lg: 32px;
+            --space-xl: 48px;
+            --space-2xl: 64px;
+            
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            
+            --shadow-gold: 0 4px 15px rgba(245, 166, 35, 0.3);
+            --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+        }
+
+        /* Navbar */
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md) var(--space-xl);
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--color-glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--color-text);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+        .nav-logo span { color: var(--color-gold); }
+        
+        .nav-btn {
+            background: var(--color-gold);
+            color: var(--color-bg);
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform var(--transition-base), box-shadow var(--transition-base);
+        }
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-gold);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            padding: var(--space-2xl) var(--space-md);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero-section h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: var(--space-md);
+            background: linear-gradient(90deg, #fff, var(--color-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-section p {
+            color: var(--color-text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Gallery Grid */
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-md) var(--space-2xl);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .gallery-item {
+            background: var(--color-glass-bg);
+            border: 1px solid var(--color-glass-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: transform var(--transition-base), border-color var(--transition-base);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--color-gold);
+        }
+
+        .gallery-image-wrapper {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .gallery-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover .gallery-image-wrapper img {
+            transform: scale(1.05);
+        }
+
+        .gallery-caption {
+            padding: var(--space-md);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .gallery-caption h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: var(--space-sm);
+        }
+
+        .gallery-caption p {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: var(--space-xl) var(--space-md);
+            border-top: 1px solid var(--color-glass-border);
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .gallery-container {
+                grid-template-columns: 1fr;
+            }
+            .nav-bar { padding: var(--space-md); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================
+         STRUCTURED DATA FOR GOOGLE IMAGES
+         ========================================== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      "name": "SMMMARIA Panel Dashboard and Interface Gallery",
+      "description": "A collection of high-quality screenshots showcasing the SMMMARIA SMM Panel dashboard, API settings, and order processing interfaces.",
+      "url": "https://smmaria.site/gallery.html",
+      "image": [
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://ik.imagekit.io/s95tumxuk/IMG_5180.jpeg",
+          "name": "SMMMARIA Main Dashboard Interface",
+          "description": "Screenshot of the SMMMARIA SMM Panel main dashboard showing automated order statistics and user balance.",
+          "width": 1200,
+          "height": 630
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://ik.imagekit.io/s95tumxuk/IMG_5185.jpeg",
+          "name": "SMM Panel Analytics and Growth Charts",
+          "description": "Visual representation of social media growth analytics and order tracking available on the SMMMARIA platform.",
+          "width": 1200,
+          "height": 800
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://ik.imagekit.io/s95tumxuk/IMG_4713.png",
+          "name": "SMMMARIA API Integration Settings",
+          "description": "Screenshot displaying the API integration settings page for resellers using the SMMMARIA SMM Panel.",
+          "width": 1200,
+          "height": 800
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://ik.imagekit.io/s95tumxuk/IMG_5181.jpeg",
+          "name": "Social Media Marketing Services List",
+          "description": "Image showing the list of automated SMM services for Instagram, TikTok, and YouTube on the SMMMARIA panel.",
+          "width": 1200,
+          "height": 800
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://ik.imagekit.io/s95tumxuk/IMG_5182.jpeg",
+          "name": "Secure Payment and Wallet Top-up Interface",
+          "description": "Screenshot of the SMMMARIA secure payment gateway and wallet top-up interface for SaaS credits.",
+          "width": 1200,
+          "height": 800
+        },
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://ik.imagekit.io/s95tumxuk/IMG_5179.jpeg",
+          "name": "Order Processing and History Logs",
+          "description": "Administrative view of instant order processing logs and history within the SMMMARIA dashboard.",
+          "width": 1200,
+          "height": 800
+        }
+      ]
+    }
+    </script>
+
+    <!-- Navbar -->
+    <nav class="nav-bar">
+        <a href="index.html" class="nav-logo">SMM<span>MARIA</span></a>
+        <a href="register.html" class="nav-btn">Get Started</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1>SMMMARIA Panel Gallery</h1>
+        <p>Explore our SMM platform interface, API settings, and automated dashboard features. Get a visual tour of the #1 Social Media Marketing panel.</p>
+    </section>
+
+    <!-- ==========================================
+         GALLERY GRID
+         Note: Ensure every image has a highly descriptive 'alt' tag.
+         This is exactly what Google Image search reads.
+         ========================================== -->
+    <main class="gallery-container">
+        
+              <!-- Image 1 -->
+        <div class="gallery-item">
+            <div class="gallery-image-wrapper">
+                <!-- ⬇️ PUT YOUR IMAGE URL HERE ⬇️ -->
+                <img src="https://ik.imagekit.io/s95tumxuk/IMG_5165.png" alt="SMMMARIA Panel Dashboard Interface Overview" loading="lazy">
+            </div>
+            <div class="gallery-caption">
+                <h3>smmaria.site</h3>
+            </div>
+        </div>
+        
+        <!-- Image 2 -->
+        <div class="gallery-item">
+            <div class="gallery-image-wrapper">
+                <!-- ⬇️ PUT YOUR IMAGE URL HERE ⬇️ -->
+                <img src="https://ik.imagekit.io/s95tumxuk/IMG_5159.png" alt="SMM Panel Analytics and Growth Charts SMMMARIA" loading="lazy">
+            </div>
+            <div class="gallery-caption">
+                <h3>smmaria.site</h3>
+            </div>
+        </div>
+        
+        <!-- Image 3 -->
+        <div class="gallery-item">
+            <div class="gallery-image-wrapper">
+                <!-- ⬇️ PUT YOUR IMAGE URL HERE ⬇️ -->
+                <img src="https://ik.imagekit.io/s95tumxuk/b8481570-44a5-4480-a269-d0757cfbe48f.jpeg" alt="SMMMARIA API Integration Settings for Resellers" loading="lazy">
+            </div>
+            <div class="gallery-caption">
+                <h3>smmaria.site</h3>
+            </div>
+        </div>
+        
+        <!-- Image 4 -->
+        <div class="gallery-item">
+            <div class="gallery-image-wrapper">
+                <!-- ⬇️ PUT YOUR IMAGE URL HERE ⬇️ -->
+                <img src="https://ik.imagekit.io/s95tumxuk/IMG_4513.jpeg" alt="Social Media Marketing Services List SMMMARIA" loading="lazy">
+            </div>
+            <div class="gallery-caption">
+                <h3>smmaria.site</h3>
+            </div>
+        </div>
+        
+        <!-- Image 5 -->
+        <div class="gallery-item">
+            <div class="gallery-image-wrapper">
+                <!-- ⬇️ PUT YOUR IMAGE URL HERE ⬇️ -->
+                <img src="https://ik.imagekit.io/s95tumxuk/IMG_4243.png" alt="Secure Payment and Wallet Top-up Interface SMMMARIA" loading="lazy">
+            </div>
+            <div class="gallery-caption">
+                <h3>smmaria.site</h3>
+            </div>
+        </div>
+        
+        <!-- Image 6 -->
+        <div class="gallery-item">
+            <div class="gallery-image-wrapper">
+                <!-- ⬇️ PUT YOUR IMAGE URL HERE ⬇️ -->
+                <img src="https://ik.imagekit.io/s95tumxuk/IMG_5180.jpeg" alt="Order Processing and History Logs SMMMARIA Panel" loading="lazy">
+            </div>
+            <div class="gallery-caption">
+                <h3>smmaria.site</h3>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 SMM-MARIA. All Rights Reserved. Premium SMM Panel Services.</p>
+    </footer>
+
+</body>
+</html>

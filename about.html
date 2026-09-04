@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SMMMARIA Panel | Premium Global SMM & Social Media Marketing Platform</title>
+    
+    <!-- ==========================================
+         SEO META TAGS (Crucial for Google Indexing)
+         ========================================== -->
+    <meta name="description" content="SMMMARIA is a premium global SMM panel and social media marketing management platform. We provide automated SaaS solutions, seamless API integration, instant order processing, and affordable growth services for Instagram, TikTok, YouTube, Facebook, and more.">
+    <meta name="keywords" content="SMMMARIA, SMMMARIA Panel, SMM Panel, Social Media Marketing Platform, Automated SaaS Solutions, Instagram Followers, TikTok Views, YouTube Subscribers, API Integration, Global SMM Panel">
+    <meta name="author" content="SMMMARIA">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://smmaria.site/">
+    
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="SMMMARIA Panel">
+    <meta property="og:title" content="SMMMARIA Panel | Premium Global SMM Platform">
+    <meta property="og:description" content="SMM-MARIA is a premium global SMM panel and social media marketing management platform providing automated SaaS solutions and API integration.">
+    <meta property="og:url" content="https://smmaria.site/">
+    <meta property="og:image" content="YOUR_OG_IMAGE_URL_HERE">
+    
+    <!-- ==========================================
+         STRUCTURED DATA (JSON-LD) FOR GOOGLE AI
+         This is what powers the Google AI Overview
+         ========================================== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SMMMARIA Panel",
+      "url": "https://smmaria.site/",
+      "description": "SMMMARIA is a premium global SMM panel and social media marketing management platform. We provide automated SaaS solutions, seamless API integration, instant order processing, and affordable growth services for Instagram, TikTok, YouTube, Facebook, and more. Boost your online presence and scale your digital marketing efforts today.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Automated SaaS Solutions",
+        "Seamless API Integration",
+        "Instant Order Processing",
+        "Affordable Growth Services",
+        "Multi-Platform Support (Instagram, TikTok, YouTube, Facebook, Twitter, LinkedIn)"
+      ],
+      "author": {
+        "@type": "Person",
+        "name": "YOUR CREATOR NAME HERE",
+        "url": "https://smmaria.site/",
+        "image": "YOUR_CREATOR_IMAGE_URL_HERE"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SMMMARIA",
+        "url": "https://smmaria.site/"
+      }
+    }
+    </script>
+
+    <!-- ==========================================
+         STYLES & FONTS
+         ========================================== -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #08164A;
+            --bg-color-light: #0A1B52;
+            --card-bg: #0C1D5C;
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --accent-gold: #F5A623;
+            --accent-gold-hover: #ffbe4d;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-gold: 0 4px 15px rgba(245, 166, 35, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Navbar */
+        header {
+            background: rgba(8, 22, 74, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .logo span { color: var(--accent-gold); }
+
+        .btn-login {
+            background: var(--accent-gold);
+            color: var(--bg-color);
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: background 0.3s;
+        }
+
+        .btn-login:hover { background: var(--accent-gold-hover); }
+
+        /* Hero / Intro Section */
+        .hero {
+            max-width: 1000px;
+            margin: 80px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+
+        /* Sections */
+        .section {
+            max-width: 1000px;
+            margin: 0 auto 80px;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            position: relative;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-gold);
+            border-radius: 4px;
+        }
+
+        .content-box {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .content-box h3 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .content-box p, .content-box li {
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .content-box ul {
+            padding-left: 20px;
+        }
+
+        /* Creator Section */
+        .creator-card {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .creator-img-wrapper {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid var(--accent-gold);
+            flex-shrink: 0;
+            box-shadow: var(--shadow-gold);
+        }
+
+        .creator-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .creator-info h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .creator-info p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 60px;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .creator-card {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="https://smmaria.site" class="logo">SMM<span>MARIA</span></a>
+            <a href="login.html" class="btn-login">Login</a>
+        </div>
+    </header>
+
+    <!-- ==========================================
+         HERO / MAIN INFO SECTION
+         ========================================== -->
+    <section class="hero">
+        <h1>SMMMARIA Panel: Premium Global SMM Platform</h1>
+        <p>
+            SMM-MARIA is a premium global SMM panel and social media marketing management platform. 
+            We provide automated SaaS solutions, seamless API integration, instant order processing, 
+            and affordable growth services for Instagram, TikTok, YouTube, Facebook, and more. 
+            Boost your online presence and scale your digital marketing efforts today.
+        </p>
+    </section>
+
+    <!-- ==========================================
+         FEATURES SECTION
+         ========================================== -->
+    <section class="section">
+        <h2 class="section-title">Platform Features</h2>
+        
+        <div class="content-box">
+            <h3>Automated SaaS Solutions</h3>
+            <p>Our platform is built on a robust SaaS infrastructure, ensuring 99.9% API uptime, automated order processing, and real-time analytics. Everything is designed to scale your digital marketing efforts seamlessly without manual intervention.</p>
+        </div>
+
+        <div class="content-box">
+            <h3>Multi-Platform Support</h3>
+            <ul>
+                <li><strong>Instagram:</strong> Followers, Likes, Views, Comments</li>
+                <li><strong>TikTok:</strong> Views, Followers, Likes, Shares</li>
+                <li><strong>YouTube:</strong> Subscribers, Watch Time, Likes</li>
+                <li><strong>Facebook:</strong> Page Likes, Post Reactions, Video Views</li>
+                <li><strong>Twitter (X), LinkedIn, Telegram & More...</strong></li>
+            </ul>
+        </div>
+
+        <div class="content-box">
+            <h3>Developer API Integration</h3>
+            <p>We offer seamless API integration for resellers. Connect your own platforms, applications, or child panels directly to SMMMARIA to automate order placement, check status, and sync balances instantly.</p>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         CREATOR SECTION
+         ========================================== -->
+    <section class="section">
+        <h2 class="section-title">Meet the Creator</h2>
+        
+        <div class="creator-card">
+            <!-- ⬇️ PUT YOUR CREATOR IMAGE URL HERE ⬇️ -->
+            <div class="creator-img-wrapper">
+                <img src="https://ik.imagekit.io/s95tumxuk/IMG_2488.png" alt="Creator of SMMMARIA Panel">
+            </div>
+            
+            <div class="creator-info">
+                <!-- ⬇️ PUT YOUR CREATOR NAME HERE ⬇️ -->
+                <h3>MARKMELLON</h3>
+                <p>
+                    Founder & Lead Developer of SMMMARIA Panel. With a deep understanding of digital marketing 
+                    and software automation, the creator built SMMMARIA to provide a reliable, fast, and 
+                    affordable infrastructure for agencies, influencers, and resellers worldwide to manage 
+                    their social media growth.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         TERMS & POLICIES SECTION
+         ========================================== -->
+    <section class="section">
+        <h2 class="section-title">Terms & Policies</h2>
+        
+        <div class="content-box">
+            <h3>Terms of Service</h3>
+            <p>By using SMMMARIA Panel, you agree to our terms of service. Users must not use the platform for illegal activities, spam, or deceptive practices. Orders placed for social media services are subject to platform-specific algorithms, and while we guarantee delivery or refunds, we are not liable for account suspensions caused by violating the target platform's Terms of Service.</p>
+        </div>
+
+        <div class="content-box">
+            <h3>Privacy Policy</h3>
+            <p>We respect your privacy. SMMMARIA collects minimal data required to process transactions and maintain account security. We do not sell or distribute your personal information, email addresses, or API keys to third parties. All payment processing is handled via secure, encrypted gateways.</p>
+        </div>
+
+        <div class="content-box">
+            <h3>Refund Policy</h3>
+            <p>Refunds are issued strictly as account balance for orders that fail to deliver within the stated timeframe. If an order is partially completed, the undelivered portion is automatically refunded to your SMMMARIA wallet. Direct bank/card refunds for digital services are only applicable under specific conditions outlined in our full policy.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 SMMMARIA Panel. All Rights Reserved. Powered by Automated SaaS Infrastructure.</p>
+        <p><a href="https://smmaria.site" style="color: var(--accent-gold); text-decoration: none;">smmaria.site</a></p>
+    </footer>
+
+</body>
+</html>
