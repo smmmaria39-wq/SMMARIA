@@ -66,8 +66,9 @@ export const api = {
  
  // Wallet & Payments
  getWallet: () => request('/wallet'),
- createDeposit: (payload) => request('/payments/deposit', 'POST', payload),
- getPayments: () => request('/payments'),
+  createDeposit: (payload) => request('/payments/deposit', 'POST', payload),
+  cancelPendingDeposit: () => request('/payments/cancel', 'POST'), // <-- ADD THIS LINE
+  getPayments: () => request('/payments'),
  
  // Child Panel
  purchaseChildPanel: (data) => request('/child-panel/purchase', 'POST', data),
