@@ -21,18 +21,6 @@ function formatUgPhone(phone) {
 }
 
 export default async function initWallet() {
- // 1. Check if user was redirected back from MarzPay checkout
- const urlParams = new URLSearchParams(window.location.search);
- const paymentStatus = urlParams.get('status');
- 
- if (paymentStatus === 'cancelled') {
-  showToast('Payment was cancelled.', 'info');
-  window.history.replaceState({}, document.title, window.location.pathname);
- } else if (paymentStatus === 'success') {
-  showToast('Payment successful! Your wallet will be updated shortly.', 'success');
-  window.history.replaceState({}, document.title, window.location.pathname);
- }
-
  const balanceEl = $('.balance-card__amount');
  const tbody = $('.transactions-card tbody');
  
@@ -180,98 +168,98 @@ export default async function initWallet() {
    
    const method = selectedMethodInput.value;
    
-   // ===============================================
-   // MARZPAY CARD PAYMENT INTERCEPTION (BOTTOM SHEET)
-   // ===============================================
-   if (method === 'card') {
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = originalBtnText;
+  // ===============================================
+// MARZPAY CARD PAYMENT INTERCEPTION (BOTTOM SHEET)
+// ===============================================
+if (method === 'card') {
+ submitBtn.disabled = false;
+ submitBtn.innerHTML = originalBtnText;
+ 
+ const sheet = document.getElementById('cardPaymentSheet');
+ const sheetAmount = document.getElementById('cardSheetAmount');
+ const confirmBtn = document.getElementById('confirmCardPayBtn');
+ const cancelBtn = document.getElementById('cancelCardPayBtn');
+ 
+ if (sheet && confirmBtn) {
+  
+  // Update amount
+  sheetAmount.textContent = formatCurrency(amount);
+  
+  // Show sheet
+  sheet.style.display = 'flex';
+  
+  // Trigger CSS transition
+  requestAnimationFrame(() => {
+   sheet.classList.add('active');
+  });
+  
+  // Close function
+  const closeSheet = () => {
+   sheet.classList.remove('active');
+   
+   setTimeout(() => {
+    sheet.style.display = 'none';
+   }, 200);
+   
+   confirmBtn.disabled = false;
+   confirmBtn.innerText = 'Continue to Secure Checkout';
+  };
+  
+  // Cancel button
+  if (cancelBtn) {
+   cancelBtn.onclick = closeSheet;
+  }
+  
+  // Click outside
+  sheet.onclick = (e) => {
+   if (e.target === sheet) {
+    closeSheet();
+   }
+  };
+  
+  // Continue to MarzPay
+  confirmBtn.onclick = async () => {
+   
+   if (confirmBtn.disabled) return;
+   
+   confirmBtn.disabled = true;
+   confirmBtn.innerText = 'Redirecting to secure checkout...';
+   
+   try {
     
-    const sheet = document.getElementById('cardPaymentSheet');
-    const sheetAmount = document.getElementById('cardSheetAmount');
-    const confirmBtn = document.getElementById('confirmCardPayBtn');
-    const cancelBtn = document.getElementById('cancelCardPayBtn');
+    const res = await api.createDeposit({
+     amount,
+     method: 'card',
+     email: userEmail
+    });
     
-    if (sheet && confirmBtn) {
-     
-     // Update amount
-     sheetAmount.textContent = formatCurrency(amount);
-     
-     // Show sheet
-     sheet.style.display = 'flex';
-     
-     // Trigger CSS transition
-     requestAnimationFrame(() => {
-      sheet.classList.add('active');
-     });
-     
-     // Close function
-     const closeSheet = () => {
-      sheet.classList.remove('active');
-      
-      setTimeout(() => {
-       sheet.style.display = 'none';
-      }, 200);
-      
-      confirmBtn.disabled = false;
-      confirmBtn.innerText = 'Continue to Secure Checkout';
-     };
-     
-     // Cancel button
-     if (cancelBtn) {
-      cancelBtn.onclick = closeSheet;
-     }
-     
-     // Click outside
-     sheet.onclick = (e) => {
-      if (e.target === sheet) {
-       closeSheet();
-      }
-     };
-     
-     // Continue to MarzPay
-     confirmBtn.onclick = async () => {
-      
-      if (confirmBtn.disabled) return;
-      
-      confirmBtn.disabled = true;
-      confirmBtn.innerText = 'Redirecting to secure checkout...';
-      
-      try {
-       
-       const res = await api.createDeposit({
-        amount,
-        method: 'card',
-        email: userEmail
-       });
-       
-       if (res?.data?.redirect_url) {
-        window.location.href = res.data.redirect_url;
-        return;
-       }
-       
-       throw new Error('Redirect URL not received from server.');
-       
-      } catch (error) {
-       
-       showToast(
-        error.message || 'Failed to initiate card payment.',
-        'error'
-       );
-       
-       confirmBtn.disabled = false;
-       confirmBtn.innerText = 'Continue to Secure Checkout';
-      }
-     };
+    if (res?.data?.redirect_url) {
+     window.location.href = res.data.redirect_url;
+     return;
     }
     
-    return;
+    throw new Error('Redirect URL not received from server.');
+    
+   } catch (error) {
+    
+    showToast(
+     error.message || 'Failed to initiate card payment.',
+     'error'
+    );
+    
+    confirmBtn.disabled = false;
+    confirmBtn.innerText = 'Continue to Secure Checkout';
    }
+  };
+ }
+ 
+ return;
+}
    
    // Show processing message INSTANTLY so you know the click worked
    showToast('Processing deposit request...', 'info');
    
-   // Base payload with hidden fields and required email
+     // Base payload with hidden fields and required email
    let payload = {
     amount,
     method,
@@ -279,7 +267,7 @@ export default async function initWallet() {
     country: $('#deposit-country')?.value || 'UG',
     reference: ($('#deposit-reference')?.value || 'SMMMARIA-DEPOSIT') + '-' + Date.now(),
     description: $('#deposit-description')?.value || 'Wallet Deposit',
-    callback_url: $('#deposit-callback')?.value || 'https://smmaria.netlify.app/api/v1/payments/webhook'
+    callback_url: $('#deposit-callback')?.value || 'https://smmmaria-backend-production.up.railway.app/api/v1/payments/webhook'
    };
    
    // Gather dynamic field data based on selection
