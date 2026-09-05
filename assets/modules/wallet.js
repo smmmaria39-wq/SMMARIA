@@ -135,6 +135,52 @@ export default async function initWallet() {
    });
   });
   
+    // Check for pending deposits and show Cancel button
+  const checkPendingAndShowCancel = async () => {
+   try {
+    const res = await api.getPayments();
+    const userPayments = res.data || [];
+    const hasPending = userPayments.some(p =>
+     p.userId === req_user_id && // Assuming you have the user ID, or just filter by status/method
+     p.status === 'pending' &&
+     (p.method === 'mtn' || p.method === 'airtel')
+    );
+    
+    if (hasPending) {
+     // Show cancel button if it doesn't exist
+     if (!document.getElementById('cancelPendingBtn')) {
+      const cancelBtn = document.createElement('button');
+      cancelBtn.id = 'cancelPendingBtn';
+      cancelBtn.className = 'btn btn--danger btn--block';
+      cancelBtn.style.marginTop = '10px';
+      cancelBtn.innerText = 'Cancel Pending Deposit';
+      cancelBtn.onclick = async () => {
+       cancelBtn.disabled = true;
+       cancelBtn.innerText = 'Cancelling...';
+       try {
+        await api.cancelPendingDeposit();
+        showToast('Pending deposit cancelled. You can try again now.', 'success');
+        cancelBtn.remove();
+        initWallet(); // Refresh UI
+       } catch (err) {
+        showToast(err.message || 'Failed to cancel deposit.', 'error');
+        cancelBtn.disabled = false;
+        cancelBtn.innerText = 'Cancel Pending Deposit';
+       }
+      };
+      depositForm.appendChild(cancelBtn);
+     }
+    } else {
+     const existingCancelBtn = document.getElementById('cancelPendingBtn');
+     if (existingCancelBtn) existingCancelBtn.remove();
+    }
+   } catch (e) {
+    console.error('Failed to check pending deposits');
+   }
+  };
+  
+  checkPendingAndShowCancel();
+  
   // 4. Handle Form Submission
   depositForm.addEventListener('submit', async (e) => {
    e.preventDefault();
