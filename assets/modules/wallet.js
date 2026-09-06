@@ -140,8 +140,10 @@ export default async function initWallet() {
    try {
     const res = await api.getPayments();
     const userPayments = res.data || [];
+    
+    // FIX: Removed the undefined 'req_user_id' variable. 
+    // The backend already filters payments to only return the logged-in user's data.
     const hasPending = userPayments.some(p =>
-     p.userId === req_user_id && // Assuming you have the user ID, or just filter by status/method
      p.status === 'pending' &&
      (p.method === 'mtn' || p.method === 'airtel')
     );
