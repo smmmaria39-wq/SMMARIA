@@ -58,21 +58,64 @@ export default async function initWallet() {
   if (tbody) {
    if (!currentTransactions || currentTransactions.length === 0) {
     tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No transactions yet. Click Add Funds to make your first deposit!</td></tr>`;
-   } else {
-    tbody.innerHTML = currentTransactions.map(tx => {
-     return `
-                    <tr>
-                        <td>#${tx.id.substring(0, 8)}</td>
-                        <td>${tx.type}</td>
-                        <td class="${tx.type === 'deposit' || tx.type === 'refund' ? 'text-success' : 'text-danger'}">
-                          ${tx.type === 'deposit' || tx.type === 'refund' ? '+' : '-'}${formatCurrency(tx.amount)}
-                        </td>
-                        <td>${formatDate(tx.date)}</td>
-                        <td><span class="badge badge--${tx.status === 'approved' ? 'success' : 'warning'}">${tx.status}</span></td>
-                    </tr>
-                `;
-    }).join('');
+    return;
    }
+
+   // FIX: Sort transactions by date descending (Newest first)
+   const sortedTx = [...currentTransactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+   // Helper to determine date category
+   const getCategory = (dateStr) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    if (date >= today) return "Today";
+    if (date >= yesterday) return "Yesterday";
+    if (date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) return "This Month";
+    return "Older";
+   };
+
+   let html = '';
+   let lastCategory = '';
+
+   // Check if there are any transactions today
+   const hasToday = sortedTx.some(tx => getCategory(tx.date) === "Today");
+   if (!hasToday) {
+    html += `<tr style="background: var(--bg-body);"><td colspan="5" style="font-weight: 700; padding: 10px 15px; color: var(--text-secondary); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">Today</td></tr>`;
+    html += `<tr><td colspan="5" class="text-center text-muted" style="padding: 15px;">No transactions done today.</td></tr>`;
+   }
+
+   sortedTx.forEach(tx => {
+    const category = getCategory(tx.date);
+    if (category !== lastCategory) {
+     // Add a category header row
+     html += `<tr style="background: var(--bg-body);"><td colspan="5" style="font-weight: 700; padding: 10px 15px; color: var(--text-secondary); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">${category}</td></tr>`;
+     lastCategory = category;
+    }
+
+    // Fix badge logic to handle new backend statuses (completed, processing, cancelled, etc.)
+    let badgeClass = 'badge--warning';
+    if (tx.status === 'approved' || tx.status === 'completed') badgeClass = 'badge--success';
+    else if (tx.status === 'rejected' || tx.status === 'cancelled') badgeClass = 'badge--danger';
+
+    // Add the transaction row
+    html += `
+     <tr>
+      <td>#${tx.id.substring(0, 8)}</td>
+      <td>${tx.type}</td>
+      <td class="${tx.type === 'deposit' || tx.type === 'refund' ? 'text-success' : 'text-danger'}">
+        ${tx.type === 'deposit' || tx.type === 'refund' ? '+' : '-'}${formatCurrency(tx.amount)}
+      </td>
+      <td>${formatDate(tx.date)}</td>
+      <td><span class="badge ${badgeClass}">${tx.status}</span></td>
+     </tr>
+    `;
+   });
+
+   tbody.innerHTML = html;
   }
  }
  
@@ -136,13 +179,13 @@ export default async function initWallet() {
   });
   
     // Check for pending deposits and show Cancel button
+  let pendingPollInterval = null; // Declare this at the top of your initWallet function or outside it
+  
   const checkPendingAndShowCancel = async () => {
    try {
     const res = await api.getPayments();
     const userPayments = res.data || [];
     
-    // FIX: Removed the undefined 'req_user_id' variable. 
-    // The backend already filters payments to only return the logged-in user's data.
     const hasPending = userPayments.some(p =>
      p.status === 'pending' &&
      (p.method === 'mtn' || p.method === 'airtel')
@@ -163,6 +206,7 @@ export default async function initWallet() {
         await api.cancelPendingDeposit();
         showToast('Pending deposit cancelled. You can try again now.', 'success');
         cancelBtn.remove();
+        if (pendingPollInterval) clearInterval(pendingPollInterval); // Stop polling
         initWallet(); // Refresh UI
        } catch (err) {
         showToast(err.message || 'Failed to cancel deposit.', 'error');
@@ -172,9 +216,42 @@ export default async function initWallet() {
       };
       depositForm.appendChild(cancelBtn);
      }
+     
+     // START POLLING: If there's a pending payment, check every 10 seconds if it was approved
+     if (!pendingPollInterval) {
+      pendingPollInterval = setInterval(async () => {
+       try {
+        const pollRes = await api.getPayments();
+        const stillPending = (pollRes.data || []).some(p =>
+         p.status === 'pending' && (p.method === 'mtn' || p.method === 'airtel')
+        );
+        
+        // If the payment is no longer pending, it means it was successful (or rejected/cancelled)
+        if (!stillPending) {
+         clearInterval(pendingPollInterval);
+         pendingPollInterval = null;
+         
+         const btn = document.getElementById('cancelPendingBtn');
+         if (btn) btn.remove();
+         
+         showToast('Deposit successful! Your wallet has been updated.', 'success');
+         initWallet(); // Reload wallet balance and UI
+        }
+       } catch (e) {
+        console.error('Polling error:', e);
+       }
+      }, 10000); // 10 seconds
+     }
+     
     } else {
+     // If no pending payment, remove the button and stop polling
      const existingCancelBtn = document.getElementById('cancelPendingBtn');
      if (existingCancelBtn) existingCancelBtn.remove();
+     
+     if (pendingPollInterval) {
+      clearInterval(pendingPollInterval);
+      pendingPollInterval = null;
+     }
     }
    } catch (e) {
     console.error('Failed to check pending deposits');
@@ -217,92 +294,92 @@ export default async function initWallet() {
    const method = selectedMethodInput.value;
    
   // ===============================================
-// MARZPAY CARD PAYMENT INTERCEPTION (BOTTOM SHEET)
-// ===============================================
-if (method === 'card') {
- submitBtn.disabled = false;
- submitBtn.innerHTML = originalBtnText;
- 
- const sheet = document.getElementById('cardPaymentSheet');
- const sheetAmount = document.getElementById('cardSheetAmount');
- const confirmBtn = document.getElementById('confirmCardPayBtn');
- const cancelBtn = document.getElementById('cancelCardPayBtn');
- 
- if (sheet && confirmBtn) {
-  
-  // Update amount
-  sheetAmount.textContent = formatCurrency(amount);
-  
-  // Show sheet
-  sheet.style.display = 'flex';
-  
-  // Trigger CSS transition
-  requestAnimationFrame(() => {
-   sheet.classList.add('active');
-  });
-  
-  // Close function
-  const closeSheet = () => {
-   sheet.classList.remove('active');
+  // MARZPAY CARD PAYMENT INTERCEPTION (BOTTOM SHEET)
+  // ===============================================
+  if (method === 'card') {
+   submitBtn.disabled = false;
+   submitBtn.innerHTML = originalBtnText;
    
-   setTimeout(() => {
-    sheet.style.display = 'none';
-   }, 200);
+   const sheet = document.getElementById('cardPaymentSheet');
+   const sheetAmount = document.getElementById('cardSheetAmount');
+   const confirmBtn = document.getElementById('confirmCardPayBtn');
+   const cancelBtn = document.getElementById('cancelCardPayBtn');
    
-   confirmBtn.disabled = false;
-   confirmBtn.innerText = 'Continue to Secure Checkout';
-  };
-  
-  // Cancel button
-  if (cancelBtn) {
-   cancelBtn.onclick = closeSheet;
-  }
-  
-  // Click outside
-  sheet.onclick = (e) => {
-   if (e.target === sheet) {
-    closeSheet();
-   }
-  };
-  
-  // Continue to MarzPay
-  confirmBtn.onclick = async () => {
-   
-   if (confirmBtn.disabled) return;
-   
-   confirmBtn.disabled = true;
-   confirmBtn.innerText = 'Redirecting to secure checkout...';
-   
-   try {
+   if (sheet && confirmBtn) {
     
-    const res = await api.createDeposit({
-     amount,
-     method: 'card',
-     email: userEmail
+    // Update amount
+    sheetAmount.textContent = formatCurrency(amount);
+    
+    // Show sheet
+    sheet.style.display = 'flex';
+    
+    // Trigger CSS transition
+    requestAnimationFrame(() => {
+     sheet.classList.add('active');
     });
     
-    if (res?.data?.redirect_url) {
-     window.location.href = res.data.redirect_url;
-     return;
+    // Close function
+    const closeSheet = () => {
+     sheet.classList.remove('active');
+     
+     setTimeout(() => {
+      sheet.style.display = 'none';
+     }, 200);
+     
+     confirmBtn.disabled = false;
+     confirmBtn.innerText = 'Continue to Secure Checkout';
+    };
+    
+    // Cancel button
+    if (cancelBtn) {
+     cancelBtn.onclick = closeSheet;
     }
     
-    throw new Error('Redirect URL not received from server.');
+    // Click outside
+    sheet.onclick = (e) => {
+     if (e.target === sheet) {
+      closeSheet();
+     }
+    };
     
-   } catch (error) {
-    
-    showToast(
-     error.message || 'Failed to initiate card payment.',
-     'error'
-    );
-    
-    confirmBtn.disabled = false;
-    confirmBtn.innerText = 'Continue to Secure Checkout';
+    // Continue to MarzPay
+    confirmBtn.onclick = async () => {
+     
+     if (confirmBtn.disabled) return;
+     
+     confirmBtn.disabled = true;
+     confirmBtn.innerText = 'Redirecting to secure checkout...';
+     
+     try {
+      
+      const res = await api.createDeposit({
+       amount,
+       method: 'card',
+       email: userEmail
+      });
+      
+      if (res?.data?.redirect_url) {
+       window.location.href = res.data.redirect_url;
+       return;
+      }
+      
+      throw new Error('Redirect URL not received from server.');
+      
+     } catch (error) {
+      
+      showToast(
+       error.message || 'Failed to initiate card payment.',
+       'error'
+      );
+      
+      confirmBtn.disabled = false;
+      confirmBtn.innerText = 'Continue to Secure Checkout';
+     }
+    };
    }
-  };
- }
- 
- return;
-}
+   
+   return;
+  }
    
    // Show processing message INSTANTLY so you know the click worked
    showToast('Processing deposit request...', 'info');
@@ -371,4 +448,4 @@ if (method === 'card') {
    }
   });
  }
-}
+} 
