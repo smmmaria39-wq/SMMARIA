@@ -132,6 +132,7 @@ export default async function initWallet() {
    }
    html += `</td></tr>`;
    
+   // Render the HTML to the DOM
    tbody.innerHTML = html;
    
    // Attach event listeners to the injected buttons
@@ -150,10 +151,8 @@ export default async function initWallet() {
      updateWalletUI(); // Re-render with today only
     });
    }
-
-   tbody.innerHTML = html;
-  }
- }
+   }
+   }
  
  // Listen for currency changes to re-render wallet balance and transactions
  window.addEventListener('currencyChanged', updateWalletUI);
