@@ -61,9 +61,9 @@ export default async function initWallet() {
     return;
    }
 
-   // FIX: Sort transactions by date descending (Newest first)
+    // FIX: Sort transactions by date descending (Newest first)
    const sortedTx = [...currentTransactions].sort((a, b) => new Date(b.date) - new Date(a.date));
-
+   
    // Helper to determine date category
    const getCategory = (dateStr) => {
     const date = new Date(dateStr);
@@ -71,49 +71,85 @@ export default async function initWallet() {
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
-
+    
     if (date >= today) return "Today";
     if (date >= yesterday) return "Yesterday";
     if (date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()) return "This Month";
     return "Older";
    };
-
+   
    let html = '';
    let lastCategory = '';
-
-   // Check if there are any transactions today
-   const hasToday = sortedTx.some(tx => getCategory(tx.date) === "Today");
-   if (!hasToday) {
-    html += `<tr style="background: var(--bg-body);"><td colspan="5" style="font-weight: 700; padding: 10px 15px; color: var(--text-secondary); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">Today</td></tr>`;
-    html += `<tr><td colspan="5" class="text-center text-muted" style="padding: 15px;">No transactions done today.</td></tr>`;
-   }
-
-   sortedTx.forEach(tx => {
-    const category = getCategory(tx.date);
-    if (category !== lastCategory) {
-     // Add a category header row
-     html += `<tr style="background: var(--bg-body);"><td colspan="5" style="font-weight: 700; padding: 10px 15px; color: var(--text-secondary); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">${category}</td></tr>`;
-     lastCategory = category;
+   
+   // Determine if we are showing all or just today
+   const isViewingAll = window.viewAllWalletTx || false;
+   const displayTx = isViewingAll ? sortedTx : sortedTx.filter(tx => getCategory(tx.date) === "Today");
+   
+   if (displayTx.length === 0) {
+    if (!isViewingAll) {
+     html += `<tr style="background: var(--bg-body);"><td colspan="5" style="font-weight: 700; padding: 10px 15px; color: var(--text-secondary); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">Today</td></tr>`;
+     html += `<tr><td colspan="5" class="text-center text-muted" style="padding: 15px;">No transactions done today.</td></tr>`;
+    } else {
+     html += `<tr><td colspan="5" class="text-center text-muted" style="padding: 15px;">No transactions found.</td></tr>`;
     }
-
-    // Fix badge logic to handle new backend statuses (completed, processing, cancelled, etc.)
-    let badgeClass = 'badge--warning';
-    if (tx.status === 'approved' || tx.status === 'completed') badgeClass = 'badge--success';
-    else if (tx.status === 'rejected' || tx.status === 'cancelled') badgeClass = 'badge--danger';
-
-    // Add the transaction row
-    html += `
-     <tr>
-      <td>#${tx.id.substring(0, 8)}</td>
-      <td>${tx.type}</td>
-      <td class="${tx.type === 'deposit' || tx.type === 'refund' ? 'text-success' : 'text-danger'}">
-        ${tx.type === 'deposit' || tx.type === 'refund' ? '+' : '-'}${formatCurrency(tx.amount)}
-      </td>
-      <td>${formatDate(tx.date)}</td>
-      <td><span class="badge ${badgeClass}">${tx.status}</span></td>
-     </tr>
-    `;
-   });
+   } else {
+    displayTx.forEach(tx => {
+     const category = getCategory(tx.date);
+     // Only add category headers if viewing all, or if it's the "Today" header
+     if (isViewingAll || category === "Today") {
+      if (category !== lastCategory) {
+       html += `<tr style="background: var(--bg-body);"><td colspan="5" style="font-weight: 700; padding: 10px 15px; color: var(--text-secondary); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">${category}</td></tr>`;
+       lastCategory = category;
+      }
+     }
+     
+     // Fix badge logic to handle new backend statuses (completed, processing, cancelled, etc.)
+     let badgeClass = 'badge--warning';
+     if (tx.status === 'approved' || tx.status === 'completed') badgeClass = 'badge--success';
+     else if (tx.status === 'rejected' || tx.status === 'cancelled') badgeClass = 'badge--danger';
+     
+     // Add the transaction row
+     html += `
+      <tr>
+       <td>#${tx.id.substring(0, 8)}</td>
+       <td>${tx.type}</td>
+       <td class="${tx.type === 'deposit' || tx.type === 'refund' ? 'text-success' : 'text-danger'}">
+         ${tx.type === 'deposit' || tx.type === 'refund' ? '+' : '-'}${formatCurrency(tx.amount)}
+       </td>
+       <td>${formatDate(tx.date)}</td>
+       <td><span class="badge ${badgeClass}">${tx.status}</span></td>
+      </tr>
+     `;
+    });
+   }
+   
+   // Inject the toggle button at the bottom of the table
+   html += `<tr><td colspan="5" style="text-align: center; padding: 15px; border-top: 2px solid var(--border-color);">`;
+   if (!isViewingAll) {
+    html += `<button id="viewAllTxBtn" class="btn btn--outline btn--sm">View all transactions</button>`;
+   } else {
+    html += `<button id="hideTxBtn" class="btn btn--outline btn--sm">Hide old transactions</button>`;
+   }
+   html += `</td></tr>`;
+   
+   tbody.innerHTML = html;
+   
+   // Attach event listeners to the injected buttons
+   const viewBtn = document.getElementById('viewAllTxBtn');
+   if (viewBtn) {
+    viewBtn.addEventListener('click', () => {
+     window.viewAllWalletTx = true;
+     updateWalletUI(); // Re-render with all transactions
+    });
+   }
+   
+   const hideBtn = document.getElementById('hideTxBtn');
+   if (hideBtn) {
+    hideBtn.addEventListener('click', () => {
+     window.viewAllWalletTx = false;
+     updateWalletUI(); // Re-render with today only
+    });
+   }
 
    tbody.innerHTML = html;
   }
