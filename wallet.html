@@ -489,7 +489,7 @@
                     
                                         <label class="payment-tile" onclick="document.getElementById('countryCheckModal').classList.add('active'); document.getElementById('countryCheckModal').style.display='flex';" style="cursor: pointer;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="#F4B342" stroke-width="2" style="height: 24px; width: 24px; margin-bottom: 5px;"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                        <div style="font-weight: 600; font-size: 14px;">Supported Countries</div>
+                        <div style="font-weight: 600; font-size: 14px;">Other Methods</div>
                     </label>
 
                    
@@ -643,77 +643,115 @@
         <!-- MOBILE OVERLAY -->
         <div class="sidebar-overlay" id="sidebar-overlay"></div>
     </div>
-<!-- COUNTRY CHECK MODAL -->
+<!-- PAYMENT METHODS MODAL -->
 <div class="modal-overlay" id="countryCheckModal" style="display: none; z-index: 2000;">
     <div class="modal" style="max-width: 500px; width: 100%; height: 80vh; display: flex; flex-direction: column;">
         <div class="modal__header">
-            <h3 class="modal__title">Supported Countries</h3>
+            <h3 class="modal__title">Supported Payment Methods</h3>
             <button class="modal__close" onclick="document.getElementById('countryCheckModal').classList.remove('active'); document.getElementById('countryCheckModal').style.display='none';">&times;</button>
         </div>
         <div class="modal__body" style="flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 20px;">
-            <input type="text" id="countrySearchInput" class="form-input" placeholder="🔍 Search your country..." style="margin-bottom: 15px;">
+            <input type="text" id="countrySearchInput" class="form-input" placeholder="🔍 Search payment methods..." style="margin-bottom: 15px;">
             <div id="countryListContainer" style="flex: 1; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;">
-                <!-- Countries will be injected here by JS -->
+                <!-- Payment methods will be injected here by JS -->
             </div>
         </div>
     </div>
 </div>
 
-<!-- Script to populate and search countries -->
+<!-- Script to populate and search payment methods -->
 <script>
-    const allCountries = [
-            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria",
-            "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan",
-            "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia",
-            "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica",
-            "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt",
-            "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon",
-            "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana",
-            "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel",
-            "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea (North)", "Korea (South)", "Kosovo",
-            "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania",
-            "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius",
-            "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia",
-            "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Norway", "Oman",
-            "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar",
-            "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia",
-            "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa",
-            "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan",
-            "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu",
-            "Uganda", "Ukraine", "United Arab Emirates","United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+    // List of global payment methods. 
+    // 'status: active' means it's currently integrated. 'status: coming_soon' means it's pending API integration.
+    const allPaymentMethods = [
+        { name: "MTN Mobile Money", region: "Uganda/Africa", status: "active", methodId: "mtn", icon: "📱" },
+        { name: "Airtel Money", region: "Uganda/Africa", status: "active", methodId: "airtel", icon: "📱" },
+        { name: "Visa / Mastercard", region: "Global", status: "active", methodId: "card", icon: "💳" },
+        
+        // --- Coming Soon ---
+        { name: "PayPal", region: "Global", status: "coming_soon", methodId: "paypal", icon: "🅿️" },
+        { name: "Bitcoin (BTC)", region: "Crypto", status: "coming_soon", methodId: "btc", icon: "₿" },
+        { name: "Ethereum (ETH)", region: "Crypto", status: "coming_soon", methodId: "eth", icon: "Ξ" },
+        { name: "USDT (TRC20)", region: "Crypto", status: "coming_soon", methodId: "usdt_trc20", icon: "₮" },
+        { name: "M-Pesa", region: "Kenya/Tanzania", status: "coming_soon", methodId: "mpesa", icon: "📱" },
+        { name: "MoMo", region: "Ghana/Cameroon", status: "coming_soon", methodId: "momo", icon: "📱" },
+        { name: "Apple Pay", region: "Global", status: "coming_soon", methodId: "apple_pay", icon: "🍎" },
+        { name: "Google Pay", region: "Global", status: "coming_soon", methodId: "google_pay", icon: "🇬" },
+        { name: "Skrill", region: "Global", status: "coming_soon", methodId: "skrill", icon: " 💳" },
+        { name: "Neteller", region: "Global", status: "coming_soon", methodId: "neteller", icon: " 💳" },
+        { name: "Alipay", region: "China", status: "coming_soon", methodId: "alipay", icon: "🇨🇳" },
+        { name: "WeChat Pay", region: "China", status: "coming_soon", methodId: "wechat", icon: "🇨🇳" },
+        { name: "UPI", region: "India", status: "coming_soon", methodId: "upi", icon: "🇮🇳" },
+        { name: "Pix", region: "Brazil", status: "coming_soon", methodId: "pix", icon: "🇧🇷" },
+        { name: "OXXO", region: "Mexico", status: "coming_soon", methodId: "oxxo", icon: "🇲🇽" },
+        { name: "SEPA Bank Transfer", region: "Europe", status: "coming_soon", methodId: "sepa", icon: "🏦" },
+        { name: "iDEAL", region: "Netherlands", status: "coming_soon", methodId: "ideal", icon: "🇳🇱" },
+        { name: "Sofort", region: "Germany", status: "coming_soon", methodId: "sofort", icon: "🇩🇪" },
+        { name: "GCash", region: "Philippines", status: "coming_soon", methodId: "gcash", icon: "🇵🇭" }
     ];
-
-    const countryListContainer = document.getElementById('countryListContainer');
-    const countrySearchInput = document.getElementById('countrySearchInput');
-
-    // Sort countries alphabetically
-    allCountries.sort();
-
+    
+    const paymentListContainer = document.getElementById('countryListContainer');
+    const paymentSearchInput = document.getElementById('countrySearchInput');
+    
+    // Sort methods alphabetically
+    allPaymentMethods.sort((a, b) => a.name.localeCompare(b.name));
+    
     // Function to render the list
-    function renderCountries(countries) {
-        if (countries.length === 0) {
-            countryListContainer.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">Country not found.</p>';
+    function renderPaymentMethods(methods) {
+        if (methods.length === 0) {
+            paymentListContainer.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 20px;">Payment method not found.</p>';
             return;
         }
         
-        countryListContainer.innerHTML = countries.map(country => {
-            return `<div style="padding: 12px 10px; border-bottom: 1px solid var(--border-color); color: var(--text-primary); font-weight: 500; font-size: 14px; display: flex; align-items: center; gap: 10px;">
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--color-success)" stroke-width="2"><path d="M20 6L9 17l-5-5"></path></svg>
-                        ${country}
+        paymentListContainer.innerHTML = methods.map(method => {
+            const badgeClass = method.status === 'active' ? 'badge--success' : 'badge--warning';
+            const badgeText = method.status === 'active' ? 'Active' : 'Coming Soon';
+            const iconHtml = method.icon ? `<span style="font-size: 18px; margin-right: 10px;">${method.icon}</span>` : '';
+            
+            return `<div data-method-id="${method.methodId}" data-status="${method.status}" style="padding: 12px 10px; border-bottom: 1px solid var(--border-color); color: var(--text-primary); font-weight: 500; font-size: 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.2s;">
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            ${iconHtml}
+                            <div>
+                                <div>${method.name}</div>
+                                <small style="font-size: 11px; color: var(--text-muted);">${method.region}</small>
+                            </div>
+                        </div>
+                        <span class="badge ${badgeClass}" style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;">${badgeText}</span>
                     </div>`;
         }).join('');
+        
+        // Attach click listeners to "Coming Soon" items
+        document.querySelectorAll('#countryListContainer > div').forEach(item => {
+            item.addEventListener('click', (e) => {
+                const status = e.currentTarget.getAttribute('data-status');
+                const methodId = e.currentTarget.getAttribute('data-method-id');
+                const methodName = e.currentTarget.querySelector('div > div > div').innerText;
+                
+                if (status === 'coming_soon') {
+                    showToast(`${methodName} is coming soon! We are working to add this payment method.`, 'info');
+                } else {
+                    // In the future, you can hook this up to your wallet.js 
+                    // e.g., selectPaymentMethod(methodId)
+                    showToast(`${methodName} is already available in the deposit section below!`, 'success');
+                }
+            });
+        });
     }
-
+    
     // Initial render
-    renderCountries(allCountries);
-
+    renderPaymentMethods(allPaymentMethods);
+    
     // Search functionality
-    countrySearchInput.addEventListener('input', (e) => {
+    paymentSearchInput.addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
-        const filtered = allCountries.filter(country => country.toLowerCase().includes(searchTerm));
-        renderCountries(filtered);
+        const filtered = allPaymentMethods.filter(method =>
+            method.name.toLowerCase().includes(searchTerm) ||
+            method.region.toLowerCase().includes(searchTerm)
+        );
+        renderPaymentMethods(filtered);
     });
 </script>
+
     <!-- JS Imports -->
     <script type="module" src="assets/js/app.js"></script>
 </body>
