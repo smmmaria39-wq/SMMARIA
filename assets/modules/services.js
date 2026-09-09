@@ -261,6 +261,48 @@ function setupAnnouncementScroller(notifications) {
     const existingScroller = document.querySelector('.announcements-scroller-card');
     if (existingScroller) existingScroller.remove();
     
+    // FIX: Robust media URL extractor that handles query parameters correctly
+    const parseMediaFromMessage = (message) => {
+        if (!message) return { text: '', mediaHtml: '' };
+        
+        // Split message into words to safely extract the full URL
+        const words = message.split(/\s+/);
+        let mediaUrl = null;
+        const textWords = [];
+        
+        words.forEach(word => {
+            // Check if the word is a URL
+            if (/^https?:\/\//i.test(word)) {
+                // Check if it ends with an image or video extension (allowing query strings like ?v=1)
+                if (/\.(jpg|jpeg|png|gif|webp|mp4|webm|ogg)(\?.*)?$/i.test(word)) {
+                    if (!mediaUrl) {
+                        mediaUrl = word; // Extract the first media URL found
+                        return; // Skip adding this word to the text
+                    }
+                }
+            }
+            textWords.push(word);
+        });
+        
+        if (!mediaUrl) return { text: message, mediaHtml: '' };
+        
+        const text = textWords.join(' ').trim();
+        let mediaHtml = '';
+        
+        const isVideo = /\.(mp4|webm|ogg)(\?.*)?$/i.test(mediaUrl);
+        
+        if (isVideo) {
+            // Video: autoplay, loop, muted, playsinline, NO controls attribute (prevents pausing)
+            mediaHtml = `<video src="${mediaUrl}" autoplay loop muted playsinline style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin-top: 10px;"></video>`;
+        } else {
+            // Image
+            mediaHtml = `<img src="${mediaUrl}" alt="Announcement Media" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin-top: 10px;">`;
+        }
+        
+        return { text, mediaHtml };
+    };
+
+    // FIX: Corrected template literal string formatting
     const scrollerHTML = `
         <div class="card announcements-scroller-card">
             <div class="announcements-scroller-header">
@@ -268,12 +310,16 @@ function setupAnnouncementScroller(notifications) {
                 <span>Swipe to view more →</span>
             </div>
             <div class="announcements-scroller-container">
-                ${notifications.map(n => `
-                    <div class="announcement-pill">
-                        <h4>${n.title || 'Announcement'}</h4>
-                        <p>${n.message}</p>
-                    </div>
-                `).join('')}
+                ${notifications.map(n => {
+                    const { text, mediaHtml } = parseMediaFromMessage(n.message);
+                    return `
+                        <div class="announcement-pill">
+                            <h4>${n.title || 'Announcement'}</h4>
+                            ${text ? `<p>${text}</p>` : ''}
+                            ${mediaHtml}
+                        </div>
+                    `;
+                }).join('')}
             </div>
         </div>
     `;
