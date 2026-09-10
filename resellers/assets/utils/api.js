@@ -3,7 +3,7 @@
 // resellers/assets/js/utils/api.js
 // ===============================================
 
-const API_BASE_URL = 'https://smmmaria-backend-production.up.railway.app/api/v1';
+const API_BASE_URL = 'smmmaria-backend-production-3ae4.up.railway.app';
 
 async function request(endpoint, method = 'GET', body = null) {
  const token = localStorage.getItem('smmmaria_reseller_token');
