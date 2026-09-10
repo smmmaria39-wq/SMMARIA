@@ -335,39 +335,16 @@ async function checkPendingAndShowCancel() {
   const depositForm = $('#deposit-form');
   if (!depositForm) return;
   
+  const submitBtn = depositForm.querySelector('button[type="submit"]');
+  
   try {
     const res = await api.getPayments();
     const userPayments = res.data || [];
     const hasPending = userPayments.some(p => p.status === 'pending' && (p.method === 'mtn' || p.method === 'airtel'));
     
     if (hasPending) {
-      if (!document.getElementById('cancelPendingBtn')) {
-        const cancelBtn = document.createElement('button');
-        cancelBtn.id = 'cancelPendingBtn';
-        cancelBtn.className = 'btn btn--danger btn--block';
-        cancelBtn.style.marginTop = '10px';
-        cancelBtn.innerText = 'Cancel Pending Deposit';
-        cancelBtn.onclick = async () => {
-          cancelBtn.disabled = true;
-          cancelBtn.innerText = 'Cancelling...';
-          try {
-            const res = await api.cancelPendingDeposit();
-            showToast(res.message || 'Pending deposit cancelled.', 'success');
-            cancelBtn.remove();
-            if (pendingPollInterval) clearInterval(pendingPollInterval);
-            await refreshWallet();
-            checkPendingAndShowCancel();
-          } catch (err) {
-            showToast(err.message || 'Failed to cancel deposit.', 'error');
-            await checkPendingAndShowCancel();
-            if (document.getElementById('cancelPendingBtn')) {
-              cancelBtn.disabled = false;
-              cancelBtn.innerText = 'Cancel Pending Deposit';
-            }
-          }
-        };
-        depositForm.appendChild(cancelBtn);
-      }
+      // FIX: Disable the Process Deposit button until the current one expires/settles
+      if (submitBtn) submitBtn.disabled = true;
       
       if (!pendingPollInterval) {
         pendingPollInterval = setInterval(async () => {
@@ -377,10 +354,12 @@ async function checkPendingAndShowCancel() {
             if (!stillPending) {
               clearInterval(pendingPollInterval);
               pendingPollInterval = null;
-              const btn = document.getElementById('cancelPendingBtn');
-              if (btn) btn.remove();
-              showToast('Deposit successful! Your wallet has been updated.', 'success');
+              
+              showToast('Deposit processed! Your wallet has been updated.', 'success');
               await refreshWallet();
+              
+              // Re-enable the submit button
+              if (submitBtn) submitBtn.disabled = false;
             }
           } catch (e) {
             console.error('Polling error:', e);
@@ -388,8 +367,8 @@ async function checkPendingAndShowCancel() {
         }, 10000); 
       }
     } else {
-      const existingCancelBtn = document.getElementById('cancelPendingBtn');
-      if (existingCancelBtn) existingCancelBtn.remove();
+      // FIX: Re-enable the submit button if no pending deposits exist
+      if (submitBtn) submitBtn.disabled = false;
       if (pendingPollInterval) {
         clearInterval(pendingPollInterval);
         pendingPollInterval = null;
