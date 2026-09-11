@@ -12,9 +12,12 @@ import { showToast } from '../components/toast.js';
 let currentBalance = 0;
 let currentTransactions = [];
 let pendingPollInterval = null;
+let backgroundRefreshInterval = null;
 let walletInitialized = false;
+let depositSubmitting = false; // FIX: Submission guard
+let activePaymentId = null; // FIX: Track the specific payment being polled
 let userEmail = 'guest@smmmaria.com'; // Fallback
-let currentIdempotencyKey = generateUUID(); // FIX: Generate key on module load
+let currentIdempotencyKey = generateUUID(); // FIX: Generate key on module load, retain for lifecycle
 
 // Helper to format Ugandan phone numbers to 2567XXXXXXXX
 function formatUgPhone(phone) {
@@ -40,8 +43,36 @@ export default async function initWallet() {
 
   await refreshWallet();
   window.addEventListener('currencyChanged', updateWalletUI);
+  
   setupDepositForm();
   checkPendingAndShowCancel();
+  startBackgroundRefresh(); // FIX: Start background polling
+  
+  // FIX: Clean up intervals on page unload
+  window.addEventListener('beforeunload', () => {
+    if (pendingPollInterval) clearInterval(pendingPollInterval);
+    if (backgroundRefreshInterval) clearInterval(backgroundRefreshInterval);
+  });
+}
+
+// FIX: Background wallet refresh system
+function startBackgroundRefresh() {
+  if (backgroundRefreshInterval) clearInterval(backgroundRefreshInterval);
+  
+  backgroundRefreshInterval = setInterval(async () => {
+    if (document.hidden) return; // Don't run if tab is hidden
+    await refreshWallet();
+    // Also check if any pending payments changed state while we weren't looking
+    await checkPendingAndShowCancel();
+  }, 15000); // 15 seconds
+
+  // Handle visibility change to refresh immediately upon returning to the tab
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      refreshWallet();
+      checkPendingAndShowCancel();
+    }
+  });
 }
 
 async function refreshWallet() {
@@ -112,15 +143,18 @@ function updateWalletUI() {
         if (tx.status === 'approved' || tx.status === 'completed') badgeClass = 'badge--success';
         else if (tx.status === 'rejected' || tx.status === 'cancelled') badgeClass = 'badge--danger';
         
+        // FIX: Safe date formatting to prevent UI crashes
+        const formattedDate = tx.date ? formatDate(tx.date) : 'N/A';
+        
         html += `
           <tr>
-            <td>#${tx.id.substring(0, 8)}</td>
-            <td>${tx.type}</td>
+            <td>#${tx.id ? tx.id.substring(0, 8) : 'N/A'}</td>
+            <td>${tx.type || 'N/A'}</td>
             <td class="${tx.type === 'deposit' || tx.type === 'refund' ? 'text-success' : 'text-danger'}">
-              ${tx.type === 'deposit' || tx.type === 'refund' ? '+' : '-'}${formatCurrency(tx.amount)}
+              ${tx.type === 'deposit' || tx.type === 'refund' ? '+' : '-'}${formatCurrency(tx.amount || 0)}
             </td>
-            <td>${formatDate(tx.date)}</td>
-            <td><span class="badge ${badgeClass}">${tx.status}</span></td>
+            <td>${formattedDate}</td>
+            <td><span class="badge ${badgeClass}">${tx.status || 'pending'}</span></td>
           </tr>
         `;
       });
@@ -153,7 +187,7 @@ function setupDepositForm() {
   const manualWhatsappBtn = $('#manual-whatsapp-btn');
   const flatBonus = 0.05;
   
-  // FIX: Regenerate idempotency key when form state changes
+  // FIX: Idempotency Key Lifecycle. Only regenerate explicitly on success or reset.
   const regenerateKey = () => {
     currentIdempotencyKey = generateUUID();
   };
@@ -177,7 +211,6 @@ function setupDepositForm() {
   if (amountInput && bonusInfo) {
     amountInput.addEventListener('input', () => {
       updateBonusInfo();
-      regenerateKey(); // New amount = new logical deposit attempt
     });
   }
   
@@ -196,18 +229,18 @@ function setupDepositForm() {
         tile.classList.toggle('active', input.checked);
       });
       if (selectedMethod === 'manual') updateManualWhatsappLink();
-      regenerateKey(); // New method = new logical deposit attempt
     });
   });
   
   depositForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const submitBtn = depositForm.querySelector('button[type="submit"]');
-    if (!submitBtn || submitBtn.disabled) return;
+    if (!submitBtn || submitBtn.disabled || depositSubmitting) return; // FIX: Prevent rapid repeated clicks
     
     const originalBtnText = submitBtn.innerHTML;
     submitBtn.disabled = true;
     submitBtn.innerHTML = 'Processing...';
+    depositSubmitting = true;
     
     const amount = parseFloat(amountInput.value);
     const selectedMethodInput = depositForm.querySelector('input[name="payment-method"]:checked');
@@ -216,18 +249,21 @@ function setupDepositForm() {
       showToast('Please select a payment method', 'error');
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalBtnText;
+      depositSubmitting = false;
       return;
     }
     if (!amount || amount <= 0) {
       showToast('Please enter a valid amount', 'error');
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalBtnText;
+      depositSubmitting = false;
       return;
     }
     
     const method = selectedMethodInput.value;
     
     if (method === 'card') {
+      // Pass control to card handler, keep main form locked until sheet is closed/canceled
       handleCardPayment(amount, currentIdempotencyKey, submitBtn, originalBtnText);
       return;
     }
@@ -238,7 +274,7 @@ function setupDepositForm() {
       amount,
       method,
       email: userEmail,
-      idempotencyKey: currentIdempotencyKey // FIX: Use the module-scoped key
+      idempotencyKey: currentIdempotencyKey
     };
     
     if (method === 'mtn' || method === 'airtel') {
@@ -247,6 +283,7 @@ function setupDepositForm() {
         showToast(`Enter a valid ${method.toUpperCase()} number (e.g., 07XXXXXXXX)`, 'error');
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalBtnText;
+        depositSubmitting = false;
         return;
       }
     } else if (method === 'manual') {
@@ -257,45 +294,64 @@ function setupDepositForm() {
     }
     
     try {
-      await api.createDeposit(payload);
+      const res = await api.createDeposit(payload);
+      
+      // FIX: Track the active payment ID if returned
+      if (res?.data?.id) {
+        activePaymentId = res.data.id;
+      }
+      
+      // Handle backend idempotency response (200 OK means it already existed)
+      const isExisting = res.status === 200;
+      
       if (method === 'mtn' || method === 'airtel') {
         showToast('Request sent! A prompt will appear on your phone. Please enter your PIN to approve the deposit.', 'info');
       } else if (method === 'manual') {
         showToast('Deposit request created! Please click the WhatsApp button to send your receipt.', 'info');
+        // Manual payments don't need to lock the form indefinitely
+        depositForm.reset();
+        dynamicFields.forEach(field => field.style.display = 'none');
+        paymentTiles.forEach(tile => tile.classList.remove('active'));
+        if (bonusInfo) bonusInfo.innerHTML = `Bonus: ${formatCurrency(0)} <span class="bonus-amount">Total Credited: ${formatCurrency(0)}</span>`;
+        regenerateKey(); // Safe to regenerate for manual since it's instant
+      }
+      
+      if (method === 'mtn' || method === 'airtel') {
+        // Don't reset form or regenerate key until terminal status is reached
+        // Keep submitBtn disabled and let polling handle the unlock
+        checkPendingAndShowCancel(); 
       } else {
-        showToast('Deposit request submitted successfully!', 'success');
+        await refreshWallet();
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+        depositSubmitting = false;
       }
-      
-      depositForm.reset();
-      dynamicFields.forEach(field => field.style.display = 'none');
-      paymentTiles.forEach(tile => tile.classList.remove('active'));
-      if (bonusInfo) {
-        bonusInfo.innerHTML = `Bonus: ${formatCurrency(0)} <span class="bonus-amount">Total Credited: ${formatCurrency(0)}</span>`;
-      }
-      
-      regenerateKey(); // FIX: Generate a new key for the NEXT deposit
-      await refreshWallet();
-      checkPendingAndShowCancel(); 
     } catch (error) {
       showToast(error.message || 'Failed to submit deposit. Please try again.', 'error');
       // FIX: Do NOT regenerate key on failure. User can retry with the SAME key safely.
-    } finally {
+      // Unlock form so they can press the button again to retry
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalBtnText;
+      depositSubmitting = false;
     }
   });
 }
 
 async function handleCardPayment(amount, idempotencyKey, submitBtn, originalBtnText) {
-  submitBtn.disabled = false;
-  submitBtn.innerHTML = originalBtnText;
+  // submitBtn is already disabled and depositSubmitting is true from the caller
   
   const sheet = document.getElementById('cardPaymentSheet');
   const sheetAmount = document.getElementById('cardSheetAmount');
   const confirmBtn = document.getElementById('confirmCardPayBtn');
   const cancelBtn = document.getElementById('cancelCardPayBtn');
   
-  if (!sheet || !confirmBtn) return;
+  if (!sheet || !confirmBtn) {
+    // FIX: Restore UI if sheet elements are missing
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalBtnText;
+    depositSubmitting = false;
+    return;
+  }
   
   sheetAmount.textContent = formatCurrency(amount);
   sheet.style.display = 'flex';
@@ -306,6 +362,11 @@ async function handleCardPayment(amount, idempotencyKey, submitBtn, originalBtnT
     setTimeout(() => sheet.style.display = 'none', 200);
     confirmBtn.disabled = false;
     confirmBtn.innerText = 'Continue to Secure Checkout';
+    
+    // FIX: Only unlock the main form when the sheet is canceled or closed without success
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalBtnText;
+    depositSubmitting = false;
   };
   
   cancelBtn.onclick = closeSheet;
@@ -318,15 +379,26 @@ async function handleCardPayment(amount, idempotencyKey, submitBtn, originalBtnT
     
     try {
       const res = await api.createDeposit({ amount, method: 'card', email: userEmail, idempotencyKey });
+      if (res?.data?.id) {
+        activePaymentId = res.data.id;
+      }
+      
       if (res?.data?.redirect_url) {
         window.location.href = res.data.redirect_url;
         return; 
       }
-      throw new Error('Redirect URL not received from server.');
+      
+      // If no redirect URL but successful, it means it's an existing active payment
+      showToast('Payment already initiated. Waiting for gateway confirmation...', 'info');
+      closeSheet(); // Close sheet, but keep main form locked if it's still pending
+      checkPendingAndShowCancel();
+      
     } catch (error) {
       showToast(error.message || 'Failed to initiate card payment.', 'error');
+      // Allow retry on the confirm button
       confirmBtn.disabled = false;
       confirmBtn.innerText = 'Continue to Secure Checkout';
+      // Keep main submitBtn disabled, user can either try again or cancel the sheet
     }
   };
 }
@@ -337,44 +409,92 @@ async function checkPendingAndShowCancel() {
   
   const submitBtn = depositForm.querySelector('button[type="submit"]');
   
+  // FIX: Always clear existing interval before starting a new one to prevent duplicates
+  if (pendingPollInterval) {
+    clearInterval(pendingPollInterval);
+    pendingPollInterval = null;
+  }
+
   try {
     const res = await api.getPayments();
     const userPayments = res.data || [];
-    const hasPending = userPayments.some(p => p.status === 'pending' && (p.method === 'mtn' || p.method === 'airtel'));
     
-    if (hasPending) {
-      // FIX: Disable the Process Deposit button until the current one expires/settles
+    // FIX: Treat both 'pending' AND 'processing' as active payments
+    const activePayment = userPayments.find(p => 
+      (p.status === 'pending' || p.status === 'processing') && 
+      (p.method === 'mtn' || p.method === 'airtel')
+    );
+    
+    if (activePayment) {
+      // FIX: Track the specific active payment ID
+      activePaymentId = activePayment.id;
+      
+      // Disable the Process Deposit button
       if (submitBtn) submitBtn.disabled = true;
       
-      if (!pendingPollInterval) {
-        pendingPollInterval = setInterval(async () => {
-          try {
-            const pollRes = await api.getPayments();
-            const stillPending = (pollRes.data || []).some(p => p.status === 'pending' && (p.method === 'mtn' || p.method === 'airtel'));
-            if (!stillPending) {
-              clearInterval(pendingPollInterval);
-              pendingPollInterval = null;
-              
-              showToast('Deposit processed! Your wallet has been updated.', 'success');
-              await refreshWallet();
-              
-              // Re-enable the submit button
-              if (submitBtn) submitBtn.disabled = false;
-            }
-          } catch (e) {
-            console.error('Polling error:', e);
-          }
-        }, 10000); 
-      }
+      // Start polling
+      pendingPollInterval = setInterval(pollPaymentStatus, 10000);
     } else {
-      // FIX: Re-enable the submit button if no pending deposits exist
-      if (submitBtn) submitBtn.disabled = false;
-      if (pendingPollInterval) {
-        clearInterval(pendingPollInterval);
-        pendingPollInterval = null;
-      }
+      // No active payments, ensure form is unlocked
+      activePaymentId = null;
+      if (submitBtn && !depositSubmitting) submitBtn.disabled = false;
     }
   } catch (e) {
-    console.error('Failed to check pending deposits');
+    console.error('Failed to check pending deposits', e);
+    // Don't lock the user out if the API fails
+    if (submitBtn && !depositSubmitting) submitBtn.disabled = false;
+  }
+}
+
+// FIX: Dedicated polling function to check actual status safely
+async function pollPaymentStatus() {
+  if (!activePaymentId) {
+    if (pendingPollInterval) { clearInterval(pendingPollInterval); pendingPollInterval = null; }
+    return;
+  }
+
+  try {
+    const res = await api.getPayments();
+    const payments = res.data || [];
+    
+    // Find the specific payment we are tracking
+    const targetPayment = payments.find(p => p.id === activePaymentId);
+    
+    // If payment not found, or reached a terminal state
+    if (!targetPayment || ['completed', 'approved', 'rejected', 'cancelled', 'expired'].includes(targetPayment.status)) {
+      clearInterval(pendingPollInterval);
+      pendingPollInterval = null;
+      
+      const depositForm = $('#deposit-form');
+      const submitBtn = depositForm?.querySelector('button[type="submit"]');
+      
+      if (targetPayment) {
+        if (targetPayment.status === 'completed' || targetPayment.status === 'approved') {
+          showToast('Deposit successful! Your wallet has been updated.', 'success');
+        } else if (targetPayment.status === 'rejected') {
+          showToast('Deposit was rejected. Please try again.', 'error');
+        } else if (targetPayment.status === 'cancelled') {
+          showToast('Deposit was cancelled.', 'info');
+        } else if (targetPayment.status === 'expired') {
+          showToast('Deposit request expired. Please try again.', 'info');
+        }
+      }
+      
+      // FIX: Regenerate key for the next genuine new attempt
+      currentIdempotencyKey = generateUUID();
+      activePaymentId = null;
+      
+      // Refresh wallet data to show new balance/transaction
+      await refreshWallet();
+      
+      // Unlock the form
+      if (submitBtn) submitBtn.disabled = false;
+      depositSubmitting = false;
+    }
+    
+    // If status is still pending or processing, keep polling silently
+  } catch (e) {
+    console.error('Polling error:', e);
+    // Do not stop polling on temporary network errors, just try again next interval
   }
 }
