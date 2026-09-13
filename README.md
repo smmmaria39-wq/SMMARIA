@@ -1,10 +1,39 @@
-# SMMMARIA
+# SMMMARIA PANEL 
 
 > Enterprise-grade Social Media Marketing (SMM) Panel with automated
 > order fulfillment, wallet management, supplier integrations, Child
 > Panels, and a Buy Account marketplace.
 
-------------------------------------------------------------------------
+## 👨‍💻 Creator
+
+<div align="center">
+
+<img src="https://ik.imagekit.io/s95tumxuk/IMG_3295.png"
+     alt="SMMMARIA Creator"
+     width="180"
+     height="230"
+     style="border-radius: 50%; object-fit: cover;">
+
+### Created by **MARKMELLON**
+
+📱 **WhatsApp:** [+256 743668990](https://wa.me/256743668990)
+
+💬 [Chat with the Creator on WhatsApp](https://wa.me/256743668990)
+
+</div>
+## 👨‍💻 Developer
+
+<div align="center">
+
+### MarkMellon
+
+🌐 **Official Developer Website:**  
+<a href="https://markmellon.site">MarkMellon.site</a>
+
+💻 Web Development | Software Solutions | Digital Services
+
+</div>
+-----------------------------------------
 
 ## Table of Contents
 
