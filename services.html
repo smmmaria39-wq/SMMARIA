@@ -143,7 +143,7 @@
         /* Service Card Styling */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
         }
         .service-card {
@@ -549,6 +549,13 @@
                             <svg viewBox="0 0 24 24" fill="#6B7280"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm6.945 6.945h-2.966c-.325-1.372-.845-2.66-1.55-3.81 1.84.682 3.42 2.032 4.516 3.81zM12 1.55c1.265 1.25 2.265 3.095 2.805 5.395h-5.61C9.735 4.645 10.735 2.8 12 1.55zM1.77 13.5c-.135-.485-.21-.985-.21-1.5s.075-1.015.21-1.5h3.42c-.045.495-.075.99-.075 1.5s.03 1.005.075 1.5h-3.42zm.885 3.555h2.966c.325 1.372.845 2.66 1.55 3.81-1.84-.682-3.42-2.032-4.516-3.81zm2.966-7.11H2.655C3.752 8.167 5.331 6.817 7.172 6.135c-.705 1.15-1.225 2.438-1.55 3.81zM12 22.45c-1.265-1.25-2.265-3.095-2.805-5.395h5.61c-.54 2.3-1.54 4.145-2.805 5.395zm3.045-6.95H8.955c-.045-.495-.075-.99-.075-1.5s.03-1.005.075-1.5h6.09c.045.495.075.99.075 1.5s-.03 1.005-.075 1.5zm.54 5.565c.705-1.15 1.225-2.438 1.55-3.81h2.966c-1.097 1.778-2.676 3.128-4.516 3.81z"></path></svg>
                             <span>Website</span>
                         </button>
+                        <button class="platform-icon-btn" data-category="Maria ads" id="mariaAdsBtn">
+                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                           <path d="M3 11l18-5v12L3 14v-3z"></path>
+                         <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path>
+                       </svg>
+                       <span>Maria ads</span>
+                       </button>
                     </div>
                 </div>
 
@@ -622,6 +629,8 @@
                 <span>Wallet</span>
             </a>
         </nav>
+        
+        
 
         <!-- MOBILE OVERLAY -->
         <div class="sidebar-overlay" id="sidebar-overlay"></div>
@@ -629,5 +638,20 @@
 
     <!-- JS Imports -->
     <script type="module" src="assets/js/app.js"></script>
+    
+    <div id="mariaAdsSheet" class="ads-bottom-sheet">
+    <div class="ads-sheet-content">
+        <div class="ads-sheet-handle" id="closeMariaAdsSheet"></div>
+        <div class="ads-sheet-header">
+            <span> Maria Ads Platform</span>
+        </div>
+        <div class="ads-sheet-body">
+            <p>Check out our premium advertising network at:</p>
+            <h3>ads.smmaria.site</h3>
+            <p style="font-size: 14px; color: #64748b; margin-bottom: 20px;">Launch your campaigns and reach thousands of users today over +1000 websites.</p>
+            <button class="ads-continue-btn" id="continueToMariaAds">Continue to Site</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
