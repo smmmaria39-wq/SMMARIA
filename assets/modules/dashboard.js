@@ -14,39 +14,57 @@ let currentUser = {};
 let currentOrders = [];
 let currentNotifications = [];
 
-// Add this function to your module
+// Ensure you have these imports at the top of your JS file:
+// import { database } from './firebase.js';
+// import { ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
 async function loadNewAccountAnnouncements() {
     const scrollContainer = document.getElementById('announcementScrollContainer');
     if (!scrollContainer) return;
     
     try {
-        const res = await api.getAccounts();
-        const accounts = res.data || [];
+        // 1. Fetch directly from Firebase Realtime Database
+        const accountsRef = ref(database, 'accountInventory');
+        const snapshot = await get(accountsRef);
         
-        // Check for accounts created in the last 7 days
+        if (!snapshot.exists()) return;
+        
+        // 2. Extract the data using .val()
+        const accounts = Object.values(snapshot.val());
+        
+        // Check for accounts created in the last 7 days that are still available
         const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
-        const newAccounts = accounts.filter(acc => acc.createdAt && acc.createdAt > sevenDaysAgo);
+        const newAccounts = accounts.filter(acc =>
+            acc.createdAt &&
+            acc.createdAt > sevenDaysAgo &&
+            acc.status === 'available' // Only announce if they are still for sale
+        );
         
         if (newAccounts.length > 0) {
+            // Prevent duplicate injections if the function runs multiple times
+            if (document.getElementById('new-acc-banner-wrapper')) return;
+            
             // Get unique platforms of the new accounts
             const platforms = [...new Set(newAccounts.map(a => a.platform))];
             
             // Create the new accounts banner HTML
             const newAccountsBanner = `
-                <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0; background: rgba(244, 179, 66, 0.15); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--color-gold);">
-                    <span style="color: var(--color-gold); font-weight: 700; font-size: 13px;">🚀 New Accounts Added!</span>
-                    <span style="color: var(--text-secondary); font-size: 13px;">${platforms.join(', ')}</span>
+                <div id="new-acc-banner-wrapper" style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
+                    <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0; background: rgba(244, 179, 66, 0.15); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--color-gold);">
+                        <span style="color: var(--color-gold); font-weight: 700; font-size: 13px;">🚀 New Accounts Added!</span>
+                        <span style="color: var(--text-secondary); font-size: 13px;">${platforms.join(', ')}</span>
+                    </div>
+                    <a href="buy-account.html" class="btn btn-primary btn-sm" style="flex-shrink: 0; padding: 5px 15px; height: auto; line-height: 1.4;">
+                        Buy Account
+                    </a>
                 </div>
-                <a href="buy-account.html" class="btn btn--primary btn--sm" style="flex-shrink: 0; padding: 5px 15px; height: auto; line-height: 1.4;">
-                    Buy Account
-                </a>
             `;
             
-            // Append the new banner to the scrollable container
-            scrollContainer.innerHTML += newAccountsBanner;
+            // 3. Use insertAdjacentHTML instead of innerHTML += to preserve existing elements
+            scrollContainer.insertAdjacentHTML('beforeend', newAccountsBanner);
         }
     } catch (err) {
-        console.error('Failed to load new account announcements', err);
+        console.error('Failed to load new account announcements:', err);
     }
 }
 
@@ -248,15 +266,55 @@ function updateOrdersUI(orders = []) {
 }
 
 // ===============================================
-// Notifications
+// Helpers for Notifications
+// ===============================================
+
+function formatNotificationMessage(text) {
+    if (!text) return '';
+    
+    // 1. Escape HTML to prevent XSS attacks
+    let safeText = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    
+    // 2. Regex to find URLs in the text
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    
+    // 3. Replace URLs with media tags or clickable links
+    safeText = safeText.replace(urlRegex, (url) => {
+        // Remove trailing punctuation that might have been caught in the regex
+        let cleanUrl = url.replace(/[.,;:!?)\]]$/, '');
+        
+        // Check if it's an image
+        if (cleanUrl.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
+            return `<img src="${cleanUrl}" alt="Notification Media" style="max-width: 100%; max-height: 200px; border-radius: 8px; margin-top: 8px; display: block; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);" onclick="window.open('${cleanUrl}', '_blank')" />`;
+        }
+        // Check if it's a video
+        else if (cleanUrl.match(/\.(mp4|webm|ogg)$/i)) {
+            return `<video controls style="max-width: 100%; max-height: 250px; border-radius: 8px; margin-top: 8px; display: block;"><source src="${cleanUrl}"></video>`;
+        }
+        // It's a normal link, make it clickable
+        else {
+            return `<a href="${cleanUrl}" target="_blank" style="color: var(--color-gold, #f5a623); text-decoration: underline; word-break: break-all;">${cleanUrl}</a>`;
+        }
+    });
+    
+    // Preserve line breaks
+    safeText = safeText.replace(/\n/g, '<br>');
+    
+    return safeText;
+}
+
+// ===============================================
+// Notifications UI
 // ===============================================
 
 function updateNotificationsUI(notifications = []) {
-    const notifList =
-        $('.recent-activity-card .notification-list');
-
+    const notifList = $('.recent-activity-card .notification-list');
+    
     if (!notifList) return;
-
+    
     if (!notifications.length) {
         notifList.innerHTML = `
         <li class="notification-item">
@@ -274,7 +332,7 @@ function updateNotificationsUI(notifications = []) {
         `;
         return;
     }
-
+    
     notifList.innerHTML = notifications
         .slice(0, 5)
         .map(n => `
@@ -286,7 +344,7 @@ function updateNotificationsUI(notifications = []) {
             <div class="notification__content">
                 <p>
                     <strong>${n.title || 'Notification'}</strong>
-                    : ${n.message}
+                    : ${formatNotificationMessage(n.message)}
                 </p>
 
                 <span class="notification__time">
