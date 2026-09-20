@@ -518,3 +518,91 @@ a:focus-visible {
         padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px)) !important;
     }
 }
+/* ==========================================
+   MARIAS ADS SLIDE-UP CARD
+   ========================================== */
+.ads-bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.ads-bottom-sheet.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+.ads-sheet-content {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    width: 100%;
+    max-width: 400px;
+    background: #ffffff;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    padding: 15px 20px 25px;
+}
+
+.ads-bottom-sheet.active .ads-sheet-content {
+    transform: translateX(-50%) translateY(0);
+}
+
+.ads-sheet-handle {
+    width: 40px;
+    height: 5px;
+    background: #e2e8f0;
+    border-radius: 5px;
+    margin: 0 auto 15px;
+    cursor: pointer;
+}
+
+.ads-sheet-header {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.ads-sheet-body {
+    text-align: center;
+}
+
+.ads-sheet-body p {
+    color: #475569;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+.ads-sheet-body h3 {
+    color: #4f46e5;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 5px 0 10px;
+}
+
+.ads-continue-btn {
+    width: 100%;
+    padding: 14px;
+    background: #4f46e5;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.ads-continue-btn:hover {
+    background: #4338ca;
+}
