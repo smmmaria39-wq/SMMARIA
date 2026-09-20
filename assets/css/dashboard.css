@@ -241,15 +241,19 @@ html[data-theme="dark"] .balance-card__amount { color: #fff; }
     margin-bottom: 4px;
 }
 
-/* Styling for injected images and videos */
+/* Styling for injected images and videos - INCREASED SIZE */
 .recent-activity-card .notification__content img,
 .recent-activity-card .notification__content video {
-    max-width: 100%;
+    width: 100%; /* Force image to take the full width of the text container */
     height: auto;
+    max-height: 350px; /* Increased max height so they display much larger */
+    object-fit: contain; /* Ensures the entire image is seen without cropping */
     border-radius: 8px;
-    margin-top: 8px;
+    margin-top: 10px;
+    margin-bottom: 5px;
     display: block;
     border: 1px solid rgba(255,255,255,0.1);
+    background-color: #f8fafc; /* Adds a subtle background to letterboxed images */
 }
 
 /* Custom scrollbar for the notification list */
