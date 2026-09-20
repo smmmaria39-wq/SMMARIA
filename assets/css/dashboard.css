@@ -191,3 +191,75 @@ html[data-theme="dark"] .balance-card__amount { color: #fff; }
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+/* ===============================================
+   Recent Notifications Card
+   =============================================== */
+.recent-activity-card {
+    flex: 1 1 300px;
+    padding: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.recent-activity-card .card__header {
+    padding: 0;
+    margin-bottom: 15px;
+}
+
+.recent-activity-card .notification-list {
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 5px;
+    max-height: 450px;
+}
+
+/* Notification Item Layout */
+.recent-activity-card .notification-item {
+    display: flex;
+    gap: 12px;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border-color, rgba(0,0,0,0.08));
+}
+
+.recent-activity-card .notification-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.recent-activity-card .notification__content {
+    flex: 1;
+    min-width: 0; /* Prevents flex overflow */
+}
+
+.recent-activity-card .notification__content p {
+    word-wrap: break-word;
+    white-space: normal;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 4px;
+}
+
+/* Styling for injected images and videos */
+.recent-activity-card .notification__content img,
+.recent-activity-card .notification__content video {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 8px;
+    display: block;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Custom scrollbar for the notification list */
+.recent-activity-card .notification-list::-webkit-scrollbar {
+    width: 6px;
+}
+.recent-activity-card .notification-list::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+}
+.recent-activity-card .notification-list::-webkit-scrollbar-track {
+    background: transparent;
+}
