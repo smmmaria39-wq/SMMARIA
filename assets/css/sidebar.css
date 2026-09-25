@@ -48,6 +48,9 @@ html[data-theme="dark"] .sidebar__logo {
 }
 
 .sidebar__collapse-btn {
+  display: flex; /* Added to ensure it shows correctly on desktop */
+  align-items: center;
+  justify-content: center;
   color: var(--text-muted);
   padding: var(--spacing-xs);
   border-radius: var(--radius-sm);
@@ -198,4 +201,14 @@ html[data-theme="dark"]
 .sidebar-overlay.active {
   display: block;
   opacity: 1;
+}
+
+/* ===============================================
+   Responsive Updates
+   =============================================== */
+/* Hide the collapse button on mobile and tablet devices */
+@media (max-width: 1024px) {
+  .sidebar__collapse-btn {
+    display: none !important;
+  }
 }
