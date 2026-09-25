@@ -1,9 +1,5 @@
 /**
- * SMMARIA NOTIFICATIONS — Universal Top Banner (No Login Required)
- *
- * Shows a full-width banner at the TOP of every page.
- * Works for ALL visitors — logged in or not.
- * Shows immediately — does NOT wait for backend to respond.
+ * SMMARIA NOTIFICATIONS — Universal Top Banner (Debug + Timeout Version)
  */
 
 (function () {
@@ -11,7 +7,7 @@
 
   var config = window.SMMARIA_NOTIF || {};
   var API_URL = config.apiUrl || 'https://notifications-production-4281.up.railway.app';
-  var SW_PATH = config.swPath || '/sw.js';
+  var SW_PATH = config.swPath || 'sw.js';
 
   // ── Token (optional) ─────────────────────────────────────────
   function getToken() {
@@ -39,15 +35,42 @@
     );
   }
 
-  // ── API helper ────────────────────────────────────────────────
+  // ── Fetch with timeout (prevents infinite hanging) ───────────
+  async function fetchWithTimeout(url, options, timeoutMs) {
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function () {
+      controller.abort();
+    }, timeoutMs || 15000);
+
+    try {
+      var res = await fetch(url, Object.assign({}, options, {
+        signal: controller.signal
+      }));
+      clearTimeout(timeoutId);
+      return res;
+    } catch (e) {
+      clearTimeout(timeoutId);
+      throw e;
+    }
+  }
+
+  // ── API helper with logging ───────────────────────────────────
   async function apiFetch(path, method, body) {
     var token = getToken();
     var headers = { 'Content-Type': 'application/json' };
     if (token) headers['Authorization'] = 'Bearer ' + token;
     var opts = { method: method || 'GET', headers: headers };
     if (body) opts.body = JSON.stringify(body);
-    var res = await fetch(API_URL + path, opts);
-    return res.json();
+
+    console.log('[SMMARIA-Notif] API call →', method || 'GET', API_URL + path);
+
+    var res = await fetchWithTimeout(API_URL + path, opts, 15000);
+    console.log('[SMMARIA-Notif] API status →', res.status);
+
+    var data = await res.json();
+    console.log('[SMMARIA-Notif] API response →', JSON.stringify(data).substring(0, 200));
+
+    return data;
   }
 
   // ── Check local subscription ──────────────────────────────────
@@ -63,9 +86,18 @@
   // ── Get VAPID key ──────────────────────────────────────────────
   async function getVapidKey() {
     try {
+      console.log('[SMMARIA-Notif] Fetching VAPID key from backend...');
       var r = await apiFetch('/api/config', 'GET');
+      if (r.vapidPublicKey) {
+        console.log('[SMMARIA-Notif] VAPID key received ✓');
+      } else {
+        console.error('[SMMARIA-Notif] VAPID key NOT in response:', r);
+      }
       return r.vapidPublicKey || null;
-    } catch (e) { return null; }
+    } catch (e) {
+      console.error('[SMMARIA-Notif] VAPID key fetch FAILED:', e.message);
+      return null;
+    }
   }
 
   // ── Base64 to Uint8Array ───────────────────────────────────────
@@ -83,34 +115,84 @@
   // ── Register service worker ──────────────────────────────────
   async function registerSW() {
     try {
+      console.log('[SMMARIA-Notif] Registering service worker at:', SW_PATH);
       var reg = await navigator.serviceWorker.register(SW_PATH, { scope: '/' });
+      console.log('[SMMARIA-Notif] Service worker registered ✓');
+      // Wait for the SW to be active
+      if (reg.active) {
+        console.log('[SMMARIA-Notif] Service worker already active');
+      } else {
+        console.log('[SMMARIA-Notif] Waiting for service worker to activate...');
+        await new Promise(function (resolve) {
+          if (reg.active) { resolve(); return; }
+          reg.addEventListener('activate', resolve);
+          // Fallback timeout — don't wait forever
+          setTimeout(resolve, 5000);
+        });
+        console.log('[SMMARIA-Notif] Service worker activated ✓');
+      }
       return reg;
-    } catch (e) { return null; }
+    } catch (e) {
+      console.error('[SMMARIA-Notif] Service worker FAILED:', e.message);
+      return null;
+    }
   }
 
-  // ── Subscribe to push ─────────────────────────────────────────
+  // ── Subscribe to push (with step logging) ─────────────────────
   async function subscribeToPush() {
+    // STEP 1: Register service worker
+    console.log('[SMMARIA-Notif] ── Step 1/4: Register service worker ──');
     var reg = await registerSW();
-    if (!reg) return false;
+    if (!reg) {
+      console.error('[SMMARIA-Notif] FAILED at step 1 — SW not registered');
+      return false;
+    }
+
+    // STEP 2: Get VAPID key from backend
+    console.log('[SMMARIA-Notif] ── Step 2/4: Get VAPID key ──');
     var vapidKey = await getVapidKey();
-    if (!vapidKey) return false;
+    if (!vapidKey) {
+      console.error('[SMMARIA-Notif] FAILED at step 2 — no VAPID key');
+      return false;
+    }
+
+    // STEP 3: Subscribe to push manager
+    console.log('[SMMARIA-Notif] ── Step 3/4: Browser push subscribe ──');
     var subscription;
     try {
       subscription = await reg.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(vapidKey)
       });
-    } catch (e) { return false; }
+      console.log('[SMMARIA-Notif] Push subscription created ✓');
+      console.log('[SMMARIA-Notif] Endpoint:', subscription.endpoint);
+    } catch (e) {
+      console.error('[SMMARIA-Notif] FAILED at step 3 — push subscribe error:', e.message);
+      return false;
+    }
+
+    // STEP 4: Send subscription to backend
+    console.log('[SMMARIA-Notif] ── Step 4/4: Send to backend ──');
     var device = {
       browser: getBrowserName(),
       platform: navigator.platform || 'unknown'
     };
     try {
       var r = await apiFetch('/api/subscribe', 'POST', {
-        subscription: subscription, device: device
+        subscription: subscription,
+        device: device
       });
-      return r.success === true;
-    } catch (e) { return false; }
+      if (r.success) {
+        console.log('[SMMARIA-Notif] Subscription saved to backend ✓');
+        return true;
+      } else {
+        console.error('[SMMARIA-Notif] Backend rejected subscription:', r.message);
+        return false;
+      }
+    } catch (e) {
+      console.error('[SMMARIA-Notif] FAILED at step 4 — backend error:', e.message);
+      return false;
+    }
   }
 
   function getBrowserName() {
@@ -123,14 +205,12 @@
   }
 
   // ═══════════════════════════════════════════════════════════════
-  //  BANNER — Full-width top bar
+  //  BANNER
   // ═══════════════════════════════════════════════════════════════
 
   function createBanner() {
-    // Don't create duplicates
     if (document.getElementById('smmaria-notif-banner')) return;
 
-    // Inject CSS into the page head
     var style = document.createElement('style');
     style.textContent = `
       #smmaria-notif-banner {
@@ -150,7 +230,6 @@
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
-        transform: none !important;
       }
       #smmaria-notif-banner .sn-inner {
         max-width: 1200px !important;
@@ -161,83 +240,23 @@
         gap: 12px !important;
         box-sizing: border-box !important;
       }
-      #smmaria-notif-banner .sn-icon {
-        font-size: 20px !important;
-        flex-shrink: 0 !important;
-      }
-      #smmaria-notif-banner .sn-text {
-        flex: 1 !important;
-        min-width: 0 !important;
-      }
-      #smmaria-notif-banner .sn-title {
-        font-size: 14px !important;
-        font-weight: 700 !important;
-        color: #F4D068 !important;
-        margin: 0 0 2px 0 !important;
-        line-height: 1.3 !important;
-      }
-      #smmaria-notif-banner .sn-desc {
-        font-size: 12px !important;
-        color: rgba(245,240,225,0.7) !important;
-        margin: 0 !important;
-        line-height: 1.3 !important;
-      }
-      #smmaria-notif-banner .sn-btn {
-        background: #D4AF37 !important;
-        color: #0A1530 !important;
-        border: none !important;
-        padding: 10px 20px !important;
-        font-weight: 700 !important;
-        font-size: 13px !important;
-        cursor: pointer !important;
-        white-space: nowrap !important;
-        flex-shrink: 0 !important;
-        font-family: inherit !important;
-      }
-      #smmaria-notif-banner .sn-btn:hover {
-        background: #F4D068 !important;
-      }
-      #smmaria-notif-banner .sn-btn:disabled {
-        opacity: 0.6 !important;
-        cursor: default !important;
-      }
-      #smmaria-notif-banner .sn-close {
-        background: none !important;
-        border: none !important;
-        color: rgba(245,240,225,0.4) !important;
-        font-size: 22px !important;
-        cursor: pointer !important;
-        padding: 0 4px !important;
-        flex-shrink: 0 !important;
-        line-height: 1 !important;
-        font-family: inherit !important;
-      }
-      #smmaria-notif-banner .sn-close:hover {
-        color: #F5F0E1 !important;
-      }
+      #smmaria-notif-banner .sn-icon { font-size: 20px !important; flex-shrink: 0 !important; }
+      #smmaria-notif-banner .sn-text { flex: 1 !important; min-width: 0 !important; }
+      #smmaria-notif-banner .sn-title { font-size: 14px !important; font-weight: 700 !important; color: #F4D068 !important; margin: 0 0 2px 0 !important; line-height: 1.3 !important; }
+      #smmaria-notif-banner .sn-desc { font-size: 12px !important; color: rgba(245,240,225,0.7) !important; margin: 0 !important; line-height: 1.3 !important; }
+      #smmaria-notif-banner .sn-btn { background: #D4AF37 !important; color: #0A1530 !important; border: none !important; padding: 10px 20px !important; font-weight: 700 !important; font-size: 13px !important; cursor: pointer !important; white-space: nowrap !important; flex-shrink: 0 !important; font-family: inherit !important; }
+      #smmaria-notif-banner .sn-btn:hover { background: #F4D068 !important; }
+      #smmaria-notif-banner .sn-btn:disabled { opacity: 0.6 !important; cursor: default !important; }
+      #smmaria-notif-banner .sn-close { background: none !important; border: none !important; color: rgba(245,240,225,0.4) !important; font-size: 22px !important; cursor: pointer !important; padding: 0 4px !important; flex-shrink: 0 !important; line-height: 1 !important; font-family: inherit !important; }
+      #smmaria-notif-banner .sn-close:hover { color: #F5F0E1 !important; }
       @media (max-width: 600px) {
-        #smmaria-notif-banner .sn-inner {
-          flex-wrap: wrap !important;
-          padding: 10px 14px !important;
-        }
-        #smmaria-notif-banner .sn-btn {
-          width: 100% !important;
-          margin-top: 4px !important;
-          padding: 12px !important;
-        }
-        #smmaria-notif-banner .sn-close {
-          position: absolute !important;
-          top: 8px !important;
-          right: 8px !important;
-        }
-        #smmaria-notif-banner .sn-inner {
-          position: relative !important;
-        }
+        #smmaria-notif-banner .sn-inner { flex-wrap: wrap !important; padding: 10px 14px !important; position: relative !important; }
+        #smmaria-notif-banner .sn-btn { width: 100% !important; margin-top: 4px !important; padding: 12px !important; }
+        #smmaria-notif-banner .sn-close { position: absolute !important; top: 8px !important; right: 8px !important; }
       }
     `;
     document.head.appendChild(style);
 
-    // Create the banner
     var banner = document.createElement('div');
     banner.id = 'smmaria-notif-banner';
     banner.innerHTML = `
@@ -252,14 +271,12 @@
       </div>
     `;
 
-    // Insert at the very top of the body
     if (document.body) {
       document.body.insertBefore(banner, document.body.firstChild);
     } else {
       document.documentElement.appendChild(banner);
     }
 
-    // Wire up buttons
     document.getElementById('smmaria-notif-close').addEventListener('click', function () {
       banner.remove();
       try { sessionStorage.setItem('smmaria_notif_dismissed', '1'); } catch (e) {}
@@ -275,7 +292,9 @@
     btn.disabled = true;
 
     try {
+      console.log('[SMMARIA-Notif] Requesting notification permission...');
       var permission = await Notification.requestPermission();
+      console.log('[SMMARIA-Notif] Permission result:', permission);
 
       if (permission !== 'granted') {
         btn.textContent = 'Permission denied';
@@ -289,9 +308,11 @@
       }
 
       btn.textContent = 'Subscribing...';
+      console.log('[SMMARIA-Notif] Starting subscription process...');
       var success = await subscribeToPush();
 
       if (success) {
+        console.log('[SMMARIA-Notif] SUCCESS — subscription complete');
         btn.textContent = '✓ Subscribed!';
         btn.style.background = '#25D366';
         btn.style.color = '#050B1F';
@@ -300,43 +321,37 @@
           if (b) b.remove();
         }, 1500);
       } else {
+        console.error('[SMMARIA-Notif] FAILED — subscription did not complete');
         btn.textContent = 'Failed — try again';
         btn.disabled = false;
         btn.style.background = '#FE2C55';
         btn.style.color = '#fff';
       }
     } catch (e) {
+      console.error('[SMMARIA-Notif] ERROR:', e.message);
       btn.textContent = 'Error — try again';
       btn.disabled = false;
     }
   }
 
   // ═══════════════════════════════════════════════════════════════
-  //  INIT — Shows banner immediately, checks subscription async
+  //  INIT
   // ═══════════════════════════════════════════════════════════════
 
   async function init() {
-    // 1. Check if push is supported
     if (!pushSupported()) return;
-
-    // 2. Check if permission was permanently denied
     if (Notification.permission === 'denied') return;
 
-    // 3. Check if user dismissed the banner this session
     try {
       if (sessionStorage.getItem('smmaria_notif_dismissed') === '1') return;
     } catch (e) {}
 
-    // 4. Show banner IMMEDIATELY — don't wait for backend checks
-    //    We'll remove it later if the user is already subscribed
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', createBanner);
     } else {
       createBanner();
     }
 
-    // 5. Async check — if already subscribed, remove the banner
-    //    This runs in the background without blocking the banner
     (async function () {
       try {
         var localSub = await hasLocalSubscription();
@@ -345,28 +360,12 @@
           if (b) b.remove();
           return;
         }
-
-        // If user is logged in, also check server-side
-        var token = getToken();
-        if (token) {
-          var r = await apiFetch('/api/subscription/status', 'GET');
-          if (r.success && r.subscribed === true) {
-            var b2 = document.getElementById('smmaria-notif-banner');
-            if (b2) b2.remove();
-          }
-        }
-      } catch (e) {
-        // Backend unavailable — keep the banner showing
-      }
+      } catch (e) {}
     })();
   }
 
-  // ── Start — never breaks the website ──────────────────────────
-  try {
-    init();
-  } catch (e) {}
+  try { init(); } catch (e) {}
 
-  // ── Re-check when DOM becomes ready (for SPA navigation) ─────
   try {
     document.addEventListener('DOMContentLoaded', function () {
       if (!document.getElementById('smmaria-notif-banner')) {
