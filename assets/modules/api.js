@@ -13,8 +13,8 @@ export default async function initApi() {
   const codeBlock = $('.code-block code');
   
   let apiKey = 'Your API key will appear here';
-  // FIX: Updated to the correct external API base URL
-  const backendUrl = 'https://smmmaria-backend-production-3ae4.up.railway.app/api/v1/api';
+  // FIX: Updated to the standard Provider V2 API URL
+  const backendUrl = 'https://smmaria.site/api/v2';
   
   // 1. Function to render the correct code based on the active tab
   const renderCodeSnippet = () => {
@@ -24,11 +24,11 @@ export default async function initApi() {
     const activeTab = document.querySelector('.api-code-card .tab.active');
     const tabName = activeTab ? activeTab.textContent.trim() : 'PHP';
     
-    // FIX: Updated examples to match the new /api/v1/api endpoints
+    // FIX: Updated examples to match the standard SMM API (key & action in body)
     const codeSnippets = {
-      'PHP': `<?php\n$apiKey = '${apiKey}';\n$endpoint = '${backendUrl}/orders';\n\n$ch = curl_init($endpoint);\ncurl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\ncurl_setopt($ch, CURLOPT_HTTPHEADER, [\n    'Authorization: Bearer ' . $apiKey,\n    'Content-Type: application/json'\n]);\n$response = curl_exec($ch);\n?>`,
-      'Python': `import requests\n\napi_key = '${apiKey}'\nendpoint = '${backendUrl}/services'\n\nheaders = {\n    'Authorization': f'Bearer {api_key}',\n    'Content-Type': 'application/json'\n}\n\nresponse = requests.get(endpoint, headers=headers)\nprint(response.json())`,
-      'Node.js': `const axios = require('axios');\n\nconst apiKey = '${apiKey}';\nconst endpoint = '${backendUrl}/balance';\n\naxios.get(endpoint, {\n    headers: {\n        'Authorization': \`Bearer \${apiKey}\`,\n        'Content-Type': 'application/json'\n    }\n})\n.then(res => console.log(res.data))\n.catch(err => console.error(err));`
+      'PHP': `<?php\n$apiKey = '${apiKey}';\n$endpoint = '${backendUrl}';\n\n$ch = curl_init($endpoint);\ncurl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\ncurl_setopt($ch, CURLOPT_POST, true);\ncurl_setopt($ch, CURLOPT_POSTFIELDS, [\n    'key' => $apiKey,\n    'action' => 'services'\n]);\n$response = curl_exec($ch);\n?>`,
+      'Python': `import requests\n\napi_key = '${apiKey}'\nendpoint = '${backendUrl}'\n\ndata = {\n    'key': api_key,\n    'action': 'balance'\n}\n\nresponse = requests.post(endpoint, data=data)\nprint(response.json())`,
+      'Node.js': `const axios = require('axios');\n\nconst apiKey = '${apiKey}';\nconst endpoint = '${backendUrl}';\n\naxios.post(endpoint, new URLSearchParams({\n    key: apiKey,\n    action: 'add',\n    service: 1,\n    link: 'https://example.com',\n    quantity: 1000\n}))\n.then(res => console.log(res.data))\n.catch(err => console.error(err));`
     };
     
     codeBlock.textContent = codeSnippets[tabName] || 'Code example not available.';
