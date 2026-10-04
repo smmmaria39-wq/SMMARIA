@@ -401,6 +401,113 @@
             margin: 0 auto;
             padding-bottom: 30px;
         }
+          /* ==========================================
+   INPUT FIELD STYLING
+   ========================================== */
+
+/* Style the input fields themselves */
+.auth-card input[type="text"],
+.auth-card input[type="email"],
+.auth-card input[type="password"],
+.auth-card input:not([type]) {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 14px;              /* Smaller, professional size */
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+/* Focus state for better UX */
+.auth-card input[type="text"]:focus,
+.auth-card input[type="email"]:focus,
+.auth-card input[type="password"]:focus,
+.auth-card input:not([type]):focus {
+    border-color: var(--color-gold);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* ==========================================
+   PLACEHOLDER TEXT STYLING (The main fix)
+   ========================================== */
+
+/* WebKit browsers (Chrome, Safari, Edge) */
+.auth-card input::-webkit-input-placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 13px;             /* Smaller than input text */
+    font-weight: 400;
+    letter-spacing: 0.3px;
+}
+
+/* Mozilla Firefox */
+.auth-card input::-moz-placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    opacity: 1;
+}
+
+/* Modern browsers (IE 10+ / newer syntax) */
+.auth-card input:-ms-input-placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+}
+
+.auth-card input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 13px;             /* Keeps "john@example.com" small and subtle */
+    font-weight: 400;
+    letter-spacing: 0.3px;
+}
+
+/* ==========================================
+   LABEL STYLING (Optional polish)
+   ========================================== */
+
+.auth-card label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+/* Spacing between form groups */
+.auth-card .form-group,
+.auth-card .input-group {
+    margin-bottom: 16px;
+}
+
+/* ==========================================
+   CHECKBOX & "REMEMBER ME" STYLING
+   ========================================== */
+
+.auth-card input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+    accent-color: var(--color-gold);
+    cursor: pointer;
+}
+
+.auth-card .remember-me,
+.auth-card label:has(input[type="checkbox"]) {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    text-transform: none;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0;
+}
     </style> 
 </head>
 <body>
