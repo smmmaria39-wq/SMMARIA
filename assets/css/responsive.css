@@ -820,3 +820,20 @@ textarea:focus {
     opacity: 1;
   }
 }
+/* Dynamic Order Details Modal Mobile Fixes */
+@media (max-width: 768px) {
+  #orderDetailsModal .modal {
+    width: 95%;
+    margin: 10px;
+  }
+  #orderDetailsModal .modal__body {
+    padding: 15px;
+  }
+  #orderDetailsModal .modal__body > div {
+    gap: 8px !important;
+  }
+  #orderDetailsModal .modal__body div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+}
