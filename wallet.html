@@ -477,7 +477,23 @@
                         <img src="https://ik.imagekit.io/s95tumxuk/IMG_5003.jpeg" alt="Airtel" style="height: 24px; width: auto; object-fit: contain; margin-bottom: 5px;">
                         <div style="font-weight: 600; font-size: 14px;">Airtel Money</div>
                     </label>
-                    
+                    <!-- ═══════════════════════════════════════════════════
+     BINANCE PAY — NEW PAYMENT METHOD CARD
+     ═══════════════════════════════════════════════════ -->
+<label class="payment-tile binance-tile">
+ <input type="radio" name="payment-method" value="binance" required style="display: none;">
+ <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 32px; height: 32px; margin-bottom: 5px;">
+  <g fill="#F0B90B">
+   <path d="M12 3l2.5 2.5L12 8 9.5 5.5z" />
+   <path d="M6 9l2.5 2.5L6 14l-2.5-2.5z" />
+   <path d="M12 9l2.5 2.5L12 14l-2.5-2.5z" />
+   <path d="M18 9l2.5 2.5L18 14l-2.5-2.5z" />
+   <path d="M12 15l2.5 2.5L12 20l-2.5-2.5z" />
+  </g>
+ </svg>
+ <div style="font-weight: 600; font-size: 14px;">Binance Pay</div>
+ <div style="font-size: 11px; color: var(--text-muted, #9ca3af);">Pay with Binance app</div>
+</label>
                     <label class="payment-tile">
                         <input type="radio" name="payment-method" value="card" required style="display: none;">
                         <div style="display: flex; gap: 5px; align-items: center; justify-content: center; margin-bottom: 5px;">
@@ -519,6 +535,146 @@
                     <input type="tel" id="airtel-phone" class="form-input" placeholder="e.g., 07XXXXXXXX">
                 </div>
             </div>
+            
+            <!-- ═══════════════════════════════════════════════════
+     BINANCE PAY — PAYMENT INSTRUCTIONS SECTION
+     ═══════════════════════════════════════════════════ -->
+<div id="binance-fields" class="dynamic-fields" style="display: none;">
+ 
+ <!-- Binance Payment Banner -->
+ <div class="binance-banner">
+  <div class="binance-banner__logo">
+   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <g fill="#F0B90B">
+     <path d="M12 3l2.5 2.5L12 8 9.5 5.5z" />
+     <path d="M6 9l2.5 2.5L6 14l-2.5-2.5z" />
+     <path d="M12 9l2.5 2.5L12 14l-2.5-2.5z" />
+     <path d="M18 9l2.5 2.5L18 14l-2.5-2.5z" />
+     <path d="M12 15l2.5 2.5L12 20l-2.5-2.5z" />
+    </g>
+   </svg>
+  </div>
+  <div class="binance-banner__text">
+   <h3>BINANCE PAY</h3>
+   <p>Pay securely using the Binance app.</p>
+  </div>
+  <span class="binance-banner__badge">Manual Verification</span>
+ </div>
+ 
+ <!-- Step 1: Scan QR Code -->
+ <div class="binance-step">
+  <div class="binance-step__title">
+   <span class="binance-step__title-num">1</span>
+   Scan QR Code
+  </div>
+  <p class="binance-step__desc">
+   Open your Binance app and scan the payment QR code below. Review the recipient and payment details before confirming.
+  </p>
+  <div class="binance-qr-container" id="binance-qr-wrapper">
+   <!-- QR image or placeholder populated by binance-pay.js -->
+  </div>
+  <div class="binance-recipient-info" id="binance-recipient-info">
+   <!-- Recipient details populated by binance-pay.js -->
+  </div>
+ </div>
+ 
+ <!-- Step 2: Payment Link -->
+ <div class="binance-step">
+  <div class="binance-step__title">
+   <span class="binance-step__title-num">2</span>
+   Or Use Payment Link
+  </div>
+  <p class="binance-step__desc">
+   If you prefer, open the configured Binance payment link and complete the payment using the displayed instructions.
+  </p>
+  <a id="binance-payment-link" href="#" target="_blank" rel="noopener noreferrer" class="binance-link-btn" style="display: none;">
+   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+    <polyline points="15 3 21 3 21 9"></polyline>
+    <line x1="10" y1="14" x2="21" y2="3"></line>
+   </svg>
+   Open Binance Pay Link
+  </a>
+  <div id="binance-no-link" class="binance-pending-state" style="display: none;">
+   No payment link configured. Please use the QR code above.
+  </div>
+ </div>
+ 
+ <!-- Step 3: Payment Details & Reference -->
+ <div class="binance-step">
+  <div class="binance-step__title">
+   <span class="binance-step__title-num">3</span>
+   Payment Details
+  </div>
+  <p class="binance-step__desc">
+   Review your deposit details below. Include the reference in your payment note if the selected Binance payment method supports notes or references.
+  </p>
+  <div class="binance-details-grid">
+   <div class="binance-detail-item">
+    <span class="label">Deposit Amount</span>
+    <span class="value highlight" id="binance-deposit-amount">$0.00</span>
+   </div>
+   <div class="binance-detail-item">
+    <span class="label">Bonus</span>
+    <span class="value" id="binance-bonus-amount">+$0.00</span>
+   </div>
+   <div class="binance-detail-item">
+    <span class="label">Total Credited</span>
+    <span class="value" id="binance-total-credited">$0.00</span>
+   </div>
+   <div class="binance-detail-item">
+    <span class="label">Currency</span>
+    <span class="value" id="binance-currency">USD</span>
+   </div>
+   <div class="binance-detail-item">
+    <span class="label">Deposit Reference</span>
+    <span class="value">
+     <span id="binance-deposit-reference">—</span>
+     <button type="button" class="binance-copy-btn" id="binance-copy-ref-btn" style="display: none;">Copy</button>
+    </span>
+   </div>
+  </div>
+  <div id="binance-reference-pending" class="binance-pending-state" style="margin-top: 12px;">
+   Click "Process Deposit" to generate your unique deposit reference.
+  </div>
+ </div>
+ 
+ <!-- Step 4: Submit Payment Proof -->
+ <div class="binance-step">
+  <div class="binance-step__title">
+   <span class="binance-step__title-num">4</span>
+   Submit Payment Proof
+  </div>
+  <p class="binance-step__desc">
+   After completing your payment, take a screenshot of your Binance payment confirmation. Send the screenshot to SMMARIA support on WhatsApp together with your deposit reference and the amount paid. Your deposit will be reviewed before your wallet is credited.
+  </p>
+  <div class="binance-reminder">
+   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M12 9v4"></path>
+    <path d="M12 17h.01"></path>
+    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+   </svg>
+   <span>Please attach your payment screenshot in WhatsApp before sending your message.</span>
+  </div>
+  <a id="binance-whatsapp-btn" href="#" target="_blank" rel="noopener noreferrer" class="binance-whatsapp-btn disabled">
+   <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" />
+   </svg>
+   Send Payment Screenshot on WhatsApp
+  </a>
+ </div>
+ 
+ <!-- Manual Verification Notice -->
+ <div class="binance-notice">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+   <circle cx="12" cy="12" r="10"></circle>
+   <line x1="12" y1="8" x2="12" y2="12"></line>
+   <line x1="12" y1="16" x2="12.01" y2="16"></line>
+  </svg>
+  <span>Your deposit will be manually verified by our admin team. Sending a WhatsApp message does not automatically confirm your payment. Please allow time for verification after sending your screenshot.</span>
+ </div>
+</div>
+<!-- ════════ END BINANCE PAY SECTION ════════ -->
 
             <div id="manual-fields" class="dynamic-fields" style="display: none;">
                 <div class="manual-instructions">
@@ -659,6 +815,17 @@
     </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════
+     BINANCE PAY — QR CODE ENLARGE MODAL
+     ═══════════════════════════════════════════════════ -->
+<div class="binance-qr-modal" id="binance-qr-modal" role="dialog" aria-modal="true" aria-label="Enlarged Binance QR Code">
+    <div class="binance-qr-modal__content">
+        <button class="binance-qr-modal__close" id="binance-qr-modal-close" type="button" aria-label="Close">&times;</button>
+        <img id="binance-qr-modal-img" src="" alt="Binance Pay QR Code (Enlarged)">
+        <div class="binance-qr-modal__title">Binance Pay QR Code</div>
+    </div>
+</div>
+
 <!-- Script to populate and search payment methods -->
 <script>
     // List of global payment methods. 
@@ -666,6 +833,7 @@
     const allPaymentMethods = [
         { name: "MTN Mobile Money", region: "Uganda/Africa", status: "active", methodId: "mtn", icon: "📱" },
         { name: "Airtel Money", region: "Uganda/Africa", status: "active", methodId: "airtel", icon: "📱" },
+        { name: "Binance Pay", region: "Global", status: "active", methodId: "binance", icon: "🟡" },
         { name: "Visa / Mastercard", region: "Global", status: "active", methodId: "card", icon: "💳" },
         
         // --- Coming Soon ---
