@@ -31,10 +31,18 @@ import { initCurrency, formatCurrency } from '../modules/currency.js'; // Added 
 import { loadPageModule } from './router.js';
 import { handleLogin, handleRegister, handleLogout } from '../modules/auth.js';
 
+// Binance Pay Modules
+import { BinancePayConfig } from '../modules/binance-pay-config.js';
+import { initBinancePay, BinancePayAdmin } from '../modules/binance-pay.js';
+
 // Expose Auth functions to window for HTML inline events (onsubmit/onclick)
 window.handleLogin = handleLogin;
 window.handleRegister = handleRegister;
 window.handleLogout = handleLogout;
+
+// Expose Binance Pay to window for admin console testing
+window.BinancePayConfig = BinancePayConfig;
+window.BinancePayAdmin = BinancePayAdmin;
 
 // Helper to update navbar balance globally
 export function updateNavbarBalance(balance) {
@@ -139,11 +147,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
  }
  
+ // Initialize Binance Pay if the deposit form exists on the page
+ if (document.getElementById('deposit-form')) {
+  initBinancePay();
+ }
+
  // Load the specific module for the current page
  if (!isPublicPage) {
   loadPageModule();
  }
 }); 
+
 // Put this in app.js or at the bottom of your main HTML layout
 document.addEventListener('click', (e) => {
     const mariaAdsSheet = document.getElementById('mariaAdsSheet');
