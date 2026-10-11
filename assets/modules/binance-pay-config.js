@@ -5,7 +5,7 @@
 
 const defaultSettings = {
  enabled: true,
- qrCodeImage: '',
+ qrCodeImage: 'https://ik.imagekit.io/s95tumxuk/IMG_6253.png',
  paymentLink: '',
  recipientId: '',
  recipientName: '',
