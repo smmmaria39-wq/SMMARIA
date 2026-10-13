@@ -4,315 +4,185 @@ import { api } from '../utils/api.js';
 import { formatDate } from '../utils/formatter.js';
 import { showToast } from '../components/toast.js';
 
-/* ------------------------------------------------------------------ *
- * Security helpers
- * ------------------------------------------------------------------ */
-
-const escapeHtml = (value) => {
- if (value === null || value === undefined) return '';
- return String(value)
-  .replace(/&/g, '&amp;')
-  .replace(/</g, '&lt;')
-  .replace(/>/g, '&gt;')
-  .replace(/"/g, '&quot;')
-  .replace(/'/g, '&#39;');
-};
-
-const escapeAttr = escapeHtml;
-
-const isSafeMediaUrl = (url) => {
- if (!url || typeof url !== 'string') return false;
- if (!/^https?:\/\//i.test(url)) return false;
- try {
-  const parsed = new URL(url);
-  return parsed.protocol === 'http:' || parsed.protocol === 'https:';
- } catch (_) {
-  return false;
- }
-};
-
-/* ------------------------------------------------------------------ *
- * Media parsing
- * ------------------------------------------------------------------ */
-
-const MEDIA_RE = /\.(jpg|jpeg|png|gif|webp|mp4|webm|ogg)(\?.*)?$/i;
-const VIDEO_RE = /\.(mp4|webm|ogg)(\?.*)?$/i;
-
-/**
- * Extracts the first supported media URL from a notification message.
- * Returns the cleaned text plus ready-to-render media HTML.
- */
-const parseMediaFromMessage = (message) => {
- if (!message) return { text: '', mediaHtml: '' };
-
- const source = String(message);
- const words = source.split(/\s+/);
- let mediaUrl = null;
- let isVideo = false;
- const textWords = [];
-
- for (const word of words) {
-  if (!word) continue;
-  if (
-   !mediaUrl &&
-   /^https?:\/\//i.test(word) &&
-   MEDIA_RE.test(word) &&
-   isSafeMediaUrl(word)
-  ) {
-   mediaUrl = word;
-   isVideo = VIDEO_RE.test(word);
-   continue; // remove the URL from the visible text
-  }
-  textWords.push(word);
- }
-
- if (!mediaUrl) {
-  return { text: source, mediaHtml: '' };
- }
-
- const safeUrl = escapeAttr(mediaUrl);
- const text = textWords.join(' ').trim();
-
- let mediaHtml;
- if (isVideo) {
-  mediaHtml = `
-   <div class="notification__media">
-    <video class="notification__media-video"
-      src="${safeUrl}"
-      controls
-      playsinline
-      preload="metadata">Your browser does not support the video tag.</video>
-   </div>`;
- } else {
-  mediaHtml = `
-   <div class="notification__media">
-    <img class="notification__media-image"
-      src="${safeUrl}"
-      alt="Notification media"
-      loading="lazy"
-      decoding="async"
-      referrerpolicy="no-referrer" />
-   </div>`;
- }
-
- return { text, mediaHtml };
-};
-
-/* ------------------------------------------------------------------ *
- * Classification
- * ------------------------------------------------------------------ */
-
-const classify = (n) => {
- const title = (n.title || '').toLowerCase();
- const message = (n.cleanMessage || '').toLowerCase();
-
- // Whole-word "ad" matching — avoids "admin", "add", "adobe", "header", etc.
- const advertWordRe = /\b(advert|advertisement|ad)\b/i;
-
- const isEmergency =
-  /\bemergenc(?:y|ies)\b/i.test(title) ||
-  /\bemergenc(?:y|ies)\b/i.test(message);
-
- const isAdvert =
-  advertWordRe.test(title) ||
-  advertWordRe.test(message);
-
- const isGiveaway =
-  /\bgive\s?away\b/i.test(title) ||
-  /\bgive\s?away\b/i.test(message);
-
- if (isEmergency) return 'emergency';
- if (isAdvert) return 'advert';
- if (isGiveaway) return 'giveaway';
- return 'regular';
-};
-
-/* ------------------------------------------------------------------ *
- * Reusable card renderers
- * ------------------------------------------------------------------ */
-
-const SPECIAL_META = {
- emergency: {
-  cardClass: 'notification-card--emergency',
-  icon: '🚨',
-  fallbackTitle: 'EMERGENCY NOTICE'
- },
- advert: {
-  cardClass: 'notification-card--advert',
-  icon: '📢',
-  fallbackTitle: 'ADVERTISEMENT'
- },
- giveaway: {
-  cardClass: 'notification-card--giveaway',
-  icon: '🎉',
-  fallbackTitle: 'GIVEAWAY'
- }
-};
-
-const messageToHtml = (cleanMessage) => {
- if (!cleanMessage) return '';
- return `<p class="notification__message">${escapeHtml(cleanMessage).replace(/\r?\n/g, '<br>')}</p>`;
-};
-
-const renderSpecialCard = (n, kind) => {
- const meta = SPECIAL_META[kind];
- const title = escapeHtml(n.title || meta.fallbackTitle);
- const mediaHtml = n.mediaHtml || '';
- const bodyHtml = messageToHtml(n.cleanMessage);
- const time = escapeHtml(formatDate(n.createdAt));
-
- return `
-  <article class="card notification-card ${meta.cardClass}">
-   <header class="notification-item__header">
-    <span class="notification__icon" aria-hidden="true">${meta.icon}</span>
-    <div class="notification-item__heading">
-     <h3 class="notification-item__title">${title}</h3>
-    </div>
-   </header>
-   ${bodyHtml}
-   ${mediaHtml}
-   <footer class="notification-item__footer">
-    <span class="notification__time">${time}</span>
-   </footer>
-  </article>`;
-};
-
-const renderSpecialContainer = (container, items, kind) => {
- if (!container) return;
- if (!items || items.length === 0) {
-  container.innerHTML = '';
-  container.style.display = 'none';
-  return;
- }
- container.innerHTML = items.map((n) => renderSpecialCard(n, kind)).join('');
- container.style.display = 'block';
- attachImageErrorHandlers(container);
-};
-
-const renderRegularCard = (n) => {
- const isAnnouncement = n.type === 'announcement';
- const iconClass = isAnnouncement
-  ? 'notification__icon notification__icon--warning'
-  : 'notification__icon notification__icon--info';
- const iconText = isAnnouncement ? '📢' : 'i';
- const badgeLabel = isAnnouncement ? 'Announcement' : 'Update';
-
- const title = escapeHtml(n.title || 'Notification');
- const mediaHtml = n.mediaHtml || '';
- const bodyHtml = messageToHtml(n.cleanMessage);
- const time = escapeHtml(formatDate(n.createdAt));
-
- return `
-  <li class="notification-item">
-   <header class="notification-item__header">
-    <span class="${iconClass}" aria-hidden="true">${iconText}</span>
-    <div class="notification-item__heading">
-     <h3 class="notification-item__title">${title}</h3>
-     <span class="notification-item__badge">${badgeLabel}</span>
-    </div>
-   </header>
-   ${bodyHtml}
-   ${mediaHtml}
-   <footer class="notification-item__footer">
-    <span class="notification__time">${time}</span>
-   </footer>
-  </li>`;
-};
-
-/* ------------------------------------------------------------------ *
- * Graceful image failure handling
- * ------------------------------------------------------------------ */
-
-const attachImageErrorHandlers = (root) => {
- if (!root) return;
- const imgs = root.querySelectorAll('img.notification__media-image');
- imgs.forEach((img) => {
-  if (img.dataset.errorBound === '1') return;
-  img.dataset.errorBound = '1';
-  img.addEventListener('error', () => {
-   const wrapper = img.closest('.notification__media');
-   if (wrapper && wrapper.parentNode) {
-    wrapper.parentNode.removeChild(wrapper);
-   }
-  });
- });
-};
-
-/* ------------------------------------------------------------------ *
- * Empty-state helpers
- * ------------------------------------------------------------------ */
-
-const EMPTY_STATE = (text) =>
- `<li class="text-muted text-center" style="padding:40px;">${escapeHtml(text)}</li>`;
-
-const hideContainer = (c) => {
- if (!c) return;
- c.innerHTML = '';
- c.style.display = 'none';
-};
-
-/* ------------------------------------------------------------------ *
- * Entry point
- * ------------------------------------------------------------------ */
-
 export default async function initNotificationsPage() {
  const notifList = document.getElementById('notifications-list');
  const giveawayContainer = document.getElementById('giveawayCardContainer');
- const advertContainer = document.getElementById('advertCardContainer');
+ const advertContainer = document.getElementById('advertCardContainer'); 
  const emergencyContainer = document.getElementById('emergencyCardContainer');
-
+ 
  if (!notifList) return;
-
- // Loading state
- notifList.innerHTML = EMPTY_STATE('Loading notifications…');
+ 
+ // FIX: Robust media URL extractor that handles query parameters correctly
+ const parseMediaFromMessage = (message) => {
+  if (!message) return { text: '', mediaHtml: '' };
+  
+  const words = message.split(/\s+/);
+  let mediaUrl = null;
+  const textWords = [];
+  
+  words.forEach(word => {
+   if (/^https?:\/\//i.test(word)) {
+    // Check if it ends with an image or video extension (allowing query strings like ?v=1)
+    if (/\.(jpg|jpeg|png|gif|webp|mp4|webm|ogg)(\?.*)?$/i.test(word)) {
+     if (!mediaUrl) {
+      mediaUrl = word; // Extract the first media URL found
+      return; // Skip adding this word to the text
+     }
+    }
+   }
+   textWords.push(word);
+  });
+  
+  if (!mediaUrl) return { text: message, mediaHtml: '' };
+  
+  const text = textWords.join(' ').trim();
+  let mediaHtml = '';
+  
+  const isVideo = /\.(mp4|webm|ogg)(\?.*)?$/i.test(mediaUrl);
+  
+  if (isVideo) {
+   // Video WITH controls, user can play/pause and it has sound. NO autoplay.
+   mediaHtml = `<video src="${mediaUrl}" controls style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;">Your browser does not support the video tag.</video>`;
+  } else {
+   // Image
+   mediaHtml = `<img src="${mediaUrl}" alt="Media" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;">`;
+  }
+  
+  return { text, mediaHtml };
+ };
 
  try {
   const res = await api.getNotifications();
-  const allNotifications = Array.isArray(res?.data) ? res.data : [];
-
+  const allNotifications = res.data || [];
+  
   if (allNotifications.length === 0) {
-   notifList.innerHTML = EMPTY_STATE('No notifications found.');
-   hideContainer(emergencyContainer);
-   hideContainer(advertContainer);
-   hideContainer(giveawayContainer);
+   notifList.innerHTML = `<li class="text-muted text-center" style="padding: 40px;">No notifications found.</li>`;
    return;
   }
-
-  const buckets = {
-   emergency: [],
-   advert: [],
-   giveaway: [],
-   regular: []
-  };
-
-  allNotifications.forEach((n) => {
+  
+  let giveaways = [];
+  let adverts = [];
+  let emergencies = [];
+  let regularNotifs = [];
+  
+  allNotifications.forEach(n => {
+   // Extract media for ALL notification types
    const { text, mediaHtml } = parseMediaFromMessage(n.message);
    n.cleanMessage = text;
    n.mediaHtml = mediaHtml;
-   buckets[classify(n)].push(n);
+
+   const title = (n.title || '').toLowerCase();
+   const messageCheck = (n.cleanMessage || '').toLowerCase(); // Use cleaned text for keyword check
+   
+   const isEmergency = title.includes('emergency') || messageCheck.includes('emergency');
+   const isAdvert = title.includes('advert') || messageCheck.includes('advertisement') || title.includes('ad');
+   const isGiveaway = title.includes('giveaway') || title.includes('give away') || messageCheck.includes('giveaway') || messageCheck.includes('give away');
+   
+   if (isEmergency) {
+    emergencies.push(n);
+   } else if (isAdvert) {
+    adverts.push(n);
+   } else if (isGiveaway) {
+    giveaways.push(n);
+   } else {
+    regularNotifs.push(n);
+   }
   });
-
-  // 1. Emergency
-  renderSpecialContainer(emergencyContainer, buckets.emergency, 'emergency');
-
-  // 2. Advertisement
-  renderSpecialContainer(advertContainer, buckets.advert, 'advert');
-
-  // 3. Giveaway
-  renderSpecialContainer(giveawayContainer, buckets.giveaway, 'giveaway');
-
-  // 4. Regular notifications (do NOT early-return before special cards)
-  if (buckets.regular.length === 0) {
-   notifList.innerHTML = EMPTY_STATE('No other notifications found.');
+  
+  // 1. Render Emergency Card
+  if (emergencyContainer) {
+   if (emergencies.length > 0) {
+    emergencyContainer.innerHTML = emergencies.map(e => `
+     <div class="card" style="margin-bottom: 20px; border: 2px solid var(--color-danger, #ef4444); background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), var(--bg-card));">
+      <div class="card__header" style="border-bottom: none; padding-bottom: 0;">
+       <h3 class="card__title" style="display: flex; align-items: center; gap: 8px; color: var(--color-danger, #ef4444);">
+        🚨 ${e.title || 'EMERGENCY NOTICE'}
+       </h3>
+      </div>
+      <div class="card__body" style="padding-top: 10px;">
+       ${e.mediaHtml || ''}
+       ${e.cleanMessage ? `<p style="font-size: 15px; color: var(--text-primary); line-height: 1.6; margin-bottom: 10px;">${e.cleanMessage}</p>` : ''}
+       <span class="notification__time" style="font-size: 12px; color: var(--text-muted);">${formatDate(e.createdAt)}</span>
+      </div>
+     </div>
+    `).join('');
+    emergencyContainer.style.display = 'block';
+   } else {
+    emergencyContainer.style.display = 'none';
+   }
+  }
+  
+  // 2. Render Advert Card (With Image/Video)
+  if (advertContainer) {
+   if (adverts.length > 0) {
+    advertContainer.innerHTML = adverts.map(a => `
+     <div class="card" style="margin-bottom: 20px; border: 2px solid var(--color-primary, #3b82f6); background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), var(--bg-card));">
+      <div class="card__header" style="border-bottom: none; padding-bottom: 0;">
+       <h3 class="card__title" style="display: flex; align-items: center; gap: 8px; color: var(--color-primary, #3b82f6);">
+        📢 ${a.title || 'ADVERTISEMENT'}
+       </h3>
+      </div>
+      <div class="card__body" style="padding-top: 10px;">
+       ${a.mediaHtml || ''}
+       ${a.cleanMessage ? `<p style="font-size: 15px; color: var(--text-primary); line-height: 1.6; margin-bottom: 10px;">${a.cleanMessage}</p>` : ''}
+       <span class="notification__time" style="font-size: 12px; color: var(--text-muted);">${formatDate(a.createdAt)}</span>
+      </div>
+     </div>
+    `).join('');
+    advertContainer.style.display = 'block';
+   } else {
+    advertContainer.style.display = 'none';
+   }
+  }
+  
+  // 3. Render Giveaway Card
+  if (giveawayContainer) {
+   if (giveaways.length > 0) {
+    giveawayContainer.innerHTML = giveaways.map(g => `
+     <div class="card" style="margin-bottom: 20px; border: 2px solid var(--color-gold); background: linear-gradient(135deg, rgba(244, 179, 66, 0.05), var(--bg-card));">
+      <div class="card__header" style="border-bottom: none; padding-bottom: 0;">
+       <h3 class="card__title" style="display: flex; align-items: center; gap: 8px; color: var(--color-gold);">
+        🎉 ${g.title || 'GIVE AWAY'}
+       </h3>
+      </div>
+      <div class="card__body" style="padding-top: 10px;">
+       ${g.mediaHtml || ''}
+       ${g.cleanMessage ? `<p style="font-size: 15px; color: var(--text-primary); line-height: 1.6; margin-bottom: 10px;">${g.cleanMessage}</p>` : ''}
+       <span class="notification__time" style="font-size: 12px; color: var(--text-muted);">${formatDate(g.createdAt)}</span>
+      </div>
+     </div>
+    `).join('');
+    giveawayContainer.style.display = 'block';
+   } else {
+    giveawayContainer.style.display = 'none';
+   }
+  }
+  
+  // 4. Render Regular Notifications List
+  if (regularNotifs.length === 0) {
+   notifList.innerHTML = `<li class="text-muted text-center" style="padding: 40px;">No other notifications found.</li>`;
    return;
   }
-
-  notifList.innerHTML = buckets.regular.map(renderRegularCard).join('');
-  attachImageErrorHandlers(notifList);
+  
+  notifList.innerHTML = regularNotifs.map(n => {
+   const iconClass = n.type === 'announcement' ? 'notification__icon--warning' : 'notification__icon--info';
+   const iconText = n.type === 'announcement' ? '📢' : 'i';
+   
+   return `
+    <li class="notification-item" style="margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
+     <div class="notification__icon ${iconClass}">${iconText}</div>
+     <div class="notification__content" style="width: 100%;">
+      <p><strong>${n.title || 'Notification'}</strong>: ${n.cleanMessage || ''}</p>
+      ${n.mediaHtml || ''}
+      <span class="notification__time">${formatDate(n.createdAt)}</span>
+     </div>
+    </li>
+   `;
+  }).join('');
+  
  } catch (error) {
   console.error('Failed to load notifications:', error);
   showToast('Failed to load notifications', 'error');
-  notifList.innerHTML =
-   '<li class="text-muted text-center text-danger">Failed to load notifications.</li>';
+  notifList.innerHTML = `<li class="text-muted text-center text-danger">Failed to load notifications.</li>`;
  }
 }
