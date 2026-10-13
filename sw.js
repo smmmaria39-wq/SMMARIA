@@ -1,167 +1,138 @@
+/* =========================================================================
+ *  SMMARIA SERVICE WORKER  (upgraded)
+ *  Preserves: push handler, notificationclick handler, payload format,
+ *  tags, actions, analytics, tab focusing, skipWaiting/clients.claim.
+ *  Adds: URL validation, defensive payload handling, waitUntil on analytics.
+ * ========================================================================= */
 
 const NOTIF_API_URL = 'https://notifications-production-4281.up.railway.app';
+const SITE_ORIGIN   = 'https://smmaria.site';
 
-// ═══════════════════════════════════════════════════════════════
-//  PUSH EVENT
-// ═══════════════════════════════════════════════════════════════
-
-self.addEventListener('push', function(event) {
- let payload = {};
- 
- try {
-  if (event.data) {
-   payload = event.data.json();
-  }
- } catch (e) {
-  // Payload might be plain text — use as body
+/* ---- helpers --------------------------------------------------------- */
+function isSafeUrl(u) {
+  if (!u || typeof u !== 'string') return false;
   try {
-   payload = { title: 'SMMARIA', body: event.data ? event.data.text() : '' };
-  } catch (e2) {
-   payload = { title: 'SMMARIA', body: 'You have a new notification' };
-  }
- }
- 
- const title = payload.title || 'SMMARIA';
- const body = payload.body || '';
- 
- // Build notification options — only include supported fields
- const options = {
-  body: body,
-  requireInteraction: false,
-  data: {
-   url: payload.url || 'https://smmaria.site',
-   notificationId: payload.notificationId || null,
-   actionText: payload.actionText || null
-  }
- };
- 
- // Add icon if provided
- if (payload.icon) options.icon = payload.icon;
- 
- // Add badge if provided
- if (payload.badge) options.badge = payload.badge;
- 
- // Add image if provided (supported on Chrome, Edge, Android)
- if (payload.image) options.image = payload.image;
- 
- // Add action button if provided (limited support — works on
- // Chrome/Edge desktop and Android, not on iOS Safari)
- if (payload.actionText) {
-  options.actions = [
-   { action: 'activate', title: payload.actionText },
-   { action: 'close', title: 'Dismiss' }
-  ];
- }
- 
- // Add tag to prevent duplicate notifications
- if (payload.notificationId) {
-  options.tag = payload.notificationId;
-  options.renotify = true;
- }
- 
- event.waitUntil(
-  self.registration.showNotification(title, options)
- );
-});
+    const parsed = new URL(u, SITE_ORIGIN);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch (e) { return false; }
+}
 
-// ═══════════════════════════════════════════════════════════════
-//  NOTIFICATION CLICK EVENT
-// ═══════════════════════════════════════════════════════════════
+function normalizeUrl(u) {
+  if (!isSafeUrl(u)) return SITE_ORIGIN;
+  try { return new URL(u, SITE_ORIGIN).href; }
+  catch (e) { return SITE_ORIGIN; }
+}
 
-self.addEventListener('notificationclick', function(event) {
- const notif = event.notification;
- const data = notif.data || {};
- const url = data.url || 'https://smmaria.site';
- const notificationId = data.notificationId;
- const isActionClick = !!event.action && event.action !== 'close';
- 
- // If the user clicked "Dismiss", just close
- if (event.action === 'close') {
-  notif.close();
-  return;
- }
- 
- // Determine event type for analytics
- const eventType = isActionClick ? 'action_click' : 'notification_click';
- const actionName = event.action || null;
- 
- // Send analytics (non-blocking, fire-and-forget)
- if (notificationId) {
+/* ---- push event ----------------------------------------------------- */
+self.addEventListener('push', function (event) {
+  let payload = {};
+  let dataRaw = null;
+
   try {
-   fetch(`${NOTIF_API_URL}/api/analytics/click`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-     notificationId: notificationId,
-     event: eventType,
-     action: actionName
-    }),
-    keepalive: true
-   }).catch(function() {
-    // Silently fail — analytics must not block URL opening
-   });
+    if (event.data) {
+      dataRaw = event.data.text();
+      payload  = event.data.json();
+    }
   } catch (e) {
-   // Silently fail
+    // Plain-text payload — keep going with a sensible fallback
+    try { payload = { title: 'SMMARIA', body: dataRaw || '' }; }
+    catch (e2) { payload = { title: 'SMMARIA', body: 'You have a new notification' }; }
   }
- }
- 
- // Close the notification
- notif.close();
- 
- // Open or focus the SMMARIA tab
- event.waitUntil(
-  (async function() {
-   try {
-    const allClients = await clients.matchAll({
-     type: 'window',
-     includeUncontrolled: true
-    });
-    
-    // Look for an existing SMMARIA tab
-    for (let i = 0; i < allClients.length; i++) {
-     const client = allClients[i];
-     if (client.url.includes('smmaria.site')) {
-      // Focus the existing tab
-      await client.focus();
-      // Try to navigate it to the destination URL
-      // (client.navigate only works if the client is
-      // controlled by this service worker)
-      if (client.navigate) {
-       try {
-        await client.navigate(url);
-       } catch (e) {
-        // If navigation fails (cross-origin etc.),
-        // the focused tab remains — user can navigate manually
-       }
-      }
-      return;
-     }
+
+  if (!payload || typeof payload !== 'object') payload = {};
+
+  const title = String(payload.title || 'SMMARIA').slice(0, 200);
+  const body  = String(payload.body  || '').slice(0, 500);
+
+  const options = {
+    body: body,
+    requireInteraction: false,
+    data: {
+      url: normalizeUrl(payload.url),
+      notificationId: payload.notificationId || null,
+      actionText: payload.actionText || null
     }
-    
-    // No existing SMMARIA tab found — open a new one
-    await clients.openWindow(url);
-   } catch (e) {
-    // Fallback — try to open a new window
+  };
+
+  if (payload.icon)  options.icon  = String(payload.icon);
+  if (payload.badge) options.badge = String(payload.badge);
+  if (payload.image) options.image = String(payload.image);
+
+  if (payload.actionText) {
+    options.actions = [
+      { action: 'activate', title: String(payload.actionText).slice(0, 24) },
+      { action: 'close',    title: 'Dismiss' }
+    ];
+  }
+
+  if (payload.notificationId) {
+    options.tag     = String(payload.notificationId);
+    options.renotify = true;
+  }
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+/* ---- notification click -------------------------------------------- */
+self.addEventListener('notificationclick', function (event) {
+  const notif = event.notification;
+  const data  = notif.data || {};
+  const url   = normalizeUrl(data.url);
+  const notificationId = data.notificationId || null;
+  const isActionClick = !!event.action && event.action !== 'close';
+
+  if (event.action === 'close') { notif.close(); return; }
+
+  const eventType  = isActionClick ? 'action_click' : 'notification_click';
+  const actionName = event.action || null;
+
+  notif.close();
+
+  // Analytics — fire-and-forget, never blocks navigation
+  const analyticsPromise = (function () {
+    if (!notificationId) return Promise.resolve();
+    return fetch(NOTIF_API_URL + '/api/analytics/click', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        notificationId: notificationId,
+        event: eventType,
+        action: actionName
+      }),
+      keepalive: true
+    }).catch(function () { /* silent */ });
+  })();
+
+  const openPromise = (async function () {
     try {
-     await clients.openWindow(url);
-    } catch (e2) {
-     console.warn('[sw] Failed to open window:', e2.message);
+      const allClients = await clients.matchAll({
+        type: 'window',
+        includeUncontrolled: true
+      });
+
+      for (let i = 0; i < allClients.length; i++) {
+        const client = allClients[i];
+        if (client.url && client.url.indexOf('smmaria.site') !== -1) {
+          try { await client.focus(); } catch (e) {}
+          if (typeof client.navigate === 'function') {
+            try { await client.navigate(url); } catch (e) { /* cross-origin */ }
+          }
+          return;
+        }
+      }
+      try { await clients.openWindow(url); }
+      catch (e) { try { await clients.openWindow(SITE_ORIGIN); } catch (e2) {} }
+    } catch (e) {
+      try { await clients.openWindow(SITE_ORIGIN); } catch (e2) {}
     }
-   }
-  })()
- );
+  })();
+
+  event.waitUntil(Promise.all([analyticsPromise, openPromise]));
 });
 
-// ═══════════════════════════════════════════════════════════════
-//  INSTALL & ACTIVATE (minimal — does not interfere with existing SW)
-// ═══════════════════════════════════════════════════════════════
+/* ---- install / activate (unchanged behavior) ----------------------- */
+self.addEventListener('install', function () { self.skipWaiting(); });
 
-self.addEventListener('install', function(event) {
- // Activate immediately — don't wait for existing tabs to close
- self.skipWaiting();
-});
-
-self.addEventListener('activate', function(event) {
- // Take control of all clients immediately
- event.waitUntil(clients.claim());
+self.addEventListener('activate', function (event) {
+  event.waitUntil(clients.claim());
 });
