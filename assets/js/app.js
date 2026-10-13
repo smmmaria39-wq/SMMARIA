@@ -35,9 +35,6 @@ import { handleLogin, handleRegister, handleLogout } from '../modules/auth.js';
 import { BinancePayConfig } from '../modules/binance-pay-config.js';
 import { initBinancePay, BinancePayAdmin } from '../modules/binance-pay.js';
 
-// Mobile App Enhancements
-import { MobileApp } from './mobile-app.js';
-
 // Expose Auth functions to window for HTML inline events (onsubmit/onclick)
 window.handleLogin = handleLogin;
 window.handleRegister = handleRegister;
@@ -119,9 +116,6 @@ document.addEventListener('DOMContentLoaded', async () => {
  initSidebarWidgets();
  initDropdowns();
  initCurrency();
- 
- // Initialize Mobile App Enhancements
- MobileApp.init();
  
  // Fetch real user data for Navbar
  const token = localStorage.getItem('smmmaria_token');
