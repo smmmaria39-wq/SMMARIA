@@ -166,13 +166,11 @@ const renderSpecialCard = (n, kind) => {
    <header class="notification-item__header">
     <span class="notification__icon" aria-hidden="true">${meta.icon}</span>
     <div class="notification-item__heading">
-     <h3 class="notification-item__title">${meta.icon} ${title}</h3>
+     <h3 class="notification-item__title">${title}</h3>
     </div>
    </header>
-   <div class="notification-item__body">
-    ${mediaHtml}
-    ${bodyHtml}
-   </div>
+   ${bodyHtml}
+   ${mediaHtml}
    <footer class="notification-item__footer">
     <span class="notification__time">${time}</span>
    </footer>
@@ -213,10 +211,8 @@ const renderRegularCard = (n) => {
      <span class="notification-item__badge">${badgeLabel}</span>
     </div>
    </header>
-   <div class="notification-item__body">
-    ${mediaHtml}
-    ${bodyHtml}
-   </div>
+   ${bodyHtml}
+   ${mediaHtml}
    <footer class="notification-item__footer">
     <span class="notification__time">${time}</span>
    </footer>
