@@ -35,6 +35,9 @@ import { handleLogin, handleRegister, handleLogout } from '../modules/auth.js';
 import { BinancePayConfig } from '../modules/binance-pay-config.js';
 import { initBinancePay, BinancePayAdmin } from '../modules/binance-pay.js';
 
+// Mobile App Enhancements
+import { MobileApp } from './mobile-app.js';
+
 // Expose Auth functions to window for HTML inline events (onsubmit/onclick)
 window.handleLogin = handleLogin;
 window.handleRegister = handleRegister;
@@ -117,6 +120,9 @@ document.addEventListener('DOMContentLoaded', async () => {
  initDropdowns();
  initCurrency();
  
+ // Initialize Mobile App Enhancements
+ MobileApp.init();
+ 
  // Fetch real user data for Navbar
  const token = localStorage.getItem('smmmaria_token');
  if (token && !isPublicPage) {
@@ -151,29 +157,29 @@ document.addEventListener('DOMContentLoaded', async () => {
  if (document.getElementById('deposit-form')) {
   initBinancePay();
  }
-
+ 
  // Load the specific module for the current page
  if (!isPublicPage) {
   loadPageModule();
  }
-}); 
+});
 
 // Put this in app.js or at the bottom of your main HTML layout
 document.addEventListener('click', (e) => {
-    const mariaAdsSheet = document.getElementById('mariaAdsSheet');
-
-    // 1. If the Maria Ads button is clicked, open the sheet
-    if (e.target.closest('#mariaAdsBtn')) {
-        if (mariaAdsSheet) mariaAdsSheet.classList.add('active');
-    }
-
-    // 2. If the close handle, the dark background, or the continue button is clicked, close the sheet
-    if (e.target.closest('#closeMariaAdsSheet') || e.target === mariaAdsSheet || e.target.closest('#continueToMariaAds')) {
-        if (mariaAdsSheet) mariaAdsSheet.classList.remove('active');
-    }
-
-    // 3. Handle the redirect
-    if (e.target.closest('#continueToMariaAds')) {
-        window.open('https://ads.smmaria.site', '_blank');
-    }
+ const mariaAdsSheet = document.getElementById('mariaAdsSheet');
+ 
+ // 1. If the Maria Ads button is clicked, open the sheet
+ if (e.target.closest('#mariaAdsBtn')) {
+  if (mariaAdsSheet) mariaAdsSheet.classList.add('active');
+ }
+ 
+ // 2. If the close handle, the dark background, or the continue button is clicked, close the sheet
+ if (e.target.closest('#closeMariaAdsSheet') || e.target === mariaAdsSheet || e.target.closest('#continueToMariaAds')) {
+  if (mariaAdsSheet) mariaAdsSheet.classList.remove('active');
+ }
+ 
+ // 3. Handle the redirect
+ if (e.target.closest('#continueToMariaAds')) {
+  window.open('https://ads.smmaria.site', '_blank');
+ }
 });
