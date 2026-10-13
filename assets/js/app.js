@@ -2,22 +2,7 @@
 // App.js - User Frontend Main Entry Point
 // ===============================================
 
-// 1. Route Guard (Must be at the very top)
-const currentPath = window.location.pathname.toLowerCase();
-const isPublicPage = currentPath.includes('login') ||
- currentPath.includes('register') ||
- currentPath.includes('forgot') ||
- currentPath.endsWith('/') ||
- currentPath.includes('index.html');
-
-if (!isPublicPage) {
- const token = localStorage.getItem('smmmaria_token');
- if (!token) {
-  window.location.href = 'login.html';
- }
-}
-
-// 2. Imports
+// 1. Imports (Must be at the very top for ES Modules)
 import { api } from '../utils/api.js';
 import { initTheme } from '../utils/storage.js';
 import { initSidebar } from '../components/sidebar.js';
@@ -34,6 +19,24 @@ import { handleLogin, handleRegister, handleLogout } from '../modules/auth.js';
 // Binance Pay Modules
 import { BinancePayConfig } from '../modules/binance-pay-config.js';
 import { initBinancePay, BinancePayAdmin } from '../modules/binance-pay.js';
+
+// Mobile App Enhancements
+import { MobileApp } from './mobile-app.js';
+
+// 2. Route Guard
+const currentPath = window.location.pathname.toLowerCase();
+const isPublicPage = currentPath.includes('login') ||
+ currentPath.includes('register') ||
+ currentPath.includes('forgot') ||
+ currentPath.endsWith('/') ||
+ currentPath.includes('index.html');
+
+if (!isPublicPage) {
+ const token = localStorage.getItem('smmmaria_token');
+ if (!token) {
+  window.location.href = 'login.html';
+ }
+}
 
 // Expose Auth functions to window for HTML inline events (onsubmit/onclick)
 window.handleLogin = handleLogin;
@@ -116,6 +119,9 @@ document.addEventListener('DOMContentLoaded', async () => {
  initSidebarWidgets();
  initDropdowns();
  initCurrency();
+ 
+ // Initialize Mobile App Enhancements
+ MobileApp.init();
  
  // Fetch real user data for Navbar
  const token = localStorage.getItem('smmmaria_token');
