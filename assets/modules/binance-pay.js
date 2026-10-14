@@ -1,75 +1,141 @@
 /**
  * SMMMARIA Panel — Binance Pay Manual Deposit Logic
- * ES Module Version
+ * Standalone Backend Integration Version
  */
 import { BinancePayConfig } from './binance-pay-config.js';
 
-var depositCreated = false;
-var currentReference = null;
-var currentAmount = 0;
-var currentBonus = 0;
+let depositCreated = false;
+let currentDepositId = null;
+let currentReference = null;
+let pollTimer = null;
+let pollStartTime = null;
+let isSubmitting = false;
 
-export function initBinancePay() {
-    if (!BinancePayConfig) {
-        console.error('[Binance Pay] binance-pay-config.js not loaded.');
-        return;
-    }
+// Firebase instance holder (assumes Firebase is initialized globally in app.js)
+let firebaseAuth = null;
 
-    if (!BinancePayConfig.isEnabled()) {
-        console.log('[Binance Pay] Disabled in config. Hiding tile.');
-        hideBinanceTile();
-        return;
-    }
+export function initBinancePay(firebase) {
+    if (firebase) firebaseAuth = firebase.auth();
+    
+    // Reset state
+    depositCreated = false;
+    currentDepositId = null;
+    isSubmitting = false;
+    if (pollTimer) clearInterval(pollTimer);
 
+    // Fetch backend settings
+    loadBackendSettings();
+    
+    // Setup UI listeners
     setupPaymentMethodToggle();
     setupAmountListener();
     setupFormSubmission();
     setupQrEnlarge();
     setupCopyButtons();
-    renderBinanceContent();
 }
 
-function setupPaymentMethodToggle() {
-    var binanceRadio = document.querySelector('input[name="payment-method"][value="binance"]');
-    if (!binanceRadio) return;
+/* ═══════════════════════════════════════
+   LOAD BACKEND SETTINGS
+   ═══════════════════════════════════════ */
+async function loadBackendSettings() {
+    const tile = document.querySelector('.payment-tile.binance-tile');
+    if (!tile) return;
 
-    binanceRadio.addEventListener('change', function () {
-        if (this.checked) showBinanceFields();
-    });
+    const settingsUrl = BinancePayConfig.buildUrl(BinancePayConfig.endpoints.settings);
+    
+    if (!settingsUrl) {
+        tile.style.display = 'none';
+        return;
+    }
 
-    var allRadios = document.querySelectorAll('input[name="payment-method"]');
-    for (var i = 0; i < allRadios.length; i++) {
-        (function (radio) {
-            if (radio.value !== 'binance') {
-                radio.addEventListener('change', function () {
-                    if (this.checked) hideBinanceFields();
-                });
-            }
-        })(allRadios[i]);
+    try {
+        const res = await fetch(settingsUrl);
+        if (!res.ok) throw new Error('Failed to fetch settings');
+        
+        const settings = await res.json();
+        
+        if (!settings.enabled) {
+            hideBinanceTile();
+            return;
+        }
+
+        // Store limits and display data in dataset for later validation
+        tile.dataset.minDeposit = settings.minDeposit || 1;
+        tile.dataset.maxDeposit = settings.maxDeposit || 10000;
+        tile.dataset.currency = settings.currency || 'USD';
+        
+        // Render any static QR or recipient info provided by backend
+        renderStaticSettings(settings);
+        
+    } catch (error) {
+        console.error('[Binance Pay] Failed to load settings:', error);
+        hideBinanceTile();
     }
 }
 
-function showBinanceFields() {
-    var fields = document.getElementById('binance-fields');
-    if (fields) fields.style.display = 'block';
-    updateAmountDisplay();
-}
-
-function hideBinanceFields() {
-    var fields = document.getElementById('binance-fields');
-    if (fields) fields.style.display = 'none';
-}
-
 function hideBinanceTile() {
-    var tiles = document.querySelectorAll('.payment-tile');
+    const tiles = document.querySelectorAll('.payment-tile');
     for (var i = 0; i < tiles.length; i++) {
         var radio = tiles[i].querySelector('input[value="binance"]');
         if (radio) tiles[i].style.display = 'none';
     }
 }
 
+function renderStaticSettings(settings) {
+    // If backend provides a static QR code (e.g. for manual transfers)
+    const wrapper = document.getElementById('binance-qr-wrapper');
+    if (wrapper && settings.qrCodeImage) {
+        wrapper.innerHTML = `
+            <img src="${escapeAttr(settings.qrCodeImage)}" alt="Binance Pay QR Code" id="binance-qr-img">
+            <button type="button" class="binance-qr-enlarge-btn" id="binance-qr-enlarge-trigger">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                Enlarge QR Code
+            </button>`;
+    }
+
+    const info = document.getElementById('binance-recipient-info');
+    if (info && settings.recipientName) {
+        info.innerHTML = `<div>Recipient: <strong>${escapeHtml(settings.recipientName)}</strong></div>`;
+    }
+}
+
+/* ═══════════════════════════════════════
+   UI TOGGLE & AMOUNT LISTENERS
+   ═══════════════════════════════════════ */
+function setupPaymentMethodToggle() {
+    const binanceRadio = document.querySelector('input[name="payment-method"][value="binance"]');
+    if (!binanceRadio) return;
+
+    binanceRadio.addEventListener('change', function () {
+        if (this.checked) showBinanceFields();
+    });
+
+    const allRadios = document.querySelectorAll('input[name="payment-method"]');
+    for (let i = 0; i < allRadios.length; i++) {
+        if (allRadios[i].value !== 'binance') {
+            allRadios[i].addEventListener('change', function () {
+                if (this.checked) hideBinanceFields();
+            });
+        }
+    }
+}
+
+function showBinanceFields() {
+    const fields = document.getElementById('binance-fields');
+    if (fields) fields.style.display = 'block';
+    updateAmountDisplay();
+}
+
+function hideBinanceFields() {
+    const fields = document.getElementById('binance-fields');
+    if (fields) fields.style.display = 'none';
+}
+
 function setupAmountListener() {
-    var amountInput = document.getElementById('deposit-amount');
+    const amountInput = document.getElementById('deposit-amount');
     if (!amountInput) return;
 
     amountInput.addEventListener('input', function () {
@@ -79,22 +145,20 @@ function setupAmountListener() {
 }
 
 function updateAmountDisplay() {
-    var amountInput = document.getElementById('deposit-amount');
+    const amountInput = document.getElementById('deposit-amount');
     if (!amountInput) return;
 
-    var amount = parseFloat(amountInput.value) || 0;
-    currentAmount = amount;
-
-    var bonus = 0;
-    var bonusInfo = document.getElementById('bonus-info');
+    const amount = parseFloat(amountInput.value) || 0;
+    let bonus = 0;
+    const bonusInfo = document.getElementById('bonus-info');
     if (bonusInfo) {
-        var match = bonusInfo.textContent.match(/\+\$?([\d.]+)/);
+        const match = bonusInfo.textContent.match(/\+\$?([\d.]+)/);
         if (match) bonus = parseFloat(match[1]) || 0;
     }
-    currentBonus = bonus;
 
-    var currency = BinancePayConfig.get('currency') || 'USD';
-    var total = amount + bonus;
+    const tile = document.querySelector('.payment-tile.binance-tile');
+    const currency = tile?.dataset.currency || 'USD';
+    const total = amount + bonus;
 
     setText('binance-deposit-amount', formatMoney(amount, currency));
     setText('binance-bonus-amount', '+' + formatMoney(bonus, currency));
@@ -103,146 +167,151 @@ function updateAmountDisplay() {
 }
 
 function formatMoney(amount, currency) {
-    var symbol = currency === 'USD' ? '$' : '';
+    const symbol = currency === 'USD' ? '$' : '';
     return symbol + (amount || 0).toFixed(2);
 }
 
-function setText(id, text) {
-    var el = document.getElementById(id);
-    if (el) el.textContent = text;
-}
-
+/* ═══════════════════════════════════════
+   FORM SUBMISSION & DEPOSIT CREATION
+   ═══════════════════════════════════════ */
 function setupFormSubmission() {
-    var form = document.getElementById('deposit-form');
+    const form = document.getElementById('deposit-form');
     if (!form) return;
 
-    form.addEventListener('submit', function (e) {
-        var selected = document.querySelector('input[name="payment-method"]:checked');
+    form.addEventListener('submit', async function (e) {
+        const selected = document.querySelector('input[name="payment-method"]:checked');
         if (!selected || selected.value !== 'binance') return;
 
         e.preventDefault();
         e.stopPropagation();
-        handleBinanceDeposit();
+        
+        if (isSubmitting) return;
+        await handleBinanceDeposit();
     }, true);
 }
 
-function handleBinanceDeposit() {
-    var amountInput = document.getElementById('deposit-amount');
-    var amount = parseFloat(amountInput.value) || 0;
+async function handleBinanceDeposit() {
+    if (!firebaseAuth) {
+        notify('Authentication service not loaded. Please refresh the page.', 'error');
+        return;
+    }
 
-    var minD = BinancePayConfig.get('minDeposit') || 1;
-    var maxD = BinancePayConfig.get('maxDeposit') || 10000;
-    var currency = BinancePayConfig.get('currency') || 'USD';
+    const user = firebaseAuth.currentUser;
+    if (!user) {
+        notify('Please log in to make a deposit.', 'error');
+        return;
+    }
+
+    isSubmitting = true;
+    toggleSubmitButton(true);
+
+    const amountInput = document.getElementById('deposit-amount');
+    const amount = parseFloat(amountInput.value) || 0;
+    const tile = document.querySelector('.payment-tile.binance-tile');
+    const minD = parseFloat(tile?.dataset.minDeposit || 1);
+    const maxD = parseFloat(tile?.dataset.maxDeposit || 10000);
+    const currency = tile?.dataset.currency || 'USD';
 
     if (amount < minD) {
-        notify('Minimum Binance Pay deposit is ' + formatMoney(minD, currency), 'error');
+        notify(`Minimum Binance Pay deposit is ${formatMoney(minD, currency)}`, 'error');
+        isSubmitting = false;
+        toggleSubmitButton(false);
         return;
     }
     if (amount > maxD) {
-        notify('Maximum Binance Pay deposit is ' + formatMoney(maxD, currency), 'error');
+        notify(`Maximum Binance Pay deposit is ${formatMoney(maxD, currency)}`, 'error');
+        isSubmitting = false;
+        toggleSubmitButton(false);
         return;
     }
 
-    var reference = generateReference();
-
-    createDepositRecord(reference, amount)
-        .then(function (result) {
-            currentReference = (result && result.reference) ? result.reference : reference;
-            depositCreated = true;
-
-            displayReference(currentReference);
-            enableWhatsAppButton(currentReference, amount, currency);
-            lockAmountField();
-
-            notify('Binance deposit initiated. Complete your payment and send the screenshot via WhatsApp.', 'success');
-
-            var qrWrapper = document.getElementById('binance-qr-wrapper');
-            if (qrWrapper) qrWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        })
-        .catch(function (err) {
-            console.error('[Binance Pay] createDepositRecord error:', err);
-            currentReference = reference;
-            depositCreated = true;
-            displayReference(currentReference);
-            enableWhatsAppButton(currentReference, amount, currency);
-            notify('Deposit reference generated. Please complete your payment.', 'info');
+    try {
+        const idToken = await user.getIdToken();
+        const createUrl = BinancePayConfig.buildUrl(BinancePayConfig.endpoints.createDeposit);
+        
+        const res = await fetch(createUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
+            },
+            body: JSON.stringify({ amount, currency })
         });
+
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.message || 'Backend rejected deposit request.');
+        }
+
+        const data = await res.json();
+        
+        if (!data.depositId || !data.reference) {
+            throw new Error('Invalid response from backend. Missing deposit ID.');
+        }
+
+        currentDepositId = data.depositId;
+        currentReference = data.reference;
+        depositCreated = true;
+
+        // Render dynamic checkout details
+        renderCheckoutDetails(data);
+        enableWhatsAppButton(currentReference, amount, currency);
+        lockAmountField();
+
+        notify('Deposit initiated. Please complete payment via Binance.', 'success');
+
+        // Start polling
+        startStatusPolling();
+
+    } catch (error) {
+        console.error('[Binance Pay] Deposit creation failed:', error);
+        notify(error.message || 'Failed to initiate deposit. No funds have been deducted.', 'error');
+        invalidateDeposit();
+    } finally {
+        isSubmitting = false;
+        toggleSubmitButton(false);
+    }
 }
 
-function generateReference() {
-    var ts = Date.now().toString(36).toUpperCase();
-    var rand = Math.random().toString(36).substring(2, 6).toUpperCase();
-    return 'SMARIA-BIN-' + ts + '-' + rand;
-}
-
-function createDepositRecord(reference, amount) {
-    var payload = {
-        reference: reference,
-        amount: amount,
-        currency: BinancePayConfig.get('currency'),
-        paymentMethod: 'binance',
-        cryptoType: BinancePayConfig.get('cryptoType') || null,
-        network: BinancePayConfig.get('network') || null,
-        recipientId: BinancePayConfig.get('recipientId') || null,
-        status: 'pending',
-        timestamp: new Date().toISOString()
-    };
-
-    return fetch('/api/deposits/binance', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(payload)
-    }).then(function (res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.json();
-    }).catch(function (err) {
-        console.warn('[Binance Pay] Backend API not reachable, using client-side reference:', err.message);
-        return { reference: reference, status: 'pending', id: null };
-    });
-}
-
-function displayReference(ref) {
-    setText('binance-deposit-reference', ref);
-    var copyBtn = document.getElementById('binance-copy-ref-btn');
+function renderCheckoutDetails(data) {
+    setText('binance-deposit-reference', currentReference);
+    const copyBtn = document.getElementById('binance-copy-ref-btn');
     if (copyBtn) copyBtn.style.display = 'inline-block';
-    var pending = document.getElementById('binance-reference-pending');
+    
+    const pending = document.getElementById('binance-reference-pending');
     if (pending) pending.style.display = 'none';
-}
 
-function enableWhatsAppButton(reference, amount, currency) {
-    var phone = BinancePayConfig.get('whatsappNumber') || '256770898186';
-    var msg = buildWhatsAppMessage(reference, amount, currency);
-    var url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
-
-    var btn = document.getElementById('binance-whatsapp-btn');
-    if (btn) {
-        btn.href = url;
-        btn.classList.remove('disabled');
-    }
-}
-
-function buildWhatsAppMessage(reference, amount, currency) {
-    var cryptoType = BinancePayConfig.get('cryptoType');
-    var network = BinancePayConfig.get('network');
-    var formatted = formatMoney(amount, currency);
-
-    var msg = 'Hello SMMARIA Support, I have completed a Binance Pay deposit.\n\n';
-    msg += 'Deposit Reference: ' + reference + '\n';
-    msg += 'Amount: ' + formatted;
-
-    if (cryptoType) {
-        msg += ' (' + cryptoType;
-        if (network) msg += ' — ' + network;
-        msg += ')';
+    // If backend returns a specific checkout URL for this order
+    const linkBtn = document.getElementById('binance-payment-link');
+    if (linkBtn && data.checkoutUrl) {
+        try {
+            const parsedUrl = new URL(data.checkoutUrl);
+            if (parsedUrl.protocol === 'https:') {
+                linkBtn.href = data.checkoutUrl;
+                linkBtn.style.display = 'flex';
+            }
+        } catch (_) {
+            console.warn('[Binance Pay] Invalid checkout URL returned by backend');
+        }
     }
 
-    msg += '\n\nI will send my payment screenshot for verification. Please confirm my deposit.';
-    return msg;
+    // If backend returns a dynamic QR code for this specific order
+    const wrapper = document.getElementById('binance-qr-wrapper');
+    if (wrapper && data.qrCodeImage) {
+        wrapper.innerHTML = `
+            <img src="${escapeAttr(data.qrCodeImage)}" alt="Binance Pay QR Code" id="binance-qr-img">
+            <button type="button" class="binance-qr-enlarge-btn" id="binance-qr-enlarge-trigger">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                Enlarge QR Code
+            </button>`;
+    }
 }
 
 function lockAmountField() {
-    var input = document.getElementById('deposit-amount');
+    const input = document.getElementById('deposit-amount');
     if (input) {
         input.setAttribute('readonly', 'readonly');
         input.style.opacity = '0.7';
@@ -250,179 +319,219 @@ function lockAmountField() {
 }
 
 function invalidateDeposit() {
+    if (pollTimer) clearInterval(pollTimer);
     depositCreated = false;
+    currentDepositId = null;
     currentReference = null;
 
     setText('binance-deposit-reference', '—');
 
-    var copyBtn = document.getElementById('binance-copy-ref-btn');
+    const copyBtn = document.getElementById('binance-copy-ref-btn');
     if (copyBtn) copyBtn.style.display = 'none';
 
-    var pending = document.getElementById('binance-reference-pending');
+    const pending = document.getElementById('binance-reference-pending');
     if (pending) {
         pending.style.display = 'block';
-        pending.textContent = 'Amount changed. Click "Process Deposit" to generate a new reference.';
+        pending.textContent = 'Click "Process Deposit" to generate a new reference.';
     }
 
-    var waBtn = document.getElementById('binance-whatsapp-btn');
+    const waBtn = document.getElementById('binance-whatsapp-btn');
     if (waBtn) {
         waBtn.href = '#';
         waBtn.classList.add('disabled');
     }
 
-    var input = document.getElementById('deposit-amount');
+    const input = document.getElementById('deposit-amount');
     if (input) {
         input.removeAttribute('readonly');
         input.style.opacity = '';
     }
-}
 
-function renderBinanceContent() {
-    renderQrCode();
-    renderPaymentLink();
-    renderRecipientInfo();
-}
+    // Reset QR code and Payment link UI
+    const linkBtn = document.getElementById('binance-payment-link');
+    if (linkBtn) {
+        linkBtn.style.display = 'none';
+        linkBtn.removeAttribute('href');
+    }
 
-function renderQrCode() {
-    var wrapper = document.getElementById('binance-qr-wrapper');
-    if (!wrapper) return;
-
-    if (BinancePayConfig.hasQrCode()) {
-        var qrUrl = BinancePayConfig.get('qrCodeImage');
-        wrapper.innerHTML =
-            '<img src="' + escapeAttr(qrUrl) + '" alt="Binance Pay QR Code" id="binance-qr-img">' +
-            '<button type="button" class="binance-qr-enlarge-btn" id="binance-qr-enlarge-trigger">' +
-                '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">' +
-                    '<circle cx="11" cy="11" r="8"></circle>' +
-                    '<line x1="21" y1="21" x2="16.65" y2="16.65"></line>' +
-                    '<line x1="11" y1="8" x2="11" y2="14"></line>' +
-                    '<line x1="8" y1="11" x2="14" y2="11"></line>' +
-                '</svg>' +
-                'Enlarge QR Code' +
-            '</button>';
-    } else {
-        wrapper.innerHTML =
-            '<div class="binance-qr-placeholder">' +
-                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">' +
-                    '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>' +
-                    '<circle cx="8.5" cy="8.5" r="1.5"></circle>' +
-                    '<polyline points="21 15 16 10 5 21"></polyline>' +
-                '</svg>' +
-                '<span>No QR code has been uploaded yet.<br>Please contact admin.</span>' +
-            '</div>';
+    const wrapper = document.getElementById('binance-qr-wrapper');
+    if (wrapper) {
+        wrapper.innerHTML = `
+            <div class="binance-qr-placeholder">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span>Enter amount and click Process Deposit to generate a QR code.</span>
+            </div>`;
     }
 }
 
-function renderPaymentLink() {
-    var linkBtn = document.getElementById('binance-payment-link');
-    var noLink = document.getElementById('binance-no-link');
+function toggleSubmitButton(isLoading) {
+    const btn = document.querySelector('#deposit-form button[type="submit"]');
+    if (!btn) return;
+    
+    if (isLoading) {
+        btn.dataset.originalText = btn.innerHTML;
+        btn.innerHTML = 'Processing...';
+        btn.disabled = true;
+    } else {
+        if (btn.dataset.originalText) btn.innerHTML = btn.dataset.originalText;
+        btn.disabled = false;
+    }
+}
 
-    if (BinancePayConfig.hasPaymentLink()) {
-        if (linkBtn) {
-            linkBtn.href = BinancePayConfig.get('paymentLink');
-            linkBtn.style.display = 'flex';
+/* ═══════════════════════════════════════
+   PAYMENT STATUS POLLING
+   ═══════════════════════════════════════ */
+function startStatusPolling() {
+    if (pollTimer) clearInterval(pollTimer);
+    pollStartTime = Date.now();
+
+    pollTimer = setInterval(async () => {
+        if (!currentDepositId) {
+            clearInterval(pollTimer);
+            return;
         }
-        if (noLink) noLink.style.display = 'none';
-    } else {
-        if (linkBtn) linkBtn.style.display = 'none';
-        if (noLink) noLink.style.display = 'block';
+
+        // Prevent infinite polling
+        if (Date.now() - pollStartTime > BinancePayConfig.defaults.maxPollDuration) {
+            clearInterval(pollTimer);
+            notify('Payment verification timed out. Please contact support if you have paid.', 'info');
+            return;
+        }
+
+        try {
+            const idToken = await firebaseAuth.currentUser.getIdToken();
+            const statusUrl = BinancePayConfig.buildUrl(BinancePayConfig.endpoints.depositStatus, { depositId: currentDepositId });
+            
+            const res = await fetch(statusUrl, {
+                headers: { 'Authorization': `Bearer ${idToken}` }
+            });
+
+            if (!res.ok) throw new Error('Failed to fetch status');
+            const data = await res.json();
+
+            handleStatusUpdate(data.status);
+
+        } catch (error) {
+            console.warn('[Binance Pay] Polling error:', error);
+            // Don't stop polling on transient network errors, just try again next interval
+        }
+    }, BinancePayConfig.defaults.pollInterval);
+}
+
+function handleStatusUpdate(status) {
+    switch (status) {
+        case 'credited':
+            clearInterval(pollTimer);
+            notify('Payment confirmed! Your wallet has been credited.', 'success');
+            
+            // Dispatch global event so app.js can update the navbar balance natively
+            window.dispatchEvent(new CustomEvent('binancePay:credited'));
+            break;
+        case 'expired':
+        case 'cancelled':
+        case 'failed':
+            clearInterval(pollTimer);
+            notify(`Deposit ${status}.`, 'error');
+            invalidateDeposit();
+            break;
+        case 'paid_uncredited':
+            notify('Payment received. Crediting wallet...', 'info');
+            break;
+        case 'review_required':
+            clearInterval(pollTimer);
+            notify('Payment requires manual review. Please contact support.', 'error');
+            break;
+        // 'pending' -> do nothing, keep polling
     }
 }
 
-function renderRecipientInfo() {
-    var info = document.getElementById('binance-recipient-info');
-    if (!info) return;
+/* ═══════════════════════════════════════
+   WHATSAPP & UTILITIES
+   ═══════════════════════════════════════ */
+function enableWhatsAppButton(reference, amount, currency) {
+    // Note: WhatsApp number could be dynamic from backend settings, but fallback to existing for now
+    const phone = '256770898186'; 
+    const msg = buildWhatsAppMessage(reference, amount, currency);
+    const url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
 
-    var html = '';
-    var name = BinancePayConfig.get('recipientName');
-    var id = BinancePayConfig.get('recipientId');
-    var crypto = BinancePayConfig.get('cryptoType');
-    var net = BinancePayConfig.get('network');
-
-    if (name) html += '<div>Recipient: <strong>' + escapeHtml(name) + '</strong></div>';
-    if (id)   html += '<div>Binance Pay ID: <strong>' + escapeHtml(id) + '</strong></div>';
-    if (crypto) {
-        html += '<div>Currency: <strong>' + escapeHtml(crypto) + '</strong>';
-        if (net) html += ' (Network: <strong>' + escapeHtml(net) + '</strong>)';
-        html += '</div>';
+    const btn = document.getElementById('binance-whatsapp-btn');
+    if (btn) {
+        btn.href = url;
+        btn.classList.remove('disabled');
     }
+}
 
-    info.innerHTML = html;
+function buildWhatsAppMessage(reference, amount, currency) {
+    return `Hello SMMARIA Support, I have completed a Binance Pay deposit.\n\nDeposit Reference: ${reference}\nAmount: ${formatMoney(amount, currency)}\n\nI will send my payment screenshot for verification.`;
+}
+
+function setText(id, text) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
 }
 
 function setupQrEnlarge() {
     document.addEventListener('click', function (e) {
         if (e.target.closest('#binance-qr-enlarge-trigger')) {
-            openQrModal();
+            const img = document.getElementById('binance-qr-img');
+            const modalImg = document.getElementById('binance-qr-modal-img');
+            const modal = document.getElementById('binance-qr-modal');
+            if (img && modalImg && modal) {
+                modalImg.src = img.src;
+                modal.classList.add('active');
+            }
         }
     });
 
-    var closeBtn = document.getElementById('binance-qr-modal-close');
-    if (closeBtn) closeBtn.addEventListener('click', closeQrModal);
-
-    var modal = document.getElementById('binance-qr-modal');
-    if (modal) {
-        modal.addEventListener('click', function (e) {
-            if (e.target === modal) closeQrModal();
-        });
-    }
-
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeQrModal();
+    const closeBtn = document.getElementById('binance-qr-modal-close');
+    if (closeBtn) closeBtn.addEventListener('click', () => {
+        document.getElementById('binance-qr-modal')?.classList.remove('active');
     });
-}
 
-function openQrModal() {
-    var modal = document.getElementById('binance-qr-modal');
-    var img = document.getElementById('binance-qr-modal-img');
-    if (!modal || !BinancePayConfig.hasQrCode()) return;
-
-    if (img) img.src = BinancePayConfig.get('qrCodeImage');
-    modal.classList.add('active');
-}
-
-function closeQrModal() {
-    var modal = document.getElementById('binance-qr-modal');
-    if (modal) modal.classList.remove('active');
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            document.getElementById('binance-qr-modal')?.classList.remove('active');
+        }
+    });
 }
 
 function setupCopyButtons() {
     document.addEventListener('click', function (e) {
-        var btn = e.target.closest('#binance-copy-ref-btn');
-        if (btn) copyToClipboard(currentReference || '', btn);
+        const btn = e.target.closest('#binance-copy-ref-btn');
+        if (btn) {
+            const refText = document.getElementById('binance-deposit-reference')?.innerText || '';
+            copyToClipboard(refText, btn);
+        }
     });
 }
 
 function copyToClipboard(text, btn) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function () {
-            showCopied(btn);
-        }).catch(function () {
-            fallbackCopy(text, btn);
-        });
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => showCopied(btn)).catch(() => fallbackCopy(text, btn));
     } else {
         fallbackCopy(text, btn);
     }
 }
 
 function fallbackCopy(text, btn) {
-    var ta = document.createElement('textarea');
+    const ta = document.createElement('textarea');
     ta.value = text;
-    ta.style.position = 'fixed';
     ta.style.opacity = '0';
     document.body.appendChild(ta);
     ta.select();
-    try { document.execCommand('copy'); showCopied(btn); }
-    catch (e) { console.warn('[Binance Pay] Copy failed'); }
+    try { document.execCommand('copy'); showCopied(btn); } catch (e) {}
     document.body.removeChild(ta);
 }
 
 function showCopied(btn) {
-    if (!btn) return;
-    var original = btn.textContent;
+    const original = btn.textContent;
     btn.textContent = 'Copied!';
     btn.classList.add('copied');
-    setTimeout(function () {
+    setTimeout(() => {
         btn.textContent = original;
         btn.classList.remove('copied');
     }, 2000);
@@ -434,25 +543,20 @@ function notify(message, type) {
         return;
     }
 
-    var bg = type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#3b82f6';
-    var el = document.createElement('div');
-    el.style.cssText =
-        'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);' +
-        'background:' + bg + ';color:#fff;padding:12px 24px;border-radius:10px;' +
-        'font-size:14px;font-weight:500;z-index:9999;max-width:90vw;' +
-        'text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.2);' +
-        'transition:opacity .3s;';
+    const bg = type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#3b82f6';
+    const el = document.createElement('div');
+    el.style.cssText = `position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:${bg};color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;z-index:9999;`;
     el.textContent = message;
     document.body.appendChild(el);
 
-    setTimeout(function () {
+    setTimeout(() => {
         el.style.opacity = '0';
-        setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 300);
+        setTimeout(() => el.parentNode?.removeChild(el), 300);
     }, 4500);
 }
 
 function escapeHtml(str) {
-    var div = document.createElement('div');
+    const div = document.createElement('div');
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
 }
@@ -460,31 +564,3 @@ function escapeHtml(str) {
 function escapeAttr(str) {
     return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
-
-// Export Admin API for use in app.js or admin panels
-export const BinancePayAdmin = {
-    getPendingDeposits: function () {
-        return fetch('/api/admin/deposits/binance?status=pending', { credentials: 'include' })
-            .then(function (r) { return r.json(); });
-    },
-    approveDeposit: function (depositId) {
-        return fetch('/api/admin/deposits/' + depositId + '/approve', {
-            method: 'POST',
-            credentials: 'include'
-        }).then(function (r) { return r.json(); });
-    },
-    rejectDeposit: function (depositId, reason) {
-        return fetch('/api/admin/deposits/' + depositId + '/reject', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ reason: reason })
-        }).then(function (r) { return r.json(); });
-    },
-    updateSettings: function (newSettings) {
-        return BinancePayConfig.update(newSettings);
-    },
-    getSettings: function () {
-        return BinancePayConfig.getAll();
-    }
-};
