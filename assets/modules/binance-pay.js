@@ -1,5 +1,5 @@
 /**
- * SMMMARIA Panel — Binance Pay Manual Deposit Logic
+ * SMMMARIA Panel  Binance Pay Manual Deposit Logic
  * Standalone Backend Integration Version
  */
 import { BinancePayConfig } from './binance-pay-config.js';
