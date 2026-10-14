@@ -1,5 +1,5 @@
 // ===============================================
-// App.js - User Frontend Main Entry Point
+// App.js  User Frontend Main Entry Point
 // ===============================================
 
 // 1. Route Guard (Must be at the very top)
