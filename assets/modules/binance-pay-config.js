@@ -1,5 +1,5 @@
 /**
- * SMMMARIA Panel — Binance Pay Frontend Configuration
+ * SMMMARIA Panel  Binance Pay Frontend Configuration
  * Standalone Backend Integration Version
  * 
  * This file ONLY contains public configuration. No secrets, keys, or credentials.
