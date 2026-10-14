@@ -1,84 +1,55 @@
 /**
- * SMMMARIA Panel — Binance Pay Configuration
- * ES Module Version
+ * SMMMARIA Panel — Binance Pay Frontend Configuration
+ * Standalone Backend Integration Version
+ * 
+ * This file ONLY contains public configuration. No secrets, keys, or credentials.
  */
 
-const defaultSettings = {
- enabled: true,
- qrCodeImage: 'https://ik.imagekit.io/s95tumxuk/IMG_6253.png',
- paymentLink: 'https://app.binance.com/uni-qr/request-to-pay?billOrderId=459301322634330112&billType=request_a_payment',
- recipientId: '',
- recipientName: '',
- currency: 'USD',
- cryptoType: '',
- network: '',
- minDeposit: 5,
- maxDeposit: 10000,
- instructions: 'Open your Binance app, scan the QR code, and confirm the payment. After payment, send the screenshot to our WhatsApp support.',
- whatsappNumber: '256770898186',
- manualVerificationNotice: 'Your deposit will be manually verified. Sending a WhatsApp message does not automatically confirm payment.',
- supportReferences: false
-};
-
-function loadSettings() {
- try {
-  const stored = localStorage.getItem('smmaria_binance_pay_settings');
-  if (stored) {
-   return Object.assign({}, defaultSettings, JSON.parse(stored));
-  }
- } catch (e) {
-  console.warn('[Binance Pay Config] Could not load from localStorage:', e);
- }
- return Object.assign({}, defaultSettings);
-}
-
-function saveSettings(settings) {
- try {
-  localStorage.setItem('smmaria_binance_pay_settings', JSON.stringify(settings));
-  return true;
- } catch (e) {
-  console.error('[Binance Pay Config] Could not save:', e);
-  return false;
- }
-}
-
-const settings = loadSettings();
+const isDevEnv = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
 export const BinancePayConfig = {
- settings: settings,
+ // Public URL of your standalone Binance Pay backend
+ // TODO: Replace 'https://YOUR-STANDALONE-BACKEND-URL' with your actual Railway/Render URL
+ apiBaseUrl: isDevEnv ? 'http://localhost:5001' : 'https://YOUR-STANDALONE-BACKEND-URL',
  
- get: function(key) {
-  return settings[key];
+ endpoints: {
+  settings: '/api/binance/settings',
+  createDeposit: '/api/binance/deposits',
+  depositStatus: '/api/binance/deposits/:depositId',
+  cancelDeposit: '/api/binance/deposits/:depositId/cancel' // Added for completeness
  },
  
- getAll: function() {
-  return Object.assign({}, settings);
+ // Safe frontend defaults
+ defaults: {
+  currency: 'USD',
+  loadingText: 'Loading Binance Pay options...',
+  disabledText: 'Binance Pay is temporarily unavailable.',
+  pollInterval: 5000, // 5 seconds
+  maxPollDuration: 300000 // 5 minutes
  },
  
- update: function(newSettings) {
-  Object.assign(settings, newSettings);
-  return saveSettings(settings);
- },
- 
- isEnabled: function() {
-  return settings.enabled === true;
- },
- 
- hasQrCode: function() {
-  return !!settings.qrCodeImage && settings.qrCodeImage.length > 0;
- },
- 
- hasPaymentLink: function() {
-  if (!settings.paymentLink) return false;
-  try {
-   var url = new URL(settings.paymentLink);
-   return url.protocol === 'https:';
-  } catch (_) {
-   return false;
+ /**
+  * Safely build a URL without duplicate slashes
+  * @param {string} path - The API endpoint path
+  * @param {object} params - URL parameters to inject (e.g., { depositId: '123' })
+  * @returns {string|null} The fully qualified URL, or null if invalid
+  */
+ buildUrl(path, params = {}) {
+  if (!this.apiBaseUrl || (!isDevEnv && !this.apiBaseUrl.startsWith('https://'))) {
+   console.error('[Binance Pay Config] Invalid or missing API Base URL. HTTPS is required in production.');
+   return null;
   }
- },
- 
- hasRecipientId: function() {
-  return !!settings.recipientId && settings.recipientId.length > 0;
+  
+  // Strip trailing slash from base, leading slash from path, and join safely
+  const base = this.apiBaseUrl.replace(/\/+$/, '');
+  const cleanPath = path.replace(/^\/+/, '');
+  let url = `${base}/${cleanPath}`;
+  
+  // Replace :param placeholders with actual values
+  Object.keys(params).forEach(key => {
+   url = url.replace(`:${key}`, encodeURIComponent(params[key]));
+  });
+  
+  return url;
  }
 };
