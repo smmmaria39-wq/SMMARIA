@@ -33,7 +33,7 @@ import { handleLogin, handleRegister, handleLogout } from '../modules/auth.js';
 
 // Binance Pay Modules
 import { BinancePayConfig } from '../modules/binance-pay-config.js';
-import { initBinancePay, BinancePayAdmin } from '../modules/binance-pay.js';
+import { initBinancePay } from '../modules/binance-pay.js';
 
 // Expose Auth functions to window for HTML inline events (onsubmit/onclick)
 window.handleLogin = handleLogin;
@@ -42,7 +42,6 @@ window.handleLogout = handleLogout;
 
 // Expose Binance Pay to window for admin console testing
 window.BinancePayConfig = BinancePayConfig;
-window.BinancePayAdmin = BinancePayAdmin;
 
 // Helper to update navbar balance globally
 export function updateNavbarBalance(balance) {
