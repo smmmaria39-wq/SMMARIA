@@ -10,7 +10,7 @@ const isDevEnv = window.location.hostname === 'localhost' || window.location.hos
 export const BinancePayConfig = {
  // Public URL of your standalone Binance Pay backend
  // TODO: Replace 'https://YOUR-STANDALONE-BACKEND-URL' with your actual Railway/Render URL
- apiBaseUrl: isDevEnv ? 'http://localhost:5001' : 'https://YOUR-STANDALONE-BACKEND-URL',
+ apiBaseUrl: isDevEnv ? 'http://localhost:5001' : 'https://bnc-py-smaria-production.up.railway.app',
  
  endpoints: {
   settings: '/api/binance/settings',
