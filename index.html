@@ -2,130 +2,385 @@
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
+    <!-- Preserve Google site verification -->
     <meta name="google-site-verification" content="_4VcrmvY2S8GSdic0AMrBR1BlTx5-5-dA4GR_ZXe2TU" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMMMARIA Panel | Loading...</title>
-    
-    <!-- Redirect to dashboard -->
-    <meta http-equiv="refresh" content="1; url=dashboard.html">
-    
-    <!-- Google Fonts -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#050505">
+    <meta name="description" content="SMMMARIA Panel is preparing your dashboard. Please wait a moment.">
+    <title>SMMMARIA Panel | Loading…</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg-primary: #050505;
+            --bg-surface: #0B0B0B;
+            --track: #262626;
+            --gold: #F5A623;
+            --gold-soft: #FFD27D;
+            --text-primary: #ffffff;
+            --text-muted: #9a9a9a;
+            --text-faint: #5e5e5e;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* =========================================================
+           FIX: dark fallback lives on <html> ONLY.
+           <body> is transparent so the fixed negative-z-index
+           background layers are not buried under an opaque body bg.
+           ========================================================= */
+        html {
+            height: 100%;
+            background-color: var(--bg-primary); /* Solid black fallback if image fails */
+        }
+
         body {
-            background-color: #0f172a; /* Deep dark blue */
-            color: #ffffff;
-            font-family: 'Inter', sans-serif;
-            height: 100vh;
+            height: 100%;
+            background-color: transparent; /* CRITICAL — do NOT set opaque bg here */
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding:
+                calc(env(safe-area-inset-top, 0px) + 20px)
+                max(env(safe-area-inset-right, 0px), 24px)
+                calc(env(safe-area-inset-bottom, 0px) + 20px)
+                max(env(safe-area-inset-left, 0px), 24px);
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            animation: pageFade 0.45s ease-out both;
+        }
+
+        /* =========================
+           BACKGROUND LAYERS (fixed; bottom → top)
+           ========================= */
+
+        /* Layer 1 (bottom): hosted photo */
+        .bg-layer-photo {
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            background-image: url('https://ik.imagekit.io/s95tumxuk/IMG_5203.png?updatedAt=1788618720200');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            opacity: 0.70;                          /* was 0.35 — too dim */
+            filter: brightness(0.9) saturate(0.85); /* controlled darkening, keeps image visible */
+        }
+
+        /* Layer 2: SVG grid + gold particles (transparent except where drawn)
+           FIX: removed the opaque <rect> that was covering the photo. */
+        .bg-layer {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            /* No background-color here — html provides the dark fallback */
+            background-image:
+                radial-gradient(1200px 700px at 80% 10%, hsla(37, 91%, 55%, 0.06), transparent 60hsla(37, 91%, 55%, 0)%),
+                radial-gradient(900px 600px at 10% 90%, rgba(245, 166, 35, 0.04), transparent 55%),
+                url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='1200' viewBox='0 0 1200 1200'><g stroke='%23171717' stroke-width='1' opacity='0.6'><path d='M0 200 H1200 M0 400 H1200 M0 600 H1200 M0 800 H1200 M0 1000 H1200' fill='none'/><path d='M200 0 V1200 M400 0 V1200 M600 0 V1200 M800 0 V1200 M1000 0 V1200' fill='none'/></g><g fill='%23F5A623' opacity='0.5'><circle cx='180' cy='220' r='1.4'/><circle cx='620' cy='420' r='1.2'/><circle cx='820' cy='180' r='1.6'/><circle cx='420' cy='820' r='1.2'/><circle cx='1020' cy='620' r='1.4'/><circle cx='320' cy='1020' r='1.2'/><circle cx='920' cy='980' r='1.6'/></g><g stroke='%23F5A623' stroke-width='0.6' opacity='0.18'><path d='M180 220 L620 420 L820 180' fill='none'/><path d='M420 820 L1020 620 L920 980' fill='none'/></g></svg>");
+            background-size: cover, cover, cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        /* Layer 3: dark overlay (lightened so image is visible) */
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(180deg,
+                rgba(5,5,5,0.65) 0%,
+                rgba(5,5,5,0.50) 50%,
+                rgba(5,5,5,0.80) 100%);
+            pointer-events: none;
+        }
+
+        /* Layer 4 (top of bg stack): vignette for depth */
+        .bg-vignette {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: radial-gradient(ellipse at center, transparent 100%, rgba(0,0,0,0.60) 100%);
+            pointer-events: none;
+        }
+
+        /* =========================
+           1) BRAND AREA (top)
+           ========================= */
+        .brand {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+        }
+        .brand-logo {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            line-height: 0;
+        }
+        .brand-logo img {
+            height: 34px;
+            width: auto;
+            max-width: 180px;
+            display: block;
+            filter: drop-shadow(0 1px 8px rgba(0,0,0,0.6));
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+        .brand-logo img[data-loaded="true"] { opacity: 1; }
+        .brand-logo img[data-error="true"] { opacity: 0; }
+
+        .brand-text {
+            display: none;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            letter-spacing: 1px;
+            color: var(--text-primary);
+        }
+        .brand-text .accent { color: var(--gold); }
+
+        /* =========================
+           2) CENTRAL LOADING AREA
+           ========================= */
+        .loader {
+            flex: 1 1 auto;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            padding: 20px; /* Prevents edge touching on mobile */
-            animation: fadeIn 0.5s ease-in;
-        }
-        
-        /* Logo Styling */
-        .logo {
-            margin-bottom: 40px;
-            text-decoration: none;
-            display: block;
             text-align: center;
+            gap: 18px;
+            padding: 24px 0;
+            max-width: 460px;
+            margin: 0 auto;
+            width: 100%;
         }
-        .logo img {
-            max-width: 220px; /* Default desktop size */
-            width: 60%; /* Responsive scaling */
-            height: auto;
-            transition: all 0.3s ease;
+        .loader-eyebrow {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            opacity: 0.9;
         }
-
-        /* Spinner Styling */
-        .spinner-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
+        .loader-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: clamp(20px, 4.2vw, 26px);
+            line-height: 1.25;
+            color: var(--text-primary);
+            letter-spacing: -0.2px;
         }
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top-color: #F5A623; /* SMMMARIA Gold */
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        .loading-text {
+        .loader-sub {
+            font-family: 'Inter', sans-serif;
             font-size: 14px;
-            color: #94a3b8; /* Muted slate color */
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-top: -4px;
+        }
+
+        .progress {
+            width: min(320px, 72vw);
+            height: 6px;
+            background: var(--track);
+            border-radius: 999px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 10px;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+        }
+        .progress::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(245,166,35,0.08), transparent);
+            opacity: 0.4;
+        }
+        .progress-fill {
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 38%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+            box-shadow: 0 0 10px rgba(245,166,35,0.55), 0 0 2px rgba(245,166,35,0.9);
+            will-change: transform;
+            transform: translateX(-100%);
+            animation: indeterminate 1.4s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+        }
+        @keyframes indeterminate {
+            0%   { transform: translateX(-100%); }
+            100% { transform: translateX(320%); }
+        }
+
+        /* =========================
+           3) FOOTER
+           ========================= */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding-top: 16px;
+            font-size: 12px;
+            color: var(--text-faint);
             font-weight: 500;
-            letter-spacing: 0.5px;
-            text-align: center;
+            letter-spacing: 0.3px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .footer-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .footer-status::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 6px rgba(245,166,35,0.8);
+            animation: pulse 1.6s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; transform: scale(0.85); }
+            50%      { opacity: 1;   transform: scale(1); }
         }
 
-        /* Animations */
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes pageFade {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===============================================
-           MOBILE RESPONSIVENESS
-           =============================================== */
+        /* =========================
+           Reduced motion
+           ========================= */
+        @media (prefers-reduced-motion: reduce) {
+            body { animation: none; }
+            .progress-fill {
+                animation: none;
+                width: 100%;
+                transform: none;
+                background: var(--gold);
+                opacity: 0.85;
+                box-shadow: none;
+            }
+            .footer-status::before { animation: none; }
+            .brand-logo img { transition: none; }
+            html { scroll-behavior: auto; }
+        }
+
+        /* =========================
+           Responsive tuning
+           ========================= */
         @media (max-width: 768px) {
-            .logo img {
-                max-width: 180px;
-                width: 70%; /* Slightly larger relative to screen on tablets */
-            }
-            .spinner {
-                width: 45px;
-                height: 45px;
-            }
+            .brand-logo img { height: 30px; }
+            .loader { gap: 16px; }
+            .progress { width: min(300px, 80vw); }
         }
-
         @media (max-width: 480px) {
-            .logo img {
-                max-width: 150px;
-                margin-bottom: 30px;
-            }
-            .spinner {
-                width: 40px;
-                height: 40px;
-                border-width: 3px;
-            }
-            .loading-text {
-                font-size: 13px;
-            }
+            .brand { justify-content: center; }
+            .brand-logo img { height: 28px; }
+            .loader-title { font-size: 19px; }
+            .loader-sub { font-size: 13px; }
+            .progress { width: min(280px, 84vw); height: 5px; }
+            .footer { justify-content: center; text-align: center; }
+        }
+        @media (max-height: 500px) and (orientation: landscape) {
+            .loader { gap: 12px; padding: 12px 0; }
+            .footer { padding-top: 10px; }
         }
     </style>
 </head>
 <body>
-    
-    <a href="dashboard.html" class="logo">
-        <img src="https://ik.imagekit.io/s95tumxuk/IMG_4715.png" alt="SMMMARIA Logo">
-    </a>
+    <!-- Background layers (fixed; no layout cost) -->
+    <div class="bg-layer-photo" aria-hidden="true"></div>
+    <div class="bg-layer" aria-hidden="true"></div>
+    <div class="bg-overlay" aria-hidden="true"></div>
+    <div class="bg-vignette" aria-hidden="true"></div>
 
-    <div class="spinner-container">
-        <div class="spinner"></div>
-        <p class="loading-text">Preparing your dashboard...</p>
-    </div>
+    <!-- 1) Compact brand area -->
+    <header class="brand">
+        <a href="dashboard.html" class="brand-logo" aria-label="SMMMARIA Panel — Home">
+            <img
+                src="https://ik.imagekit.io/s95tumxuk/IMG_4715.png"
+                alt="SMMMARIA"
+                width="170"
+                height="34"
+                decoding="async"
+                onload="this.setAttribute('data-loaded','true')"
+                onerror="this.style.display='none';document.querySelector('.brand-text').style.display='inline-flex';"
+            >
+            <span class="brand-text" aria-hidden="true">SMMM<span class="accent">ARIA</span></span>
+        </a>
+    </header>
 
-    <!-- Fallback redirect if meta refresh fails -->
+    <!-- 2) Central loading area -->
+    <main class="loader" role="status" aria-live="polite" aria-atomic="true">
+        <p class="loader-eyebrow">SMMMARIA Panel</p>
+        <h1 class="loader-title">Preparing your dashboard…</h1>
+        <p class="loader-sub">Getting your workspace ready</p>
+        <div class="progress" role="progressbar" aria-label="Loading SMMMARIA dashboard" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-fill"></div>
+        </div>
+    </main>
+
+    <!-- 3) Subtle footer -->
+    <footer class="footer">
+        <span>&copy; <span id="year"></span> SMMMARIA Panel</span>
+        <span class="footer-status" aria-hidden="true">Initializing secure session</span>
+    </footer>
+
     <script>
-        setTimeout(() => {
-            window.location.href = 'dashboard.html';
-        }, 1000);
+        // Year (footer)
+        (function () {
+            var y = document.getElementById('year');
+            if (y) y.textContent = String(new Date().getFullYear());
+        })();
+
+        // ----- Redirect logic -----
+        // FIX: '#' does not navigate (only sets URL fragment) — loader would
+        // stay on screen forever. Restored to 'dashboard.html'.
+        (function () {
+            var DASHBOARD_URL   = 'dashboard.html';
+            var MIN_DISPLAY_MS  = 1200;
+            var HARD_TIMEOUT_MS = 8000;
+
+            var start = Date.now();
+
+            function go() {
+                var elapsed = Date.now() - start;
+                var wait = Math.max(0, MIN_DISPLAY_MS - elapsed);
+                setTimeout(function () {
+                    window.location.replace(DASHBOARD_URL);
+                }, wait);
+            }
+
+            var safety = setTimeout(function () {
+                window.location.replace(DASHBOARD_URL);
+            }, HARD_TIMEOUT_MS);
+
+            window.addEventListener('pagehide', function () { clearTimeout(safety); });
+
+            if (document.readyState === 'complete') {
+                go();
+            } else {
+                window.addEventListener('load', go);
+            }
+        })();
     </script>
 </body>
 </html>
