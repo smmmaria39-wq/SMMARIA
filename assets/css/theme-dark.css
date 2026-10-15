@@ -1,25 +1,34 @@
+
 /* ===============================================
-   Dark Theme Overrides
+   SMMARIA Premium Black Theme
+   Background and surface overrides only
    =============================================== */
 
 html[data-theme="dark"] {
- --bg-body: #0f172a;
- --bg-card: #1e293b;
- --bg-navbar: #1e293b;
- --bg-input: #334155;
- --bg-hover: #334155;
- 
- --text-primary: #f1f5f9;
- --text-secondary: #cbd5e1;
- --text-muted: #94a3b8;
- --text-inverse: #1F2937;
- 
- --border-color: #334155;
- --border-color-light: #334155;
- 
- /* In dark mode, sidebar matches the dark body */
- --bg-sidebar: #1e293b;
- --sidebar-text: #cbd5e1;
- --sidebar-text-active: #fff;
- --sidebar-hover: #334155;
+    color-scheme: dark;
+
+    /* Page backgrounds */
+    --bg-body: #050505;
+    --bg-card: #111111;
+    --bg-navbar: #0B0B0B;
+    --bg-sidebar: #0B0B0B;
+
+    /* Inputs and interactive surfaces */
+    --bg-input: #141414;
+    --bg-hover: #1A1A1A;
+
+    /* Borders */
+    --border-color: #262626;
+    --border-color-light: #1C1C1C;
+
+    /* Preserve existing text colors */
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --text-inverse: #1F2937;
+
+    /* Preserve existing sidebar text */
+    --sidebar-text: #cbd5e1;
+    --sidebar-text-active: #fff;
+    --sidebar-hover: #1A1A1A;
 }
