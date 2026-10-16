@@ -27,18 +27,18 @@
     <meta name="msapplication-TileColor" content="#0f172a">
     <meta name="msapplication-config" content="/browserconfig.xml">
     
-  <!-- ==========================================
+<!-- ==========================================
          4. APPLE / IOS SUPPORT
          ========================================== -->
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="192x192" href="assets/icons/icon-192.png">
-    <link rel="apple-touch-icon" sizes="512x512" href="assets/icons/icon-512.png">
-    
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SMMARIA">
-    <meta name="theme-color" content="#0A1530">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="192x192" href="assets/icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="assets/icons/icon-512.png">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SMMARIA">
+<meta name="theme-color" content="#0A1530">
     
     <!-- ==========================================
          5. FAVICON SYSTEM (Modern Browsers)
@@ -98,6 +98,8 @@
     <link rel="stylesheet" href="assets/css/notifications.css">
     <link rel="stylesheet" href="assets/css/dashboard.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
+    <!-- DESKTOP & TV LAYOUT ENHANCEMENT (Loaded last to safely override) -->
+    <link rel="stylesheet" href="assets/css/desktop-layout.css">
 
       <style>
         .landing-layout {
@@ -579,23 +581,24 @@
                 </div>
             </div>
 
-            <!-- 5. Features Trigger -->
-            <div class="features-section">
-                <h2 class="section-title">Why Choose SMMMARIA?</h2>
-                <div class="info-trigger-card" onclick="openInfoSheet('why-choose')">
-                    <h3>⚡ Discover Our Features</h3>
-                    <p>Instant processing, premium quality, developer API, and easy payments. Find out what makes us the best.</p>
-                    <span class="view-link">View Details &rarr;</span>
+            <!-- 5. & 6. Info Triggers (Wrapped for Desktop Side-by-Side Layout) -->
+            <div class="desktop-info-grid">
+                <div class="features-section">
+                    <h2 class="section-title">Why Choose SMMMARIA?</h2>
+                    <div class="info-trigger-card" onclick="openInfoSheet('why-choose')">
+                        <h3>⚡ Discover Our Features</h3>
+                        <p>Instant processing, premium quality, developer API, and easy payments. Find out what makes us the best.</p>
+                        <span class="view-link">View Details &rarr;</span>
+                    </div>
                 </div>
-            </div>
 
-            <!-- 6. How it works Trigger -->
-            <div class="features-section">
-                <h2 class="section-title">Get Started in 3 Steps</h2>
-                <div class="info-trigger-card" onclick="openInfoSheet('get-started')">
-                    <h3>🚀 How It Works</h3>
-                    <p>Create an account, add funds, and launch your order. It's that simple to start growing.</p>
-                    <span class="view-link">View Steps &rarr;</span>
+                <div class="features-section">
+                    <h2 class="section-title">Get Started in 3 Steps</h2>
+                    <div class="info-trigger-card" onclick="openInfoSheet('get-started')">
+                        <h3>🚀 How It Works</h3>
+                        <p>Create an account, add funds, and launch your order. It's that simple to start growing.</p>
+                        <span class="view-link">View Steps &rarr;</span>
+                    </div>
                 </div>
             </div>
         </div>
