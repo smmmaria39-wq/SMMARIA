@@ -1,0 +1,148 @@
+/* ==========================================
+   DESKTOP & TV LAYOUT ENHANCEMENTS
+   Activates only at 1024px and above
+   ========================================== */
+
+/* --- Desktop (1024px - 1599px) --- */
+@media (min-width: 1024px) {
+    /* Constrain main layout width to prevent excessive stretching */
+    .landing-layout {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    /* Adjust branding pane to ~63% width */
+    .branding-pane {
+        flex: 1.7;
+        padding: 60px 80px;
+    }
+
+    /* Adjust auth pane to ~37% width */
+    .auth-pane {
+        flex: 1;
+        padding: 40px 60px;
+    }
+
+    /* Make the login button span the card width nicely on desktop */
+    #openLoginBtn {
+        width: 100%;
+        max-width: 420px;
+    }
+
+    /* Arrange the two info cards side-by-side */
+    .desktop-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+
+    /* Remove bottom margin so they align evenly in the grid */
+    .desktop-info-grid .info-trigger-card {
+        margin-bottom: 0;
+    }
+
+    /* Convert mobile bottom sheet to a centered desktop modal */
+    .bottom-sheet {
+        bottom: auto;
+        top: 50%;
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%) scale(0.95);
+        max-width: 480px;
+        width: calc(100% - 40px);
+        border-radius: 24px;
+        opacity: 0;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    }
+
+    .bottom-sheet.active {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    /* Adjust handle margin for centered modal */
+    .sheet-handle {
+        margin-top: 16px;
+        margin-bottom: 8px;
+    }
+}
+
+/* --- Large Desktop & TV (1600px+) --- */
+@media (min-width: 1600px) {
+    .landing-layout {
+        max-width: 1600px;
+    }
+
+    /* Scale typography and spacing conservatively */
+    .branding-pane {
+        padding: 80px 100px;
+    }
+
+    .auth-pane {
+        padding: 60px;
+    }
+
+    .hero-section h1 {
+        font-size: 4rem;
+    }
+
+    .hero-section p {
+        font-size: 1.3rem;
+        max-width: 700px;
+    }
+
+    .stat-box h2 {
+        font-size: 3rem;
+    }
+
+    .stat-box p {
+        font-size: 1rem;
+    }
+
+    .platform-card {
+        width: 56px;
+        height: 56px;
+    }
+
+    .platform-card svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* --- 4K & Ultra-Wide TV (2560px+) --- */
+@media (min-width: 2560px) {
+    .landing-layout {
+        max-width: 2000px;
+    }
+
+    .branding-pane {
+        padding: 120px;
+    }
+
+    .hero-section h1 {
+        font-size: 5rem;
+    }
+
+    .hero-section p {
+        font-size: 1.6rem;
+    }
+
+    .glass-card {
+        max-width: 500px;
+    }
+
+    #openLoginBtn {
+        max-width: 500px;
+        font-size: 18px;
+        padding: 20px 24px;
+    }
+
+    .auth-card {
+        max-width: 600px !important;
+    }
+
+    .bottom-sheet {
+        max-width: 600px;
+    }
+}
