@@ -148,27 +148,50 @@ textarea,
   font-size: 16px !important;
 }
 
+
 /* -----------------------------------------------
    5. COMPACT MOBILE APP UI (max-width: 768px)
+   iOS HOME SCREEN / SAFE AREA FIX
    ----------------------------------------------- */
 @media (max-width: 768px) {
+
   /* Layout & Navbar Fixes */
   .main-wrapper {
     margin-left: 0 !important;
-    padding-top: 60px !important;
-    padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px)) !important;
+
+    /* Keep page content below the safe-area-aware navbar */
+    padding-top: calc(
+      55px + env(safe-area-inset-top, 0px) + 24px
+    ) !important;
+
+    padding-bottom: calc(
+      70px + env(safe-area-inset-bottom, 0px)
+    ) !important;
+
     overflow-x: hidden;
+    min-width: 0;
   }
 
   .navbar {
     position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
+
+    /* Prevent header from sitting behind iPhone status icons */
+    top: calc(env(safe-area-inset-top, 0px) + 8px) !important;
+
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
+
     z-index: 1100 !important;
+    height: 55px !important;
+    box-sizing: border-box !important;
+
     background-color: var(--bg-card) !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
-    height: 55px !important;
+
+    /* Keep navbar contents vertically centered */
+    display: flex;
+    align-items: center;
   }
 
   /* Sidebar / Drawer */
@@ -182,27 +205,33 @@ textarea,
     z-index: 1200;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
   .sidebar__header {
     position: sticky;
     top: 0;
     z-index: 2;
     background: var(--bg-sidebar);
   }
+
   .sidebar__nav {
     flex: 0 0 auto;
     min-height: auto;
     overflow: visible;
   }
+
   .sidebar__widgets {
     flex: 0 0 auto;
     margin-top: 0;
   }
+
   .sidebar__footer {
     flex: 0 0 auto;
   }
+
   .app-container.sidebar-open .sidebar {
     transform: translateX(0);
   }
+
   .app-container.sidebar-collapsed .main-wrapper {
     margin-left: 0;
   }
@@ -210,20 +239,28 @@ textarea,
   /* Navbar Adjustments */
   .navbar__toggle {
     display: block;
+    flex-shrink: 0;
   }
+
   .navbar__search {
     display: none;
   }
+
   .profile__info {
     display: none;
   }
+
   .navbar__balance {
     font-size: var(--fs-xs);
     padding: var(--spacing-xs) var(--spacing-sm);
+    min-width: 0;
   }
+
   .navbar__right {
     gap: var(--spacing-xs);
+    min-width: 0;
   }
+
   .navbar__icon-btn svg {
     width: 20px !important;
     height: 20px !important;
@@ -232,13 +269,16 @@ textarea,
   /* Content Spacing */
   .content-area {
     padding: 12px 14px !important;
+    min-width: 0;
   }
+
   .page-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px !important;
     margin-bottom: 14px !important;
   }
+
   .page-title {
     font-size: 20px !important;
   }
@@ -254,6 +294,7 @@ textarea,
     grid-template-columns: 1fr !important;
     gap: 12px !important;
   }
+
   .form-group--full {
     grid-column: 1 / -1;
   }
@@ -261,6 +302,7 @@ textarea,
   .settings-card {
     flex-direction: column;
   }
+
   .tabs--vertical {
     flex-direction: row;
     width: 100%;
@@ -268,15 +310,18 @@ textarea,
     border-bottom: 1px solid var(--border-color);
     overflow-x: auto;
   }
+
   .tabs--vertical .tab {
     border-right: none;
     border-bottom: 2px solid transparent;
     white-space: nowrap;
   }
+
   .tabs--vertical .tab.active {
     border-right: none;
     border-bottom-color: var(--color-gold);
   }
+
 
   /* ===============================================
        PREMIUM MOBILE CARDS
@@ -557,47 +602,118 @@ textarea,
     white-space: nowrap !important;
   }
 
-  /* ===============================================
-       MOBILE BOTTOM NAVIGATION (Premium)
-       =============================================== */
-  .mobile-nav {
+ 
+/* ===============================================
+   SMMARIA PREMIUM FLOATING MOBILE NAVIGATION
+   Inspired by the WhatsApp iOS floating navigation
+   =============================================== */
+
+.mobile-nav {
     display: flex;
     justify-content: space-around;
     align-items: center;
+
     position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: var(--bg-card);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid var(--border-color);
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    left: 12px;
+    right: 12px;
+    width: auto;
+
+    min-height: 68px;
+    height: auto;
+
+    padding: 6px 8px;
+
+    background: color-mix(
+        in srgb,
+        var(--bg-card) 88%,
+        transparent
+    );
+
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    backdrop-filter: blur(24px) saturate(160%);
+
+    border: 1px solid var(--border-color);
+    border-radius: 28px;
+
+    box-shadow:
+        0 8px 28px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
     z-index: 1000;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-    height: 60px;
-  }
-  .mobile-nav__link {
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.mobile-nav__link {
     display: flex;
+    flex: 1;
+    min-width: 0;
+    height: 56px;
+
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    gap: 4px;
+
     color: var(--text-secondary);
     text-decoration: none;
+
     font-size: 11px;
     font-weight: 500;
-    flex: 1;
-    height: 100%;
-    gap: 4px;
-    transition: color 0.2s ease;
-  }
-  .mobile-nav__link:active,
-  .mobile-nav__link:hover {
+    line-height: 1.2;
+
+    border-radius: 22px;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-nav__link svg {
+    width: 21px !important;
+    height: 21px !important;
+    flex-shrink: 0;
+}
+
+.mobile-nav__link:active {
+    transform: scale(0.94);
+}
+
+/* Selected navigation item */
+.mobile-nav__link.active,
+.mobile-nav__link[aria-current="page"] {
     color: var(--color-gold);
-  }
-  .mobile-nav__link svg {
-    width: 20px !important;
-    height: 20px !important;
-  }
+    background: rgba(212, 160, 65, 0.12);
+}
+
+/* Optional subtle hover effect */
+@media (hover: hover) {
+    .mobile-nav__link:hover {
+        color: var(--color-gold);
+        background: rgba(212, 160, 65, 0.08);
+    }
+}
+
+/* Keep page content visible above the floating navigation */
+@media (max-width: 768px) {
+    body {
+        padding-bottom: calc(
+            100px + env(safe-area-inset-bottom, 0px)
+        );
+    }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .mobile-nav__link {
+        transition: none;
+    }
+}
 
   /* ===============================================
        INLINE RECEIPT STYLES
