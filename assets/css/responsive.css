@@ -603,27 +603,32 @@ textarea,
   }
 
  
-/* ===============================================
-   SMMARIA PREMIUM FLOATING MOBILE NAVIGATION
-   Inspired by the WhatsApp iOS floating navigation
-   =============================================== */
 
+/* =========================================================
+   SMMARIA PREMIUM FLOATING MOBILE NAVIGATION
+   Rounded glass design with iOS safe-area support
+   ========================================================= */
+
+/* Navigation container */
 .mobile-nav {
     display: flex;
-    justify-content: space-around;
     align-items: center;
+    justify-content: space-around;
 
     position: fixed;
-    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+
+    /* Keep navigation close to the screen bottom */
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 2px);
     left: 12px;
     right: 12px;
-    width: auto;
 
+    width: auto;
+    height: 68px;
     min-height: 68px;
-    height: auto;
 
     padding: 6px 8px;
 
+    /* Premium glass appearance */
     background: color-mix(
         in srgb,
         var(--bg-card) 88%,
@@ -641,13 +646,19 @@ textarea,
         inset 0 1px 0 rgba(255, 255, 255, 0.12);
 
     z-index: 1000;
+
     overflow: hidden;
     box-sizing: border-box;
+
+    /* Prevent horizontal overflow */
+    max-width: 100%;
 }
 
+/* Individual navigation links */
 .mobile-nav__link {
     display: flex;
     flex: 1;
+
     min-width: 0;
     height: 56px;
 
@@ -660,9 +671,13 @@ textarea,
     color: var(--text-secondary);
     text-decoration: none;
 
+    font-family: inherit;
     font-size: 11px;
     font-weight: 500;
     line-height: 1.2;
+
+    text-align: center;
+    white-space: nowrap;
 
     border-radius: 22px;
 
@@ -672,39 +687,81 @@ textarea,
         transform 0.2s ease;
 
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    box-sizing: border-box;
 }
 
+/* Navigation icons */
 .mobile-nav__link svg {
+    display: block;
+
     width: 21px !important;
     height: 21px !important;
+
     flex-shrink: 0;
 }
 
+/* Active press feedback */
 .mobile-nav__link:active {
     transform: scale(0.94);
 }
 
-/* Selected navigation item */
+/* Active navigation item */
 .mobile-nav__link.active,
 .mobile-nav__link[aria-current="page"] {
     color: var(--color-gold);
     background: rgba(212, 160, 65, 0.12);
 }
 
-/* Optional subtle hover effect */
-@media (hover: hover) {
+/* Hover effect for devices with a mouse */
+@media (hover: hover) and (pointer: fine) {
     .mobile-nav__link:hover {
         color: var(--color-gold);
         background: rgba(212, 160, 65, 0.08);
     }
 }
 
-/* Keep page content visible above the floating navigation */
+/* =========================================================
+   MOBILE CONTENT SPACING
+   Prevent page content from being hidden behind navigation
+   ========================================================= */
+
 @media (max-width: 768px) {
     body {
         padding-bottom: calc(
-            100px + env(safe-area-inset-bottom, 0px)
+            82px + env(safe-area-inset-bottom, 0px)
         );
+    }
+
+    .mobile-nav {
+        left: 12px;
+        right: 12px;
+    }
+}
+
+/* Small mobile screens */
+@media (max-width: 360px) {
+    .mobile-nav {
+        left: 8px;
+        right: 8px;
+
+        height: 64px;
+        min-height: 64px;
+
+        padding: 5px;
+        border-radius: 25px;
+    }
+
+    .mobile-nav__link {
+        height: 52px;
+        gap: 3px;
+        font-size: 10px;
+        border-radius: 20px;
+    }
+
+    .mobile-nav__link svg {
+        width: 19px !important;
+        height: 19px !important;
     }
 }
 
