@@ -1,6 +1,19 @@
 /**
- * SMMMARIA Panel  Binance Pay Manual Deposit Logic
+ * SMMMARIA Panel — Binance Pay Manual Deposit Logic
  * Standalone Backend Integration Version
+ *
+ * Backend response envelope: every /api/binance/* endpoint (except /settings)
+ * returns { success: true, data: <payload> } on success, or
+ * { success: false, error: { code, message } } on failure. Always unwrap.
+ *
+ * Polling hits POST /api/binance/deposits/:depositId/verify (NOT GET status)
+ * because only the verify endpoint actually calls Binance to check the live
+ * order status. GET /:depositId just reads the local Firebase cache and would
+ * return 'pending' forever even after the user pays.
+ *
+ * When the Binance order IS paid but WALLET_CREDIT_ENABLED=false on the
+ * backend, /verify returns 503 VERIFICATION_UNAVAILABLE. The frontend treats
+ * that as "payment received, pending manual credit" rather than a hard failure.
  */
 import { BinancePayConfig } from './binance-pay-config.js';
 
@@ -11,27 +24,75 @@ let pollTimer = null;
 let pollStartTime = null;
 let isSubmitting = false;
 
-// Firebase instance holder (assumes Firebase is initialized globally in app.js)
+// Firebase auth instance holder (assumes Firebase is initialized globally
+// in app.js and passed into initBinancePay(firebase)).
 let firebaseAuth = null;
+
+// Cached backend settings (currency, limits) from /api/binance/settings.
+let backendSettings = null;
+
+// Guards against double-binding DOM listeners if initBinancePay() is called
+// more than once (e.g. on SPA route changes). State above is reset on each
+// call, but event listeners must not be re-registered or they'd fire N times
+// per click.
+let listenersBound = false;
 
 export function initBinancePay(firebase) {
     if (firebase) firebaseAuth = firebase.auth();
-    
-    // Reset state
+
+    // Reset runtime state.
     depositCreated = false;
     currentDepositId = null;
+    currentReference = null;
     isSubmitting = false;
-    if (pollTimer) clearInterval(pollTimer);
+    if (pollTimer) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+    }
 
-    // Fetch backend settings
+    // Fetch backend settings (currency, limits) before binding UI so the
+    // amount display renders with the right currency on first paint.
     loadBackendSettings();
-    
-    // Setup UI listeners
+
+    // Only bind UI listeners once per page load.
+    if (listenersBound) return;
+    listenersBound = true;
+
     setupPaymentMethodToggle();
     setupAmountListener();
     setupFormSubmission();
     setupQrEnlarge();
     setupCopyButtons();
+}
+
+/* ═══════════════════════════════════════
+   BACKEND RESPONSE UNWRAPPING
+   ═══════════════════════════════════════ */
+
+/**
+ * Pulls `payload` out of the backend's { success, data } envelope, or throws
+ * with the backend's error message if the request failed.
+ *
+ * The /api/binance/settings endpoint returns its payload directly (no
+ * envelope), so this helper falls back to the raw JSON when `data` is absent.
+ *
+ * @param {Response} res - The fetch Response object.
+ * @returns {Promise<object>} The unwrapped payload.
+ */
+async function unwrapResponse(res) {
+    let json;
+    try {
+        json = await res.json();
+    } catch (e) {
+        throw new Error('Backend returned a non-JSON response.');
+    }
+
+    if (!res.ok || json?.success === false) {
+        const msg = json?.error?.message || json?.message || `Request failed (HTTP ${res.status}).`;
+        throw new Error(msg);
+    }
+
+    return json?.data ?? json;
 }
 
 /* ═══════════════════════════════════════
@@ -42,7 +103,6 @@ async function loadBackendSettings() {
     if (!tile) return;
 
     const settingsUrl = BinancePayConfig.buildUrl(BinancePayConfig.endpoints.settings);
-    
     if (!settingsUrl) {
         tile.style.display = 'none';
         return;
@@ -50,27 +110,38 @@ async function loadBackendSettings() {
 
     try {
         const res = await fetch(settingsUrl);
-        if (!res.ok) throw new Error('Failed to fetch settings');
-        
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const settings = await res.json();
-        
-        if (!settings.enabled) {
+        backendSettings = settings;
+
+        if (settings.enabled === false) {
             hideBinanceTile();
             return;
         }
 
-        // Store limits and display data in dataset for later validation
-        tile.dataset.minDeposit = settings.minDeposit || 1;
-        tile.dataset.maxDeposit = settings.maxDeposit || 10000;
-        tile.dataset.currency = settings.currency || 'USD';
-        
-        // Render any static QR or recipient info provided by backend
-        renderStaticSettings(settings);
-        
+        // Cache limits and currency on the tile's dataset for later validation.
+        tile.dataset.minDeposit = settings.minDeposit ?? 1;
+        tile.dataset.maxDeposit = settings.maxDeposit ?? 10000;
+        tile.dataset.currency = settings.currency || getDefaultCurrency(settings);
     } catch (error) {
         console.error('[Binance Pay] Failed to load settings:', error);
-        hideBinanceTile();
+        // Fall back to a sane currency; the backend will re-validate at
+        // deposit-creation time. Never default to 'USD' — the backend's
+        // SUPPORTED_CURRENCIES is currently ['USDT'].
+        if (tile) tile.dataset.currency = 'USDT';
     }
+}
+
+/**
+ * Returns the first supported currency from the settings response, or 'USDT'
+ * as a fallback. The backend rejects anything outside SUPPORTED_CURRENCIES,
+ * so 'USD' would 400 at deposit creation — never default to it.
+ */
+function getDefaultCurrency(settings) {
+    if (Array.isArray(settings?.supportedCurrencies) && settings.supportedCurrencies.length > 0) {
+        return settings.supportedCurrencies[0];
+    }
+    return 'USDT';
 }
 
 function hideBinanceTile() {
@@ -78,27 +149,6 @@ function hideBinanceTile() {
     for (var i = 0; i < tiles.length; i++) {
         var radio = tiles[i].querySelector('input[value="binance"]');
         if (radio) tiles[i].style.display = 'none';
-    }
-}
-
-function renderStaticSettings(settings) {
-    // If backend provides a static QR code (e.g. for manual transfers)
-    const wrapper = document.getElementById('binance-qr-wrapper');
-    if (wrapper && settings.qrCodeImage) {
-        wrapper.innerHTML = `
-            <img src="${escapeAttr(settings.qrCodeImage)}" alt="Binance Pay QR Code" id="binance-qr-img">
-            <button type="button" class="binance-qr-enlarge-btn" id="binance-qr-enlarge-trigger">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                Enlarge QR Code
-            </button>`;
-    }
-
-    const info = document.getElementById('binance-recipient-info');
-    if (info && settings.recipientName) {
-        info.innerHTML = `<div>Recipient: <strong>${escapeHtml(settings.recipientName)}</strong></div>`;
     }
 }
 
@@ -157,7 +207,7 @@ function updateAmountDisplay() {
     }
 
     const tile = document.querySelector('.payment-tile.binance-tile');
-    const currency = tile?.dataset.currency || 'USD';
+    const currency = tile?.dataset.currency || 'USDT';
     const total = amount + bonus;
 
     setText('binance-deposit-amount', formatMoney(amount, currency));
@@ -167,8 +217,12 @@ function updateAmountDisplay() {
 }
 
 function formatMoney(amount, currency) {
-    const symbol = currency === 'USD' ? '$' : '';
-    return symbol + (amount || 0).toFixed(2);
+    const value = (amount || 0).toFixed(2);
+    if (currency === 'USD') return '$' + value;
+    // For non-USD codes (USDT, BUSD, EUR, etc.) append the ISO 4217-style code
+    // since stablecoins don't have a $ symbol and we'd otherwise render a
+    // naked number that's easy to misread.
+    return value + ' ' + currency;
 }
 
 /* ═══════════════════════════════════════
@@ -184,7 +238,7 @@ function setupFormSubmission() {
 
         e.preventDefault();
         e.stopPropagation();
-        
+
         if (isSubmitting) return;
         await handleBinanceDeposit();
     }, true);
@@ -208,9 +262,9 @@ async function handleBinanceDeposit() {
     const amountInput = document.getElementById('deposit-amount');
     const amount = parseFloat(amountInput.value) || 0;
     const tile = document.querySelector('.payment-tile.binance-tile');
-    const minD = parseFloat(tile?.dataset.minDeposit || 1);
-    const maxD = parseFloat(tile?.dataset.maxDeposit || 10000);
-    const currency = tile?.dataset.currency || 'USD';
+    const minD = parseFloat(tile?.dataset.minDeposit || '1');
+    const maxD = parseFloat(tile?.dataset.maxDeposit || '10000');
+    const currency = tile?.dataset.currency || 'USDT';
 
     if (amount < minD) {
         notify(`Minimum Binance Pay deposit is ${formatMoney(minD, currency)}`, 'error');
@@ -228,41 +282,37 @@ async function handleBinanceDeposit() {
     try {
         const idToken = await user.getIdToken();
         const createUrl = BinancePayConfig.buildUrl(BinancePayConfig.endpoints.createDeposit);
-        
+
         const res = await fetch(createUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${idToken}`
             },
-            body: JSON.stringify({ amount, currency })
+            // Send amount as a string so the backend's BigInt-aware
+            // normalizeAmount() in src/utils/amount.js can parse it
+            // exactly without floating-point rounding surprises.
+            body: JSON.stringify({ amount: String(amount), currency })
         });
 
-        if (!res.ok) {
-            const errData = await res.json().catch(() => ({}));
-            throw new Error(errData.message || 'Backend rejected deposit request.');
+        // unwrapResponse throws on non-2xx with the backend's error message.
+        const data = await unwrapResponse(res);
+
+        if (!data?.depositId || !data?.merchantTradeNo) {
+            throw new Error('Backend response was missing depositId or merchantTradeNo.');
         }
 
-        const data = await res.json();
-        
-        if (!data.depositId || !data.reference) {
-            throw new Error('Invalid response from backend. Missing deposit ID.');
-        }
-
-        currentDepositId = data.depositId;
-        currentReference = data.reference;
+        currentDepositId = data.depositId;            // Firebase-side ID — used for all subsequent API calls
+        currentReference = data.merchantTradeNo;      // Binance-side order ID — human-readable, shown to user
         depositCreated = true;
 
-        // Render dynamic checkout details
         renderCheckoutDetails(data);
         enableWhatsAppButton(currentReference, amount, currency);
         lockAmountField();
 
         notify('Deposit initiated. Please complete payment via Binance.', 'success');
 
-        // Start polling
         startStatusPolling();
-
     } catch (error) {
         console.error('[Binance Pay] Deposit creation failed:', error);
         notify(error.message || 'Failed to initiate deposit. No funds have been deducted.', 'error');
@@ -275,31 +325,35 @@ async function handleBinanceDeposit() {
 
 function renderCheckoutDetails(data) {
     setText('binance-deposit-reference', currentReference);
+
     const copyBtn = document.getElementById('binance-copy-ref-btn');
     if (copyBtn) copyBtn.style.display = 'inline-block';
-    
+
     const pending = document.getElementById('binance-reference-pending');
     if (pending) pending.style.display = 'none';
 
-    // If backend returns a specific checkout URL for this order
+    // Checkout URL + QR live under data.checkout (not flat at the top level).
+    const checkout = data?.checkout || {};
+
     const linkBtn = document.getElementById('binance-payment-link');
-    if (linkBtn && data.checkoutUrl) {
+    if (linkBtn && checkout.checkoutUrl) {
         try {
-            const parsedUrl = new URL(data.checkoutUrl);
+            const parsedUrl = new URL(checkout.checkoutUrl);
             if (parsedUrl.protocol === 'https:') {
-                linkBtn.href = data.checkoutUrl;
+                linkBtn.href = checkout.checkoutUrl;
                 linkBtn.style.display = 'flex';
+            } else {
+                console.warn('[Binance Pay] Refusing non-https checkout URL.');
             }
         } catch (_) {
-            console.warn('[Binance Pay] Invalid checkout URL returned by backend');
+            console.warn('[Binance Pay] Invalid checkout URL returned by backend.');
         }
     }
 
-    // If backend returns a dynamic QR code for this specific order
     const wrapper = document.getElementById('binance-qr-wrapper');
-    if (wrapper && data.qrCodeImage) {
+    if (wrapper && checkout.qrCodeUrl) {
         wrapper.innerHTML = `
-            <img src="${escapeAttr(data.qrCodeImage)}" alt="Binance Pay QR Code" id="binance-qr-img">
+            <img src="${escapeAttr(checkout.qrCodeUrl)}" alt="Binance Pay QR Code" id="binance-qr-img">
             <button type="button" class="binance-qr-enlarge-btn" id="binance-qr-enlarge-trigger">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="8"></circle>
@@ -319,7 +373,10 @@ function lockAmountField() {
 }
 
 function invalidateDeposit() {
-    if (pollTimer) clearInterval(pollTimer);
+    if (pollTimer) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+    }
     depositCreated = false;
     currentDepositId = null;
     currentReference = null;
@@ -347,7 +404,6 @@ function invalidateDeposit() {
         input.style.opacity = '';
     }
 
-    // Reset QR code and Payment link UI
     const linkBtn = document.getElementById('binance-payment-link');
     if (linkBtn) {
         linkBtn.style.display = 'none';
@@ -371,7 +427,7 @@ function invalidateDeposit() {
 function toggleSubmitButton(isLoading) {
     const btn = document.querySelector('#deposit-form button[type="submit"]');
     if (!btn) return;
-    
+
     if (isLoading) {
         btn.dataset.originalText = btn.innerHTML;
         btn.innerHTML = 'Processing...';
@@ -389,63 +445,132 @@ function startStatusPolling() {
     if (pollTimer) clearInterval(pollTimer);
     pollStartTime = Date.now();
 
-    pollTimer = setInterval(async () => {
-        if (!currentDepositId) {
-            clearInterval(pollTimer);
+    pollTimer = setInterval(pollDepositStatus, BinancePayConfig.defaults.pollInterval);
+}
+
+async function pollDepositStatus() {
+    if (!currentDepositId) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+        return;
+    }
+
+    // Stop polling after the configured max duration. The backend's
+    // ORDER_EXPIRATION_MINUTES is the source of truth for how long the
+    // Binance order stays payable; defaults.maxPollDuration should be set
+    // >= that value (30 minutes by default — set in binance-pay-config.js).
+    if (Date.now() - pollStartTime > BinancePayConfig.defaults.maxPollDuration) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+        notify('Payment verification timed out. Please contact support if you have paid.', 'info');
+        return;
+    }
+
+    // If the user logged out mid-poll, stop instead of spamming TypeErrors
+    // every interval when firebaseAuth.currentUser is null.
+    if (!firebaseAuth?.currentUser) {
+        clearInterval(pollTimer);
+        pollTimer = null;
+        notify('Your session expired. Please log in again to resume verification.', 'error');
+        return;
+    }
+
+    let idToken;
+    try {
+        idToken = await firebaseAuth.currentUser.getIdToken();
+    } catch (e) {
+        console.warn('[Binance Pay] Failed to refresh ID token:', e);
+        return;
+    }
+
+    // Hit POST /verify, NOT GET /:depositId — only the verify endpoint calls
+    // Binance to check the actual payment status. GET just reads the local
+    // Firebase cache and would return 'pending' forever even after payment.
+    const statusUrl = BinancePayConfig.buildUrl(
+        BinancePayConfig.endpoints.verifyDeposit,
+        { depositId: currentDepositId }
+    );
+    if (!statusUrl) {
+        console.error('[Binance Pay] Could not build verify URL.');
+        return;
+    }
+
+    try {
+        const res = await fetch(statusUrl, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${idToken}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        // The verify endpoint returns 503 VERIFICATION_UNAVAILABLE when the
+        // Binance order IS paid but the wallet-credit integration is disabled
+        // (WALLET_CREDIT_ENABLED=false). It can also return 503 when Binance
+        // Pay itself is disabled mid-flight. Either way, we cannot auto-resolve
+        // — surface the issue to the user and stop polling.
+        if (res.status === 503) {
+            const body = await res.json().catch(() => ({}));
+            const code = body?.error?.code || '';
+            if (code === 'VERIFICATION_UNAVAILABLE' || code === 'VERIFY_ERROR') {
+                clearInterval(pollTimer);
+                pollTimer = null;
+                notify('Payment verification is unavailable. Please contact support with your deposit reference to confirm payment.', 'info');
+                window.dispatchEvent(new CustomEvent('binancePay:paidPendingCredit', {
+                    detail: { depositId: currentDepositId, reference: currentReference }
+                }));
+                return;
+            }
+            // Other 503s (DEPOSITS_DISABLED, BINANCE_PAY_DISABLED) — system
+            // may recover; keep polling.
             return;
         }
 
-        // Prevent infinite polling
-        if (Date.now() - pollStartTime > BinancePayConfig.defaults.maxPollDuration) {
-            clearInterval(pollTimer);
-            notify('Payment verification timed out. Please contact support if you have paid.', 'info');
+        if (!res.ok) {
+            console.warn(`[Binance Pay] Verify returned HTTP ${res.status}`);
             return;
         }
 
-        try {
-            const idToken = await firebaseAuth.currentUser.getIdToken();
-            const statusUrl = BinancePayConfig.buildUrl(BinancePayConfig.endpoints.depositStatus, { depositId: currentDepositId });
-            
-            const res = await fetch(statusUrl, {
-                headers: { 'Authorization': `Bearer ${idToken}` }
-            });
-
-            if (!res.ok) throw new Error('Failed to fetch status');
-            const data = await res.json();
-
-            handleStatusUpdate(data.status);
-
-        } catch (error) {
-            console.warn('[Binance Pay] Polling error:', error);
-            // Don't stop polling on transient network errors, just try again next interval
-        }
-    }, BinancePayConfig.defaults.pollInterval);
+        const data = await unwrapResponse(res);
+        handleStatusUpdate(data?.status);
+    } catch (error) {
+        console.warn('[Binance Pay] Polling error:', error);
+        // Transient network errors — keep polling on the next interval.
+    }
 }
 
 function handleStatusUpdate(status) {
     switch (status) {
         case 'credited':
             clearInterval(pollTimer);
+            pollTimer = null;
             notify('Payment confirmed! Your wallet has been credited.', 'success');
-            
-            // Dispatch global event so app.js can update the navbar balance natively
             window.dispatchEvent(new CustomEvent('binancePay:credited'));
             break;
         case 'expired':
         case 'cancelled':
         case 'failed':
             clearInterval(pollTimer);
+            pollTimer = null;
             notify(`Deposit ${status}.`, 'error');
             invalidateDeposit();
             break;
-        case 'paid_uncredited':
-            notify('Payment received. Crediting wallet...', 'info');
-            break;
         case 'review_required':
             clearInterval(pollTimer);
+            pollTimer = null;
             notify('Payment requires manual review. Please contact support.', 'error');
             break;
-        // 'pending' -> do nothing, keep polling
+        case 'refund_pending':
+        case 'refunded':
+            clearInterval(pollTimer);
+            pollTimer = null;
+            notify(`Deposit status: ${status}. Please contact support.`, 'info');
+            break;
+        case 'pending':
+        case 'creating':
+        default:
+            // Still in flight — keep polling silently.
+            break;
     }
 }
 
@@ -453,8 +578,10 @@ function handleStatusUpdate(status) {
    WHATSAPP & UTILITIES
    ═══════════════════════════════════════ */
 function enableWhatsAppButton(reference, amount, currency) {
-    // Note: WhatsApp number could be dynamic from backend settings, but fallback to existing for now
-    const phone = '256770898186'; 
+    // TODO: make the WhatsApp number dynamic from backend settings once the
+    // /settings endpoint exposes a `supportWhatsApp` field. For now, fall
+    // back to the existing hardcoded number.
+    const phone = '256770898186';
     const msg = buildWhatsAppMessage(reference, amount, currency);
     const url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
 
@@ -475,6 +602,10 @@ function setText(id, text) {
 }
 
 function setupQrEnlarge() {
+    // Event delegation on document — the enlarge button is dynamically
+    // rendered when a deposit is created, so we can't bind to it directly
+    // at init time. Listeners are guarded by `listenersBound` upstream so
+    // this only registers once per page load.
     document.addEventListener('click', function (e) {
         if (e.target.closest('#binance-qr-enlarge-trigger')) {
             const img = document.getElementById('binance-qr-img');
@@ -488,9 +619,11 @@ function setupQrEnlarge() {
     });
 
     const closeBtn = document.getElementById('binance-qr-modal-close');
-    if (closeBtn) closeBtn.addEventListener('click', () => {
-        document.getElementById('binance-qr-modal')?.classList.remove('active');
-    });
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            document.getElementById('binance-qr-modal')?.classList.remove('active');
+        });
+    }
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
@@ -500,6 +633,7 @@ function setupQrEnlarge() {
 }
 
 function setupCopyButtons() {
+    // Same event-delegation pattern as setupQrEnlarge — see comment there.
     document.addEventListener('click', function (e) {
         const btn = e.target.closest('#binance-copy-ref-btn');
         if (btn) {
@@ -511,7 +645,9 @@ function setupCopyButtons() {
 
 function copyToClipboard(text, btn) {
     if (navigator.clipboard) {
-        navigator.clipboard.writeText(text).then(() => showCopied(btn)).catch(() => fallbackCopy(text, btn));
+        navigator.clipboard.writeText(text)
+            .then(() => showCopied(btn))
+            .catch(() => fallbackCopy(text, btn));
     } else {
         fallbackCopy(text, btn);
     }
@@ -545,7 +681,7 @@ function notify(message, type) {
 
     const bg = type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#3b82f6';
     const el = document.createElement('div');
-    el.style.cssText = `position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:${bg};color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;z-index:9999;`;
+    el.style.cssText = `position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:${bg};color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;z-index:9999;transition:opacity 0.3s ease;`;
     el.textContent = message;
     document.body.appendChild(el);
 
