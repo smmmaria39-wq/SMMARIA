@@ -149,10 +149,12 @@ textarea,
 }
 
 
+
 /* -----------------------------------------------
    5. COMPACT MOBILE APP UI (max-width: 768px)
    iOS HOME SCREEN / SAFE AREA FIX
    ----------------------------------------------- */
+
 @media (max-width: 768px) {
 
   /* Layout & Navbar Fixes */
@@ -170,6 +172,26 @@ textarea,
 
     overflow-x: hidden;
     min-width: 0;
+  }
+
+  /* Solid white layer above the navbar */
+  body::before {
+    content: "";
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    /* Reduced height: ends just beneath the navbar */
+    height: calc(
+      15px + env(safe-area-inset-top, 0px)
+    );
+
+    background: #ffffff;
+
+    z-index: 1099;
+    pointer-events: none;
   }
 
   .navbar {
@@ -321,6 +343,7 @@ textarea,
     border-right: none;
     border-bottom-color: var(--color-gold);
   }
+
 
 
   /* ===============================================
@@ -604,30 +627,30 @@ textarea,
 
  
 
-/* =========================================================
+/* ===============================================
    SMMARIA PREMIUM FLOATING MOBILE NAVIGATION
-   Glass effect, bottom fade and iOS safe-area support
-   ========================================================= */
+   Inspired by the WhatsApp iOS floating navigation
+   =============================================== */
 
-/* Navigation container */
 .mobile-nav {
     display: flex;
-    align-items: center;
     justify-content: space-around;
+    align-items: center;
 
     position: fixed;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 2px);
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     left: 12px;
     right: 12px;
-
     width: auto;
-    height: 68px;
+
     min-height: 68px;
+    height: auto;
+
     padding: 6px 8px;
 
     background: color-mix(
         in srgb,
-        var(--bg-card) 94%,
+        var(--bg-card) 88%,
         transparent
     );
 
@@ -642,46 +665,13 @@ textarea,
         inset 0 1px 0 rgba(255, 255, 255, 0.12);
 
     z-index: 1000;
-    isolation: isolate;
-    overflow: visible;
+    overflow: hidden;
     box-sizing: border-box;
 }
-
-/* =========================================================
-   SOFT FADE UNDER THE NAVIGATION
-   Gradually conceals scrolling content near the bottom
-   ========================================================= */
-
-.mobile-nav::before {
-    content: "";
-    position: fixed;
-
-    left: -12px;
-    right: -12px;
-    bottom: -2px;
-
-    height: 150px;
-
-    background: linear-gradient(
-        to bottom,
-        transparent 0%,
-        color-mix(in srgb, var(--bg-body) 35%, transparent) 25%,
-        color-mix(in srgb, var(--bg-body) 75%, transparent) 55%,
-        var(--bg-body) 100%
-    );
-
-    pointer-events: none;
-    z-index: -1;
-}
-
-/* =========================================================
-   NAVIGATION LINKS
-   ========================================================= */
 
 .mobile-nav__link {
     display: flex;
     flex: 1;
-
     min-width: 0;
     height: 56px;
 
@@ -694,13 +684,9 @@ textarea,
     color: var(--text-secondary);
     text-decoration: none;
 
-    font-family: inherit;
     font-size: 11px;
     font-weight: 500;
     line-height: 1.2;
-
-    text-align: center;
-    white-space: nowrap;
 
     border-radius: 22px;
 
@@ -710,104 +696,82 @@ textarea,
         transform 0.2s ease;
 
     -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-    box-sizing: border-box;
 }
 
-/* Navigation icons */
 .mobile-nav__link svg {
-    display: block;
     width: 21px !important;
     height: 21px !important;
     flex-shrink: 0;
 }
 
-/* Touch feedback */
 .mobile-nav__link:active {
     transform: scale(0.94);
 }
 
-/* Current page */
+/* Selected navigation item */
 .mobile-nav__link.active,
 .mobile-nav__link[aria-current="page"] {
     color: var(--color-gold);
     background: rgba(212, 160, 65, 0.12);
 }
 
-/* Hover for mouse and trackpad devices */
-@media (hover: hover) and (pointer: fine) {
+/* Optional subtle hover effect */
+@media (hover: hover) {
     .mobile-nav__link:hover {
         color: var(--color-gold);
         background: rgba(212, 160, 65, 0.08);
     }
 }
 
-/* =========================================================
-   MOBILE PAGE SPACING
-   Prevent content from being hidden behind navigation
-   ========================================================= */
+
+/* ===============================================
+   SOLID WHITE BOTTOM BACKDROP
+   Starts underneath the floating navigation
+   =============================================== */
 
 @media (max-width: 768px) {
-    body {
-        padding-bottom: calc(
-            82px + env(safe-area-inset-bottom, 0px)
+    body::after {
+        content: "";
+        position: fixed;
+
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        /* Reduced height: backdrop begins beneath navbar */
+        height: calc(
+            38px + env(safe-area-inset-bottom, 0px)
+        );
+
+        background: #ffffff;
+
+        z-index: 999;
+        pointer-events: none;
+    }
+
+    /* Keep navigation above the white backdrop */
+    .mobile-nav {
+        z-index: 1000;
+
+        bottom: calc(
+            12px + env(safe-area-inset-bottom, 0px)
         );
     }
 
-    .mobile-nav {
-        left: 12px;
-        right: 12px;
-    }
-
-    .mobile-nav::before {
-        height: 150px;
+    /* Preserve space for scrolling content */
+    body {
+        padding-bottom: calc(
+            100px + env(safe-area-inset-bottom, 0px)
+        );
     }
 }
 
-/* =========================================================
-   SMALL MOBILE SCREENS
-   ========================================================= */
-
-@media (max-width: 360px) {
-    .mobile-nav {
-        left: 8px;
-        right: 8px;
-
-        height: 64px;
-        min-height: 64px;
-        padding: 5px;
-
-        border-radius: 25px;
-    }
-
-    .mobile-nav__link {
-        height: 52px;
-        gap: 3px;
-
-        font-size: 10px;
-        border-radius: 20px;
-    }
-
-    .mobile-nav__link svg {
-        width: 19px !important;
-        height: 19px !important;
-    }
-}
-
-/* =========================================================
-   ACCESSIBILITY
-   ========================================================= */
-
+/* Respect reduced-motion preferences */
 @media (prefers-reduced-motion: reduce) {
     .mobile-nav__link {
         transition: none;
     }
-
-    .mobile-nav__link:active {
-        transform: none;
-    }
 }
-
   /* ===============================================
        INLINE RECEIPT STYLES
        =============================================== */
