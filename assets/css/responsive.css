@@ -165,7 +165,7 @@ textarea,
     ) !important;
 
     padding-bottom: calc(
-      70px + env(safe-area-inset-bottom, 0px)
+      1px + env(safe-area-inset-bottom, 0px)
     ) !important;
 
     overflow-x: hidden;
@@ -729,7 +729,7 @@ textarea,
 @media (max-width: 768px) {
     body {
         padding-bottom: calc(
-            82px + env(safe-area-inset-bottom, 0px)
+            10px + env(safe-area-inset-bottom, 0px)
         );
     }
 
@@ -765,12 +765,7 @@ textarea,
     }
 }
 
-/* Respect reduced-motion preferences */
-@media (prefers-reduced-motion: reduce) {
-    .mobile-nav__link {
-        transition: none;
-    }
-}
+
 
   /* ===============================================
        INLINE RECEIPT STYLES
