@@ -6,7 +6,7 @@
   'use strict';
 
   var config   = window.SMMARIA_NOTIF || {};
-  var API_URL   = config.apiUrl || 'https://notifications-production-4281.up.railway.app';
+  var API_URL   = config.apiUrl || 'https://notifications-production-c09a.up.railway.app';
   var SW_PATH   = config.swPath || 'sw.js';
 
   /* ═════════════ INIT GUARD ═════════════ */
