@@ -729,7 +729,7 @@ textarea,
 @media (max-width: 768px) {
     body {
         padding-bottom: calc(
-            10px + env(safe-area-inset-bottom, 0px)
+            0px + env(safe-area-inset-bottom, 0px)
         );
     }
 
