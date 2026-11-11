@@ -1,5 +1,11 @@
 /* ===============================================
-   Notifications CSS
+   Notifications CSS (FIXED)
+   FIX: Toasts were invisible in light mode — the CSS used
+   --text-heading / --text-body which are NOT defined in this
+   project's theme files, so text fell back to near-white (#f8fafc)
+   on the white light-mode toast. Switched to the real theme
+   variables (--text-primary / --text-secondary / --text-muted)
+   and added explicit per-theme text colors for both modes.
    =============================================== */
 
 .announcement-bar {
@@ -60,7 +66,7 @@
     padding: 14px 16px;
 
     background: var(--bg-card, #111827);
-    color: var(--text-heading, #f8fafc);
+    color: var(--text-primary, #1f2937);
 
     border: 1px solid var(--border-color, rgba(255,255,255,.09));
     border-radius: 9px;
@@ -78,6 +84,7 @@
 /* Dark theme */
 [data-theme="dark"] .toast {
     background: #151e31;
+    color: #f1f5f9;
     border-color: rgba(255,255,255,.08);
     box-shadow: 0 10px 30px rgba(0,0,0,.28);
 }
@@ -85,6 +92,7 @@
 /* Light theme */
 [data-theme="light"] .toast {
     background: #ffffff;
+    color: #1f2937;
     border-color: #e5e7eb;
 }
 
@@ -171,7 +179,7 @@
     line-height: 1.4;
     margin-bottom: 3px;
 
-    color: var(--text-heading, #f8fafc);
+    color: var(--text-primary, #1f2937);
 }
 
 .toast__message {
@@ -180,8 +188,26 @@
     font-weight: 400;
     line-height: 1.5;
 
-    color: var(--text-body, #9ca3af);
+    color: var(--text-secondary, #64748b);
     overflow-wrap: anywhere;
+}
+
+/* Dark theme content colors */
+[data-theme="dark"] .toast__title {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .toast__message {
+    color: #cbd5e1;
+}
+
+/* Light theme content colors */
+[data-theme="light"] .toast__title {
+    color: #1f2937;
+}
+
+[data-theme="light"] .toast__message {
+    color: #64748b;
 }
 
 /* Dismiss button */
@@ -199,7 +225,7 @@
     border-radius: 6px;
 
     background: transparent;
-    color: var(--text-muted, #94a3b8);
+    color: var(--text-muted, #64748b);
 
     cursor: pointer;
     transition: background .2s, color .2s;
@@ -207,7 +233,23 @@
 
 .toast__dismiss:hover {
     background: rgba(148,163,184,.15);
-    color: var(--text-heading, #ffffff);
+    color: var(--text-primary, #1f2937);
+}
+
+[data-theme="dark"] .toast__dismiss {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .toast__dismiss:hover {
+    color: #f1f5f9;
+}
+
+[data-theme="light"] .toast__dismiss {
+    color: #64748b;
+}
+
+[data-theme="light"] .toast__dismiss:hover {
+    color: #1f2937;
 }
 
 .toast__dismiss svg {
