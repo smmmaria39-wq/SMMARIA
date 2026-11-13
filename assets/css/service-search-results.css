@@ -1,15 +1,140 @@
-/* Compact, responsive search results table for the Services page */
-.service-search-results { margin-top: 16px; }
-.service-search-results[hidden] { display: none !important; }
-.service-search-results__heading { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
-.service-search-results__heading h3 { margin:0; font-size:1rem; color:var(--text-primary); }
-.service-search-results__scroll { width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
-.service-results-table { width:100%; min-width:650px; border-collapse:collapse; text-align:left; }
-.service-results-table th, .service-results-table td { padding:11px 13px; border-bottom:1px solid var(--border-color); white-space:nowrap; font-size:.875rem; }
-.service-results-table th { color:var(--text-secondary); font-weight:600; background:var(--bg-secondary, transparent); }
-.service-result-row { cursor:pointer; transition:background .15s ease; outline-offset:-2px; }
-.service-result-row:hover, .service-result-row:focus { background:var(--hover-bg, rgba(124,58,237,.08)); }
-.service-result-name { color:var(--text-primary); font-weight:600; white-space:normal !important; min-width:190px; }
-.service-results-empty { padding:22px !important; text-align:center; color:var(--text-secondary); }
-.service-search-results__hint { margin:10px 0 0; color:var(--text-secondary); font-size:.78rem; }
-@media (max-width:600px) { .service-search-results__heading { align-items:flex-start; } .service-results-table th, .service-results-table td { padding:10px; } }
+
+/* =========================================
+   SMMMARIA - Responsive Service Search Table
+   All columns fit without horizontal scrolling
+========================================= */
+
+.service-search-results {
+    margin-top: 16px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.service-search-results[hidden] {
+    display: none !important;
+}
+
+.service-search-results__heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.service-search-results__heading h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+/* Remove horizontal scrolling */
+.service-search-results__scroll {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: auto;
+}
+
+/* Responsive table */
+.service-results-table {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+/* All cells */
+.service-results-table th,
+.service-results-table td {
+    padding: 11px 8px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.82rem;
+
+    /* Allow content to wrap */
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    vertical-align: middle;
+}
+
+/* Table headings */
+.service-results-table th {
+    color: var(--text-secondary);
+    font-weight: 600;
+    background: var(--bg-secondary, transparent);
+    font-size: 0.78rem;
+}
+
+/* Clickable service rows */
+.service-result-row {
+    cursor: pointer;
+    transition: background 0.15s ease;
+    outline-offset: -2px;
+}
+
+.service-result-row:hover,
+.service-result-row:focus {
+    background: var(--hover-bg, rgba(124,58,237,.08));
+}
+
+/* Service name */
+.service-result-name {
+    color: var(--text-primary);
+    font-weight: 600;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+    min-width: 0;
+}
+
+/* Empty results */
+.service-results-empty {
+    padding: 22px !important;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+/* Instruction below table */
+.service-search-results__hint {
+    margin: 10px 0 0;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    .service-results-table th,
+    .service-results-table td {
+        padding: 9px 6px;
+        font-size: 0.76rem;
+    }
+
+    .service-results-table th {
+        font-size: 0.72rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .service-search-results__heading {
+        align-items: flex-start;
+    }
+
+    .service-results-table th,
+    .service-results-table td {
+        padding: 8px 4px;
+        font-size: 0.68rem;
+    }
+
+    .service-results-table th {
+        font-size: 0.65rem;
+    }
+
+    .service-result-name {
+        font-size: 0.7rem;
+    }
+}
