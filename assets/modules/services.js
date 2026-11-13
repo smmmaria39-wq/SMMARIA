@@ -357,6 +357,9 @@ export default async function initServices() {
   const searchInput = $("#serviceSearch");
   const categorySelect = $("#categoryFilter");
   const platformBtns = document.querySelectorAll(".platform-icon-btn");
+  const searchResults = $("#serviceSearchResults");
+  const searchResultsBody = $("#serviceSearchResultsBody");
+  const searchResultCount = $("#serviceSearchResultCount");
 
   if (!grid) return;
 
@@ -425,6 +428,7 @@ export default async function initServices() {
 
       displayCount = BATCH_SIZE;
       renderServices(true);
+      renderSearchResults(searchTerm);
 
       // Sync platform icons active state
       if (platformBtns) {
@@ -446,6 +450,59 @@ export default async function initServices() {
     };
 
     runFiltersGlobal = runFilters; // Expose locally for background tasks
+
+    // --- SEARCH RESULTS TABLE ---
+    const escapeHTML = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    })[char]);
+
+    const renderSearchResults = (searchTerm) => {
+      if (!searchResults || !searchResultsBody) return;
+      // Keep the normal service grid until the user starts typing.
+      if (!searchTerm) {
+        searchResults.hidden = true;
+        grid.hidden = false;
+        return;
+      }
+
+      searchResults.hidden = false;
+      grid.hidden = true;
+      if (searchResultCount) {
+        searchResultCount.textContent = `${filteredServices.length} service${filteredServices.length === 1 ? "" : "s"} found`;
+      }
+
+      if (!filteredServices.length) {
+        searchResultsBody.innerHTML = '<tr><td colspan="6" class="service-results-empty">No matching services found.</td></tr>';
+        return;
+      }
+
+      searchResultsBody.innerHTML = filteredServices.map((service) => `
+        <tr class="service-result-row" data-service-id="${escapeHTML(service.id)}" tabindex="0" role="link" aria-label="Order ${escapeHTML(service.name)}">
+          <td class="service-result-name">${escapeHTML(service.name)}</td>
+          <td>${escapeHTML(service.category || "General")}</td>
+          <td>${escapeHTML(service.supplierServiceId || service.id || "N/A")}</td>
+          <td>${escapeHTML(formatCurrency(service.sellingPrice))}</td>
+          <td>${escapeHTML(service.min ?? "—")}</td>
+          <td>${escapeHTML(service.max ?? "—")}</td>
+        </tr>
+      `).join("");
+    };
+
+    // Clicking or keyboard-activating a result carries its service ID to New Order.
+    if (searchResultsBody && !searchResultsBody.dataset.navigationBound) {
+      const openServiceOrder = (row) => {
+        const serviceId = row?.dataset.serviceId;
+        if (serviceId) window.location.href = `new-order.html?id=${encodeURIComponent(serviceId)}`;
+      };
+      searchResultsBody.addEventListener("click", (event) => openServiceOrder(event.target.closest("tr[data-service-id]")));
+      searchResultsBody.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          const row = event.target.closest("tr[data-service-id]");
+          if (row) { event.preventDefault(); openServiceOrder(row); }
+        }
+      });
+      searchResultsBody.dataset.navigationBound = "true";
+    }
 
     // --- RENDER FUNCTION ---
     const renderServices = (isFresh = false) => {
