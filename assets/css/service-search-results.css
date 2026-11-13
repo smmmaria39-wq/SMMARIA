@@ -1,42 +1,305 @@
 
-/* =========================================
-   FIX: Preserve SMMMARIA Sticky Header
-========================================= */
+/* =====================================================
+   SMMMARIA - RESPONSIVE SERVICE SEARCH RESULTS
+   Desktop: Table
+   Mobile: Service Cards
+===================================================== */
 
-/* Keep the page's normal scrolling behavior */
-html {
-    overflow-y: auto;
-}
-
-body {
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-
-/* Preserve the header's original sticky positioning */
-header,
-.main-header,
-.navbar,
-.top-header {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-/* Search results must not create a competing scroll area */
 .service-search-results {
-    position: relative;
-    overflow: visible;
-    isolation: auto;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin-top: 16px;
+    box-sizing: border-box;
 }
 
+.service-search-results[hidden] {
+    display: none !important;
+}
+
+.service-search-results__heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.service-search-results__heading h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+/* Table container */
 .service-search-results__scroll {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     overflow: visible;
-    max-height: none;
 }
 
-/* Prevent table content from interfering with header */
+/* Desktop table */
 .service-results-table {
-    position: relative;
-    z-index: 1;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.service-results-table th,
+.service-results-table td {
+    padding: 11px 8px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: .84rem;
+    line-height: 1.4;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    vertical-align: middle;
+}
+
+.service-results-table th {
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: .76rem;
+    background: var(--bg-secondary, transparent);
+}
+
+/* Column proportions */
+.service-results-table th:nth-child(1) { width: 31%; }
+.service-results-table th:nth-child(2) { width: 22%; }
+.service-results-table th:nth-child(3) { width: 12%; }
+.service-results-table th:nth-child(4) { width: 15%; }
+.service-results-table th:nth-child(5) { width: 9%; }
+.service-results-table th:nth-child(6) { width: 11%; }
+
+/* Clickable rows */
+.service-result-row {
+    cursor: pointer;
+    transition: background .15s ease;
+    outline-offset: -2px;
+}
+
+.service-result-row:hover,
+.service-result-row:focus,
+.service-result-row:focus-visible {
+    background: var(--hover-bg, rgba(124,58,237,.08));
+}
+
+.service-result-name {
+    color: var(--text-primary);
+    font-weight: 650;
+    overflow-wrap: anywhere;
+}
+
+/* Empty results */
+.service-results-empty {
+    padding: 22px !important;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+/* Hint */
+.service-search-results__hint {
+    margin: 10px 0 0;
+    color: var(--text-secondary);
+    font-size: .78rem;
+}
+
+/* Tablet */
+@media (min-width: 601px) and (max-width: 900px) {
+    .service-results-table th,
+    .service-results-table td {
+        padding: 8px 5px;
+        font-size: .76rem;
+    }
+
+    .service-results-table th {
+        font-size: .7rem;
+    }
+}
+
+/* =====================================================
+   MOBILE: DISPLAY RESULTS AS CARDS
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .service-search-results {
+        padding: 12px;
+        overflow: visible;
+    }
+
+    .service-search-results__heading {
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .service-results-table,
+    .service-results-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    /* Hide traditional table headings */
+    .service-results-table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .service-results-table tbody {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+    }
+
+    /* Individual service card */
+    .service-results-table tbody tr.service-result-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0 12px;
+        width: 100%;
+        min-width: 0;
+        padding: 10px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        background: var(--bg-card);
+        box-shadow: 0 2px 8px rgba(0,0,0,.035);
+        box-sizing: border-box;
+    }
+
+    .service-results-table tbody tr.service-result-row td {
+        display: block;
+        min-width: 0;
+        padding: 7px 0;
+        border: 0;
+        font-size: .78rem;
+        line-height: 1.4;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    /* Service name occupies full width */
+    .service-results-table tbody tr.service-result-row td:nth-child(1) {
+        grid-column: 1 / -1;
+        padding-top: 2px;
+        padding-bottom: 9px;
+        margin-bottom: 3px;
+        border-bottom: 1px solid var(--border-color);
+        font-size: .9rem;
+    }
+
+    /* Field labels */
+    .service-results-table tbody tr.service-result-row td:nth-child(1)::before {
+        content: "SERVICE";
+    }
+
+    .service-results-table tbody tr.service-result-row td:nth-child(2)::before {
+        content: "CATEGORY";
+    }
+
+    .service-results-table tbody tr.service-result-row td:nth-child(3)::before {
+        content: "SERVICE ID";
+    }
+
+    .service-results-table tbody tr.service-result-row td:nth-child(4)::before {
+        content: "RATE / 1K";
+    }
+
+    .service-results-table tbody tr.service-result-row td:nth-child(5)::before {
+        content: "MINIMUM";
+    }
+
+    .service-results-table tbody tr.service-result-row td:nth-child(6)::before {
+        content: "MAXIMUM";
+    }
+
+    .service-results-table tbody tr.service-result-row td::before {
+        display: block;
+        margin-bottom: 3px;
+        color: var(--text-secondary);
+        font-size: .61rem;
+        font-weight: 700;
+        letter-spacing: .045em;
+    }
+
+    .service-search-results__hint {
+        font-size: .72rem;
+        line-height: 1.4;
+    }
+}
+
+/* Small phones */
+@media (max-width: 360px) {
+
+    .service-search-results {
+        padding: 10px;
+    }
+
+    .service-results-table tbody tr.service-result-row {
+        padding: 9px 10px;
+        gap: 0 8px;
+    }
+
+    .service-results-table tbody tr.service-result-row td {
+        font-size: .74rem;
+    }
+}
+
+/* =====================================================
+   SAFARI IOS HEADER FIX
+===================================================== */
+
+@supports (-webkit-touch-callout: none) {
+
+    @media (max-width: 768px) {
+
+        html {
+            scroll-padding-top:
+                calc(env(safe-area-inset-top, 0px) + 80px);
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        /* Prevent wrappers from trapping sticky elements */
+        .main-wrapper {
+            overflow: visible !important;
+        }
+
+        /* Sticky Safari navigation */
+        .navbar {
+            position: -webkit-sticky !important;
+            position: sticky !important;
+
+            top: env(safe-area-inset-top, 0px) !important;
+
+            left: auto !important;
+            right: auto !important;
+
+            width: calc(100% - 20px) !important;
+            margin-left: 10px !important;
+            margin-right: 10px !important;
+
+            z-index: 1100 !important;
+
+            transform: none !important;
+            -webkit-transform: none !important;
+
+            animation: none !important;
+            will-change: auto !important;
+
+            box-sizing: border-box !important;
+        }
+    }
 }
