@@ -88,6 +88,7 @@
     <link rel="stylesheet" href="assets/css/buttons.css">
     <link rel="stylesheet" href="assets/css/forms.css">
     <link rel="stylesheet" href="assets/css/tables.css">
+    <link rel="stylesheet" href="assets/css/service-search-results.css">
     <link rel="stylesheet" href="assets/css/modal.css">
     <link rel="stylesheet" href="assets/css/notifications.css">
     <link rel="stylesheet" href="assets/css/dashboard.css">
@@ -501,6 +502,21 @@
                             <option value="all">All Categories</option>
                         </select>
                     </div>
+                </div>
+
+                <!-- Search Results Table (shown while searching) -->
+                <div class="card service-search-results" id="serviceSearchResults" hidden aria-live="polite">
+                    <div class="service-search-results__heading">
+                        <h3>Search Results</h3>
+                        <span id="serviceSearchResultCount" class="text-muted"></span>
+                    </div>
+                    <div class="service-search-results__scroll">
+                        <table class="service-results-table">
+                            <thead><tr><th>Service</th><th>Category</th><th>ID</th><th>Rate / 1K</th><th>Min</th><th>Max</th></tr></thead>
+                            <tbody id="serviceSearchResultsBody"></tbody>
+                        </table>
+                    </div>
+                    <p class="service-search-results__hint">Select any result to continue to the new order page.</p>
                 </div>
 
                 <!-- Platform Icons Grid -->
