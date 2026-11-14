@@ -1,26 +1,58 @@
-# Default rule: Allow all search engines to crawl the site
+
+# ==========================================
+# SMMMARIA - ROBOTS.TXT
+# Website: https://smmaria.site/
+# ==========================================
+
+# Allow all search engines to crawl public pages
 User-agent: *
 
-# Block crawling of private/authenticated frontend routes
+# ==========================================
+# BLOCK PRIVATE / AUTHENTICATED PAGES
+# ==========================================
+
 Disallow: /admin/
 Disallow: /dashboard/
 Disallow: /orders/
 Disallow: /wallet/
 Disallow: /profile/
 Disallow: /tickets/
-Disallow: /api/
 
-# Block crawling of backend API endpoint paths (if hosted on the same domain)
+# ==========================================
+# BLOCK PRIVATE BACKEND / API ROUTES
+# ==========================================
+
+Disallow: /api/
 Disallow: /v1/
 Disallow: /auth/
 Disallow: /users/
-Disallow: /services/
 
-# Allow access to public assets (CSS, JS, Images)
+# ==========================================
+# ALLOW PUBLIC WEBSITE CONTENT
+# ==========================================
+
+Allow: /
+Allow: /gallery.html
+Allow: /services.html
+Allow: /new-order.html
 Allow: /assets/
 Allow: /css/
 Allow: /js/
 Allow: /images/
 
-# Point to the sitemap
+# ==========================================
+# IMPORTANT: PUBLIC SEO PAGES
+# ==========================================
+
+Allow: /gallery/
+Allow: /about-smmaria/
+Allow: /smm-panel/
+Allow: /instagram-marketing/
+Allow: /tiktok-marketing/
+Allow: /youtube-marketing/
+
+# ==========================================
+# XML SITEMAP
+# ==========================================
+
 Sitemap: https://smmaria.site/sitemap.xml
