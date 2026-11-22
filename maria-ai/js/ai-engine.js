@@ -1,122 +1,44 @@
-// Maria AI local knowledge engine.
-// Answers are retrieved from ai-knowledge-base.js, generated from the SMMARIA ZIP.
-// This file does not call Gemini, OpenAI, or any AI inference endpoint.
-
-import { KNOWLEDGE_BASE } from './ai-knowledge-base.js';
-import { getJwtToken, getSmmariaSession } from './ai-auth.js';
+// Maria AI response client. All knowledge retrieval, response composition,
+// permission checks and database access happen on the trusted backend.
+import { apiRequest } from './ai-auth.js';
+import { MARIA_AI_ENDPOINTS } from './ai-config.js';
 import { getPageCards } from './ai-navigation.js';
 
-const STOP_WORDS = new Set([
-  'a','an','and','are','as','at','be','can','could','do','does','for','from',
-  'how','i','in','is','it','me','my','of','on','or','please','show','tell',
-  'that','the','this','to','what','when','where','which','who','why','with',
-  'would','you','your','we','our','help','understand','explain'
-]);
-
-function tokens(value) {
-  return String(value || '').toLowerCase()
-    .replace(/[^a-z0-9]+/g, ' ')
-    .split(/\s+/)
-    .filter(word => word.length > 1 && !STOP_WORDS.has(word));
+function normalizeHistory(history) {
+  return (Array.isArray(history) ? history : []).slice(-12).map(item => ({
+    role: item.role === 'assistant' ? 'assistant' : 'user',
+    content: String(item.content || '').slice(0, 8000)
+  }));
 }
 
-function scoreEntry(queryTokens, question, entry) {
-  const title = entry.source.split('/').pop().replace(/\.[^.]+$/, '').toLowerCase();
-  const haystack = (entry.source + ' ' + entry.content).toLowerCase();
-  let score = 0;
+export async function askMaria(question, history = [], onChunk = () => {}, conversationId = null) {
+  const cleanQuestion = String(question || '').trim();
+  if (!cleanQuestion) throw new Error('Please enter a message.');
+  if (cleanQuestion.length > 8000) throw new Error('Your message is too long. Please shorten it.');
 
-  for (const token of queryTokens) {
-    if (title.includes(token)) score += 7;
-    if (entry.source.toLowerCase().includes(token)) score += 4;
-    const count = haystack.split(token).length - 1;
-    score += Math.min(count, 5);
-  }
+  const payload = await apiRequest(MARIA_AI_ENDPOINTS.chat, {
+    method: 'POST',
+    body: JSON.stringify({
+      message: cleanQuestion,
+      history: normalizeHistory(history),
+      conversationId
+    })
+  });
 
-  const phrase = question.toLowerCase().trim();
-  if (phrase.length > 4 && haystack.includes(phrase)) score += 12;
+  const data = payload.data || payload;
+  const text = String(data.reply || data.text || data.answer || '').trim();
+  if (!text) throw new Error('Maria AI returned an empty response. Please try again.');
 
-  // Prefer explanatory documents and page/module sources over styling noise.
-  if (/readme|documentation|guide|help/.test(entry.source.toLowerCase())) score += 2;
-  if (/\.html$/i.test(entry.source)) score += 1;
-  if (/\.css$/i.test(entry.source)) score -= 2;
+  // The API currently returns a complete JSON response. This callback keeps
+  // compatibility with the chat UI and can later be connected to SSE streaming.
+  onChunk(text);
+  const backendPages = Array.isArray(data.pages) ? data.pages : [];
+  const pages = backendPages.length ? backendPages : getPageCards(cleanQuestion);
 
-  return score;
-}
-
-function makeExcerpt(content, queryTokens, maxLength = 620) {
-  const lines = String(content).split(/\n+/).map(s => s.trim()).filter(Boolean);
-  if (!lines.length) return '';
-  let best = lines[0];
-  let bestScore = -1;
-
-  for (const line of lines) {
-    const lower = line.toLowerCase();
-    const lineScore = queryTokens.reduce((n, token) => n + (lower.includes(token) ? 1 : 0), 0);
-    if (lineScore > bestScore) {
-      best = line;
-      bestScore = lineScore;
-    }
-  }
-
-  if (best.length > maxLength) best = best.slice(0, maxLength).replace(/\s+\S*$/, '') + '…';
-  return best;
-}
-
-function safeFileLabel(path) {
-  return path.replace(/^assets\//, '').replace(/\.html?$/i, '').replace(/\.js$/i, '');
-}
-
-export async function askMaria(question, history = [], onChunk = () => {}) {
-  const token = getJwtToken();
-  if (!token) throw new Error('Please sign in to your SMMARIA account before using Maria AI.');
-
-  // Verify the existing SMMARIA session; this is the panel's normal backend,
-  // not an AI API. No account-changing requests are made.
-  await getSmmariaSession();
-
-  const queryTokens = tokens(question);
-  if (!queryTokens.length) {
-    const text = 'Please tell me a little more about what you want to find in SMMARIA.';
-    onChunk(text);
-    return { text, pages: [], sources: [] };
-  }
-
-  const ranked = KNOWLEDGE_BASE
-    .map(entry => ({ entry, score: scoreEntry(queryTokens, question, entry) }))
-    .filter(item => item.score > 0)
-    .sort((a, b) => b.score - a.score);
-
-  const unique = [];
-  const seen = new Set();
-  for (const item of ranked) {
-    if (seen.has(item.entry.source)) continue;
-    seen.add(item.entry.source);
-    unique.push(item);
-    if (unique.length === 4) break;
-  }
-
-  const pages = getPageCards(question);
-
-  let answer;
-  if (!unique.length || unique[0].score < 2) {
-    answer = [
-      'I could not find a reliable match for that question in the SMMARIA knowledge files.',
-      'Try using the name of the page or feature, such as Wallet, Orders, Services, Tickets, Refill or API.',
-      'I will only answer from information available in the supplied SMMARIA project files.'
-    ].join('\n\n');
-  } else {
-    const sections = unique.map(({ entry }) =>
-      `**${safeFileLabel(entry.source)}**\n${makeExcerpt(entry.content, queryTokens)}`
-    );
-    answer = `I found these relevant details in the SMMARIA project files:\n\n${sections.join('\n\n')}\n\n` +
-      'These results are retrieved from the project files; they are not generated by an external AI model. ' +
-      'If you want, ask me about a specific step or button on the page.';
-  }
-
-  onChunk(answer);
   return {
-    text: answer,
+    text,
     pages,
-    sources: unique.map(({ entry, score }) => ({ source: entry.source, score }))
+    conversationId: data.conversationId || conversationId || null,
+    messageId: data.messageId || null
   };
 }
