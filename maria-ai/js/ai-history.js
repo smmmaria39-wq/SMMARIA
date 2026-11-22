@@ -1,58 +1,59 @@
-import { getFirebaseServices } from './ai-config.js';
-import { ref, push, set, get, update, remove, onValue, query, orderByChild, limitToLast } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js';
+// Conversation history is managed by the Maria AI backend.
+import { apiRequest } from './ai-auth.js';
+import { MARIA_AI_ENDPOINTS } from './ai-config.js';
 
-function userRoot(uid) { return `mariaAI/users/${uid}`; }
-function requireUid() {
-  const { auth } = getFirebaseServices();
-  const uid = auth.currentUser?.uid;
-  if (!uid) throw new Error('Conversation saving needs a signed-in Firebase Authentication user. Your SMMARIA JWT alone is not a Firebase Auth credential.');
-  return uid;
+const endpoint = MARIA_AI_ENDPOINTS.conversations;
+
+function unwrap(payload) {
+  return payload && payload.data !== undefined ? payload.data : payload;
 }
-export async function getConsent() {
-  try { const uid=requireUid(); const {database}=getFirebaseServices(); const s=await get(ref(database,`${userRoot(uid)}/preferences/conversationConsent`)); return s.val()===true; }
-  catch { return false; }
+
+export async function listConversations(onUpdate = () => {}) {
+  const data = unwrap(await apiRequest(endpoint, { method: 'GET' }));
+  const rows = Array.isArray(data) ? data : (data.conversations || []);
+  onUpdate(rows);
+  // Return an unsubscribe-compatible function so the UI can use the same API
+  // shape as its previous history implementation. Refresh is manual/API-driven.
+  return () => {};
 }
-export async function setConsent(value) {
-  const uid=requireUid(), {database}=getFirebaseServices();
-  await set(ref(database,`${userRoot(uid)}/preferences/conversationConsent`),Boolean(value));
-}
-export async function createConversation(title='New conversation') {
-  const uid=requireUid(), {database}=getFirebaseServices();
-  const listRef=ref(database,`${userRoot(uid)}/conversations`);
-  const newRef=push(listRef); const now=Date.now();
-  await set(newRef,{title,createdAt:now,updatedAt:now,messages:{}});
-  return newRef.key;
-}
-export async function saveMessage(conversationId,message) {
-  const uid=requireUid(), {database}=getFirebaseServices();
-  const base=`${userRoot(uid)}/conversations/${conversationId}`;
-  const msgRef=push(ref(database,`${base}/messages`));
-  await set(msgRef,{role:message.role,content:String(message.content).slice(0,12000),timestamp:Date.now()});
-  await update(ref(database,base),{updatedAt:Date.now()});
-  return msgRef.key;
-}
-export async function listConversations(callback) {
-  const uid=requireUid(), {database}=getFirebaseServices();
-  return onValue(query(ref(database,`${userRoot(uid)}/conversations`),orderByChild('updatedAt'),limitToLast(50)),snap=>{
-    const rows=[]; snap.forEach(child=>rows.push({id:child.key,...child.val()}));
-    callback(rows.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0)));
-  });
-}
+
 export async function loadConversation(id) {
-  const uid=requireUid(), {database}=getFirebaseServices();
-  const snap=await get(ref(database,`${userRoot(uid)}/conversations/${id}`));
-  if(!snap.exists()) throw new Error('Conversation not found.');
-  return {id,...snap.val()};
+  if (!id) throw new Error('Conversation not found.');
+  return unwrap(await apiRequest(MARIA_AI_ENDPOINTS.conversation(id), { method: 'GET' }));
 }
-export async function renameConversation(id,title) {
-  const uid=requireUid(), {database}=getFirebaseServices();
-  await update(ref(database,`${userRoot(uid)}/conversations/${id}`),{title:String(title).slice(0,80),updatedAt:Date.now()});
+
+export async function createConversation(title) {
+  const payload = unwrap(await apiRequest(endpoint, {
+    method: 'POST',
+    body: JSON.stringify({ title: String(title || 'New conversation').slice(0, 100) })
+  }));
+  const id = payload.id || payload.conversationId;
+  if (!id) throw new Error('The server did not return a conversation ID.');
+  return id;
 }
-export async function deleteConversation(id) {
-  const uid=requireUid(), {database}=getFirebaseServices();
-  await remove(ref(database,`${userRoot(uid)}/conversations/${id}`));
+
+export async function saveMessage(conversationId, message) {
+  if (!conversationId) return;
+  return unwrap(await apiRequest(MARIA_AI_ENDPOINTS.conversation(conversationId) + '/messages', {
+    method: 'POST',
+    body: JSON.stringify({
+      role: message.role === 'assistant' ? 'assistant' : 'user',
+      content: String(message.content || '').slice(0, 12000)
+    })
+  }));
 }
+
 export async function deleteAllConversations() {
-  const uid=requireUid(), {database}=getFirebaseServices();
-  await remove(ref(database,`${userRoot(uid)}/conversations`));
+  return unwrap(await apiRequest(endpoint, { method: 'DELETE' }));
+}
+
+// Consent is stored on this browser. The backend must still enforce the
+// authenticated user's ownership for every history endpoint.
+const CONSENT_KEY = 'maria_ai_history_consent';
+export async function getConsent() {
+  return localStorage.getItem(CONSENT_KEY) === 'true';
+}
+export async function setConsent(enabled) {
+  localStorage.setItem(CONSENT_KEY, enabled ? 'true' : 'false');
+  return enabled;
 }
