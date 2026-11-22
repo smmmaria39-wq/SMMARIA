@@ -8,12 +8,15 @@ import { getAuth } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-aut
 import { getDatabase } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js';
 import { getAI, getGenerativeModel, GoogleAIBackend } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-ai.js';
 
-export const firebaseConfig = {
-  apiKey: 'YOUR_FIREBASE_WEB_API_KEY',
-  authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
-  databaseURL: 'https://YOUR_DATABASE_NAME.REGION.firebasedatabase.app',
-  projectId: 'YOUR_PROJECT_ID',
-  appId: 'YOUR_FIREBASE_APP_ID'
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyA79GKNHZ9OjaenhXDDFi-IEU58KfqvmYA",
+  authDomain: "smmmaria-ai-assistant.firebaseapp.com",
+  projectId: "smmmaria-ai-assistant",
+  storageBucket: "smmmaria-ai-assistant.firebasestorage.app",
+  messagingSenderId: "915315015465",
+  appId: "1:915315015465:web:6bd62a14add2a3cac94138",
+  measurementId: "G-ZD7N6BNZK5"
 };
 
 export const AI_MODEL_NAME = 'gemini-2.5-flash';
