@@ -172,7 +172,35 @@ document.addEventListener('click', (e) => {
  }
  
  // 3. Handle the redirect
- if (e.target.closest('#continueToMariaAds')) {
-  window.open('https://ads.smmaria.site', '_blank');
- }
+
+// =====================================
+// MARIA AI ASSISTANT NAVIGATION
+// =====================================
+
+document.addEventListener('click', (e) => {
+    const mariaAdsSheet = document.getElementById('mariaAdsSheet');
+
+    // 1. Open Maria AI introduction card
+    if (e.target.closest('#mariaAdsBtn')) {
+        if (mariaAdsSheet) {
+            mariaAdsSheet.classList.add('active');
+        }
+        return;
+    }
+
+    // 2. Close the introduction card
+    if (
+        e.target.closest('#closeMariaAdsSheet') ||
+        e.target === mariaAdsSheet
+    ) {
+        if (mariaAdsSheet) {
+            mariaAdsSheet.classList.remove('active');
+        }
+        return;
+    }
+
+    // 3. Navigate to the dedicated Maria AI page
+    if (e.target.closest('#continueToMariaAds')) {
+        window.location.href = 'ai.html';
+    } 
 });
