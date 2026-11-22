@@ -1,27 +1,59 @@
-// SMMARIA still uses its existing JWT session. This module validates that session
-// through the existing /auth/me API. Firebase Auth is separate and is required
-// for private Realtime Database rules. No anonymous/public database access is enabled.
+import { MARIA_AI_API_BASE_URL, MARIA_AI_ENDPOINTS, MARIA_AI_REQUEST_TIMEOUT } from './ai-config.js';
 
-import { getFirebaseServices, FIREBASE_CONFIGURED } from './ai-config.js';
+export function getJwtToken() {
+  return localStorage.getItem('smmmaria_token');
+}
 
-const API_BASE = 'https://smmmaria-backend-production-4513.up.railway.app/api/v1';
+export function requireJwtToken() {
+  const token = getJwtToken();
+  if (!token) {
+    throw new Error('Your session has expired. Please sign in to SMMARIA again.');
+  }
+  return token;
+}
+
+export async function apiRequest(path, options = {}) {
+  const token = requireJwtToken();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), MARIA_AI_REQUEST_TIMEOUT);
+
+  try {
+    const response = await fetch(`${MARIA_AI_API_BASE_URL}${path}`, {
+      ...options,
+      signal: options.signal || controller.signal,
+      headers: {
+        Accept: 'application/json',
+        ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+        ...(options.headers || {}),
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const payload = await response.json().catch(() => ({}));
+    if (response.status === 401) {
+      localStorage.removeItem('smmmaria_token');
+      throw new Error('Your session has expired. Please sign in again.');
+    }
+    if (!response.ok) {
+      throw new Error(payload.message || payload.error || `Request failed (${response.status}).`);
+    }
+    return payload;
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      throw new Error('The request took too long. Please try again.');
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 export async function getSmmariaSession() {
-  const token = localStorage.getItem('smmmaria_token');
-  if (!token) throw new Error('Your SMMARIA session has expired. Please sign in again.');
-  const response = await fetch(`${API_BASE}/auth/me`, { headers: { Authorization: `Bearer ${token}` } });
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(payload.message || 'Could not verify your SMMARIA session.');
+  const payload = await apiRequest(MARIA_AI_ENDPOINTS.session, { method: 'GET' });
   return payload.data || payload.user || payload;
 }
 
 export async function getMariaIdentity() {
   const user = await getSmmariaSession();
-  let firebaseUser = null;
-  if (FIREBASE_CONFIGURED) {
-    const { auth } = getFirebaseServices();
-    firebaseUser = auth.currentUser;
-  }
-  return { user, firebaseUser, canSaveHistory: Boolean(firebaseUser) };
+  return { user, canSaveHistory: true };
 }
-
-export function getJwtToken() { return localStorage.getItem('smmmaria_token'); }
