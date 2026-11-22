@@ -77,3 +77,81 @@
 @media(max-width:700px){#updates-page .up-layout{grid-template-columns:1fr}#updates-page .up-side{grid-template-columns:repeat(2,minmax(0,1fr))}#updates-page .up-feature{grid-template-columns:.8fr 1.2fr}}
 @media(max-width:560px){#updates-page .up-hero{padding:23px 20px;min-height:0}#updates-page .up-hero-art{display:none}#updates-page .up-hero h1{font-size:30px}#updates-page .up-hero p{font-size:11px}#updates-page .up-toolbar{display:block}#updates-page .up-actions{margin-top:13px}#updates-page .up-search{width:100%;flex:1}#updates-page .up-feature{grid-template-columns:1fr}#updates-page .up-feature-art{min-height:145px}#updates-page .up-feature-art b{font-size:60px}#updates-page .up-side{grid-template-columns:1fr}#updates-page .up-story{grid-template-columns:75px minmax(0,1fr);gap:10px;padding:9px}#updates-page .up-thumb{min-height:85px}#updates-page .up-cta{align-items:flex-start;flex-direction:column}}
 @media(prefers-reduced-motion:reduce){#updates-page *{animation-duration:.01ms!important;transition:none!important}}
+
+/* =====================================
+   MARIA AI BUTTON — ABOVE BOTTOM NAV
+===================================== */
+
+:root {
+    --maria-nav-height: 140px;
+    --maria-nav-gap: 16px;
+}
+
+.maria-ai-launcher {
+    position: fixed;
+    right: 22px;
+    bottom: calc(var(--maria-nav-height) + var(--maria-nav-gap));
+    z-index: 10001;
+}
+
+.maria-ai-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
+    padding: 13px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    color: #ffffff;
+    background: linear-gradient(135deg, #7655e8, #4b35b5);
+    box-shadow: 0 8px 25px rgba(90, 60, 190, 0.35);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.maria-ai-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(90, 60, 190, 0.45);
+    color: #ffffff;
+}
+
+.maria-ai-icon {
+    font-size: 23px;
+    line-height: 1;
+}
+
+.maria-ai-button-text {
+    white-space: nowrap;
+}
+
+.maria-ai-status {
+    width: 9px;
+    height: 9px;
+    flex-shrink: 0;
+    background: #42e695;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(66, 230, 149, 0.8);
+}
+
+/* Mobile positioning */
+@media (max-width: 600px) {
+    .maria-ai-launcher {
+        right: 15px;
+        bottom: calc(
+            var(--maria-nav-height) +
+            var(--maria-nav-gap) +
+            env(safe-area-inset-bottom, 0px)
+        );
+    }
+
+    .maria-ai-button {
+        padding: 13px 17px;
+        gap: 8px;
+    }
+
+    .maria-ai-button-text {
+        font-size: 13px;
+    }
+}
