@@ -1,3 +1,4 @@
+
 // ===============================================
 // App.js  User Frontend Main Entry Point
 // ===============================================
@@ -157,50 +158,34 @@ document.addEventListener('DOMContentLoaded', async () => {
  }
 });
 
-// Put this in app.js or at the bottom of your main HTML layout
+// ===============================================
+// MARIA AI ASSISTANT — SLIDE-UP CARD & NAVIGATION
+// ===============================================
+
 document.addEventListener('click', (e) => {
  const mariaAdsSheet = document.getElementById('mariaAdsSheet');
- 
- // 1. If the Maria Ads button is clicked, open the sheet
+
+ // 1. Open Maria AI introduction card
  if (e.target.closest('#mariaAdsBtn')) {
-  if (mariaAdsSheet) mariaAdsSheet.classList.add('active');
+  if (mariaAdsSheet) {
+   mariaAdsSheet.classList.add('active');
+  }
+  return;
  }
- 
- // 2. If the close handle, the dark background, or the continue button is clicked, close the sheet
- if (e.target.closest('#closeMariaAdsSheet') || e.target === mariaAdsSheet || e.target.closest('#continueToMariaAds')) {
-  if (mariaAdsSheet) mariaAdsSheet.classList.remove('active');
+
+ // 2. Close Maria AI introduction card
+ if (
+  e.target.closest('#closeMariaAdsSheet') ||
+  e.target === mariaAdsSheet
+ ) {
+  if (mariaAdsSheet) {
+   mariaAdsSheet.classList.remove('active');
+  }
+  return;
  }
- 
- // 3. Handle the redirect
 
-// =====================================
-// MARIA AI ASSISTANT NAVIGATION
-// =====================================
-
-document.addEventListener('click', (e) => {
-    const mariaAdsSheet = document.getElementById('mariaAdsSheet');
-
-    // 1. Open Maria AI introduction card
-    if (e.target.closest('#mariaAdsBtn')) {
-        if (mariaAdsSheet) {
-            mariaAdsSheet.classList.add('active');
-        }
-        return;
-    }
-
-    // 2. Close the introduction card
-    if (
-        e.target.closest('#closeMariaAdsSheet') ||
-        e.target === mariaAdsSheet
-    ) {
-        if (mariaAdsSheet) {
-            mariaAdsSheet.classList.remove('active');
-        }
-        return;
-    }
-
-    // 3. Navigate to the dedicated Maria AI page
-    if (e.target.closest('#continueToMariaAds')) {
-        window.location.href = 'ai.html';
-    } 
+ // 3. Navigate to the dedicated Maria AI page
+ if (e.target.closest('#continueToMariaAds')) {
+  window.location.href = 'ai.html';
+ }
 });
