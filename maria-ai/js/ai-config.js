@@ -5,7 +5,7 @@
 // Use the backend's API root. Change this if Maria AI is hosted by a
 // separate backend service.
 export const MARIA_AI_API_BASE_URL =
-  'https://smmmaria-backend-production-4513.up.railway.app/api/v1';
+  'https://ai-assistant-production-3804f48e.up.railway.app/api/v1';
 
 export const MARIA_AI_ENDPOINTS = Object.freeze({
   session: '/auth/me',
