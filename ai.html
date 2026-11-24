@@ -1,76 +1,294 @@
+
 <!doctype html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f7f8fc">
+
   <title>Maria AI | SMMARIA</title>
+
   <link rel="stylesheet" href="maria-ai/css/ai.css">
   <link rel="stylesheet" href="maria-ai/css/ai-chat.css">
   <link rel="stylesheet" href="maria-ai/css/ai-responsive.css">
 </head>
+
 <body>
-  <div class="ai-shell">
-    <aside class="ai-sidebar" id="aiSidebar">
-      <a class="ai-brand" href="dashboard.html" aria-label="Back to SMMARIA dashboard">
-        <span class="ai-brand-mark">M</span><span><strong>SMMARIA</strong><small>MARIA AI</small></span>
+
+<div class="ai-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="ai-sidebar" id="aiSidebar">
+
+    <a class="ai-brand" href="dashboard.html" aria-label="Back to SMMARIA dashboard">
+      <span class="ai-brand-mark">M</span>
+      <span>
+        <strong>SMMARIA</strong>
+        <small>MARIA AI</small>
+      </span>
+    </a>
+
+    <button class="ai-new-chat" id="newChatBtn">
+      <span>＋</span> New conversation
+    </button>
+
+    <div class="ai-side-label">YOUR CONVERSATIONS</div>
+
+    <div class="ai-history-list" id="conversationList">
+      <p class="ai-muted ai-small">Your saved chats will appear here.</p>
+    </div>
+
+    <div class="ai-sidebar-bottom">
+
+      <a href="dashboard.html" class="ai-side-link">
+        ← Back to dashboard
       </a>
-      <button class="ai-new-chat" id="newChatBtn"><span>＋</span> New conversation</button>
-      <div class="ai-side-label">YOUR CONVERSATIONS</div>
-      <div class="ai-history-list" id="conversationList"><p class="ai-muted ai-small">Your saved chats will appear here.</p></div>
-      <div class="ai-sidebar-bottom">
-        <a href="dashboard.html" class="ai-side-link">← Back to dashboard</a>
-        <button class="ai-side-link ai-privacy-link" id="privacyBtn">Privacy & data</button>
-        <div class="ai-user-chip"><span class="ai-avatar" id="userAvatar">M</span><span><strong id="userName">SMMARIA User</strong><small id="userRole">Authenticated session</small></span></div>
+
+      <button class="ai-side-link ai-privacy-link" id="privacyBtn">
+        Privacy & data
+      </button>
+
+      <div class="ai-user-chip">
+        <span class="ai-avatar" id="userAvatar">M</span>
+
+        <span>
+          <strong id="userName">SMMARIA User</strong>
+          <small id="userRole">Authenticated session</small>
+        </span>
       </div>
-    </aside>
 
-    <main class="ai-main">
-      <header class="ai-topbar">
-        <button class="ai-icon-btn ai-mobile-menu" id="mobileMenuBtn" aria-label="Open menu">☰</button>
-        <div><div class="ai-top-title">Maria AI</div><div class="ai-top-subtitle"><span class="ai-status-dot"></span> Your SMMARIA assistant</div></div>
-        <div class="ai-top-actions"><button class="ai-icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◐</button><a class="ai-back-link" href="dashboard.html">Exit AI</a></div>
-      </header>
+    </div>
+  </aside>
 
-      <section class="ai-chat-stage" id="chatStage">
-        <div class="ai-welcome" id="welcomePanel">
-          <div class="ai-orb"><span>✦</span></div>
-          <p class="ai-eyebrow">SMMARIA INTELLIGENCE</p>
-          <h1>How can I help you<br><span>today?</span></h1>
-          <p class="ai-welcome-copy">Ask about your SMMARIA account, services, orders, wallet or how to use the panel.</p>
-          <div class="ai-suggestion-grid" id="suggestionGrid"></div>
+  <!-- MAIN CHAT -->
+  <main class="ai-main">
+
+    <!-- HEADER -->
+    <header class="ai-topbar">
+
+      <button
+        class="ai-icon-btn ai-mobile-menu"
+        id="mobileMenuBtn"
+        aria-label="Open menu">
+        ☰
+      </button>
+
+      <div>
+        <div class="ai-top-title">Maria AI</div>
+
+        <!-- LIVE BACKEND CONNECTION STATUS -->
+        <div class="ai-top-subtitle" role="status" aria-live="polite">
+
+          <span
+            class="ai-status-dot"
+            id="aiStatusDot"
+            data-status="connecting">
+          </span>
+
+          <span id="aiConnectionLabel">
+            Connecting to Maria AI…
+          </span>
+
         </div>
-        <div class="ai-messages" id="messages" aria-live="polite" aria-label="Conversation"></div>
-      </section>
+      </div>
 
-      <footer class="ai-composer-wrap">
-        <div class="ai-consent-notice" id="consentNotice" hidden>
-          <span>Chat history is not being saved.</span>
-          <button id="enableHistoryBtn">Enable saving</button>
+      <div class="ai-top-actions">
+
+        <button
+          class="ai-icon-btn"
+          id="themeBtn"
+          title="Toggle theme"
+          aria-label="Toggle theme">
+          ◐
+        </button>
+
+        <a class="ai-back-link" href="dashboard.html">
+          Exit AI
+        </a>
+
+      </div>
+    </header>
+
+    <!-- CHAT AREA -->
+    <section
+      class="ai-chat-stage"
+      id="chatStage">
+
+      <div class="ai-welcome" id="welcomePanel">
+
+        <div class="ai-orb">
+          <span>✦</span>
         </div>
-        <form class="ai-composer" id="chatForm">
-          <textarea id="messageInput" rows="1" maxlength="8000" placeholder="Message Maria AI…" aria-label="Message Maria AI"></textarea>
-          <div class="ai-composer-bottom"><span class="ai-composer-hint">Maria AI can make mistakes. Verify important account information.</span><button class="ai-send-btn" id="sendBtn" type="submit" aria-label="Send message">↑</button></div>
-        </form>
-        <p class="ai-footer-note">Never share your password, OTP, payment PIN or private API key in chat.</p>
-      </footer>
-    </main>
-  </div>
 
-  <div class="ai-modal-backdrop" id="privacyModal" hidden>
-    <section class="ai-modal" role="dialog" aria-modal="true" aria-labelledby="privacyTitle">
-      <button class="ai-modal-close" id="closePrivacyBtn" aria-label="Close">×</button>
-      <p class="ai-eyebrow">YOUR CONTROL</p><h2 id="privacyTitle">Conversation privacy</h2>
-      <p>Maria AI can remember your conversations so you can
-           revisit them whenever you need. Saving your chat history
-             is completely optional, and you remain in control of
-             your conversation data.</p>
-      <label class="ai-consent-check"><input type="checkbox" id="historyConsentCheck"><span><strong>I consent to saving my Maria AI conversations.</strong><small>I can turn this off and delete saved conversations later.</small></span></label>
-      <div class="ai-modal-actions"><button class="ai-btn ai-btn-quiet" id="deleteAllChatsBtn">Delete saved chats</button><button class="ai-btn ai-btn-primary" id="savePrivacyBtn">Save preference</button></div>
-      <p class="ai-small ai-muted" id="privacyStatus"></p>
+        <p class="ai-eyebrow">SMMARIA INTELLIGENCE</p>
+
+        <h1>
+          How can I help you
+          <br>
+          <span>today?</span>
+        </h1>
+
+        <p class="ai-welcome-copy">
+          Ask about your SMMARIA account, services, orders,
+          wallet or how to use the panel.
+        </p>
+
+        <div
+          class="ai-suggestion-grid"
+          id="suggestionGrid">
+        </div>
+
+      </div>
+
+      <div
+        class="ai-messages"
+        id="messages"
+        aria-live="polite"
+        aria-label="Conversation">
+      </div>
+
     </section>
-  </div>
-  <div class="ai-toast" id="aiToast" role="status"></div>
-  <script type="module" src="maria-ai/js/ai.js"></script>
+
+    <!-- MESSAGE COMPOSER -->
+    <footer class="ai-composer-wrap">
+
+      <div class="ai-consent-notice" id="consentNotice" hidden>
+
+        <span>Chat history is not being saved.</span>
+
+        <button id="enableHistoryBtn">
+          Enable saving
+        </button>
+
+      </div>
+
+      <form class="ai-composer" id="chatForm">
+
+        <textarea
+          id="messageInput"
+          rows="1"
+          maxlength="8000"
+          placeholder="Message Maria AI…"
+          aria-label="Message Maria AI">
+        </textarea>
+
+        <div class="ai-composer-bottom">
+
+          <span class="ai-composer-hint">
+            Maria AI can make mistakes.
+            Verify important account information.
+          </span>
+
+          <button
+            class="ai-send-btn"
+            id="sendBtn"
+            type="submit"
+            aria-label="Send message">
+            ↑
+          </button>
+
+        </div>
+
+      </form>
+
+      <p class="ai-footer-note">
+        Never share your password, OTP, payment PIN
+        or private API key in chat.
+      </p>
+
+    </footer>
+
+  </main>
+
+</div>
+
+<!-- PRIVACY MODAL -->
+<div
+  class="ai-modal-backdrop"
+  id="privacyModal"
+  hidden>
+
+  <section
+    class="ai-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="privacyTitle">
+
+    <button
+      class="ai-modal-close"
+      id="closePrivacyBtn"
+      aria-label="Close">
+      ×
+    </button>
+
+    <p class="ai-eyebrow">YOUR CONTROL</p>
+
+    <h2 id="privacyTitle">
+      Conversation privacy
+    </h2>
+
+    <p>
+      Maria AI can remember your conversations so you can
+      revisit them whenever you need. Saving your chat history
+      is completely optional, and you remain in control of
+      your conversation data.
+    </p>
+
+    <label class="ai-consent-check">
+
+      <input
+        type="checkbox"
+        id="historyConsentCheck">
+
+      <span>
+        <strong>
+          I consent to saving my Maria AI conversations.
+        </strong>
+
+        <small>
+          I can turn this off and delete saved conversations later.
+        </small>
+      </span>
+
+    </label>
+
+    <div class="ai-modal-actions">
+
+      <button
+        class="ai-btn ai-btn-quiet"
+        id="deleteAllChatsBtn">
+        Delete saved chats
+      </button>
+
+      <button
+        class="ai-btn ai-btn-primary"
+        id="savePrivacyBtn">
+        Save preference
+      </button>
+
+    </div>
+
+    <p
+      class="ai-small ai-muted"
+      id="privacyStatus">
+    </p>
+
+  </section>
+
+</div>
+
+<!-- TOAST NOTIFICATIONS -->
+<div
+  class="ai-toast"
+  id="aiToast"
+  role="status">
+</div>
+
+<!-- MARIA AI APPLICATION -->
+<script
+  type="module"
+  src="maria-ai/js/ai.js">
+</script>
+
 </body>
 </html>
