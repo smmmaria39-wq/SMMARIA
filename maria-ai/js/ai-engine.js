@@ -75,7 +75,21 @@ export async function askMaria(
       body: JSON.stringify({
         message: cleanQuestion,
         history: normalizeHistory(history),
-        conversationId
+        conversationId,
+
+        // The backend should use these preferences when composing
+        // answers from retrieved/database content.
+        responsePreferences: {
+          style: 'concise_customer_support',
+          instructions: [
+            'Answer the exact customer question using only relevant retrieved information.',
+            'Do not dump database records or repeat unrelated details.',
+            'Prefer a short direct answer; include only necessary steps, facts, and caveats.',
+            'If multiple relevant image URLs are available, return every relevant image URL.',
+            'Return structured data as tables or concise cards when that improves clarity.',
+            'Never invent facts or claim a payment or wallet credit is confirmed without an authoritative transaction record.'
+          ]
+        }
       })
     }
   );
@@ -109,6 +123,9 @@ export async function askMaria(
 
   return {
     text: responseText,
+    // Optional structured media/content from newer backend responses.
+    images: Array.isArray(data.images) ? data.images : [],
+    cards: Array.isArray(data.cards) ? data.cards : [],
     pages,
     conversationId:
       data.conversationId ||
