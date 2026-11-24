@@ -266,4 +266,34 @@ html[data-theme="dark"] .balance-card__amount { color: #fff; }
 }
 .recent-activity-card .notification-list::-webkit-scrollbar-track {
     background: transparent;
+} 
+/* SMMARIA GLOBAL SEARCH BANNER */
+
+.smmaria-search-banner {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    margin: 15px 0;
+    line-height: 0;
+    text-decoration: none;
+    border-radius: 8px;
 }
+
+.smmaria-search-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border: none;
+    border-radius: inherit;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+    .smmaria-search-banner {
+        margin: 12px 0;
+        border-radius: 6px;
+    }
+}
+
