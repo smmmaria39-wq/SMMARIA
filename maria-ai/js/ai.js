@@ -1,11 +1,22 @@
 
-import { getMariaIdentity } from './ai-auth.js';
+import {
+  getMariaIdentity,
+  checkMariaAiConnection
+} from './ai-auth.js';
+
 import * as historyStore from './ai-history.js';
+
 import { askMaria } from './ai-engine.js';
+
 import { renderNavigationCards } from './ai-navigation.js';
+
 import { renderSuggestions } from './ai-suggestions.js';
 
 const $ = id => document.getElementById(id);
+
+// =============================================
+// APPLICATION STATE
+// =============================================
 
 const state = {
   messages: [],
@@ -17,16 +28,26 @@ const state = {
   connected: false
 };
 
-const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-  "'": '&#39;'
-}[char]));
+// =============================================
+// SECURITY
+// =============================================
+
+const escapeHtml = value =>
+  String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[char]));
+
+// =============================================
+// TOAST NOTIFICATIONS
+// =============================================
 
 function toast(message) {
   const element = $('aiToast');
+
   if (!element) return;
 
   element.textContent = message;
@@ -37,24 +58,24 @@ function toast(message) {
   }, 2800);
 }
 
-/* =====================================
-   MARIA AI CONNECTION STATUS
-===================================== */
+// =============================================
+// CONNECTION STATUS
+// =============================================
 
 function updateConnectionStatus(status, message) {
   const dot = $('aiStatusDot');
   const label = $('aiConnectionLabel');
 
   if (dot) {
-    dot.classList.remove('connected', 'disconnected', 'connecting');
+    dot.dataset.status = status;
 
-    if (status === 'connected') {
-      dot.classList.add('connected');
-    } else if (status === 'disconnected') {
-      dot.classList.add('disconnected');
-    } else {
-      dot.classList.add('connecting');
-    }
+    dot.classList.remove(
+      'connected',
+      'disconnected',
+      'connecting'
+    );
+
+    dot.classList.add(status);
   }
 
   if (label) {
@@ -64,19 +85,25 @@ function updateConnectionStatus(status, message) {
   state.connected = status === 'connected';
 }
 
+// =============================================
+// LOADING STATE
+// =============================================
+
 function setBusy(busy) {
   state.busy = busy;
 
-  const sendButton = $('sendBtn');
-  const messageInput = $('messageInput');
+  if ($('sendBtn')) {
+    $('sendBtn').disabled = busy;
+  }
 
-  if (sendButton) sendButton.disabled = busy;
-  if (messageInput) messageInput.disabled = busy;
+  if ($('messageInput')) {
+    $('messageInput').disabled = busy;
+  }
 }
 
-/* =====================================
-   MESSAGE FORMATTING
-===================================== */
+// =============================================
+// MESSAGE FORMATTING
+// =============================================
 
 function formatText(value) {
   let text = escapeHtml(value);
@@ -90,6 +117,10 @@ function formatText(value) {
   return text.replace(/\n/g, '<br>');
 }
 
+// =============================================
+// SCROLLING
+// =============================================
+
 function scrollToLatest() {
   const stage = $('chatStage');
 
@@ -98,6 +129,10 @@ function scrollToLatest() {
   }
 }
 
+// =============================================
+// RENDER CHAT MESSAGE
+// =============================================
+
 function renderMessage(role, content, actions = true) {
   const article = document.createElement('article');
 
@@ -105,33 +140,32 @@ function renderMessage(role, content, actions = true) {
 
   const avatar = role === 'assistant' ? 'M' : 'U';
 
+  const time = new Date().toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
   article.innerHTML = `
     <div class="ai-message-avatar">${avatar}</div>
 
     <div class="ai-message-body">
 
       <div class="ai-message-meta">
-        ${role === 'assistant' ? 'MARIA AI' : 'YOU'} ·
-        ${new Date().toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit'
-        })}
+        ${role === 'assistant' ? 'MARIA AI' : 'YOU'} · ${time}
       </div>
 
       <div class="ai-bubble">
-        ${role === 'assistant' ? formatText(content) : escapeHtml(content)}
+        ${role === 'assistant'
+          ? formatText(content)
+          : escapeHtml(content)}
       </div>
 
-      ${
-        role === 'assistant' && actions
-          ? `
-            <div class="ai-message-actions">
-              <button type="button" data-copy>Copy</button>
-              <button type="button" data-regenerate>Regenerate</button>
-            </div>
-          `
-          : ''
-      }
+      ${role === 'assistant' && actions ? `
+        <div class="ai-message-actions">
+          <button type="button" data-copy>Copy</button>
+          <button type="button" data-regenerate>Regenerate</button>
+        </div>
+      ` : ''}
 
       <div class="ai-nav-cards"></div>
 
@@ -145,9 +179,19 @@ function renderMessage(role, content, actions = true) {
   return article;
 }
 
-/* =====================================
-   CHAT MANAGEMENT
-===================================== */
+// =============================================
+// WELCOME PANEL
+// =============================================
+
+function showWelcome(show) {
+  if ($('welcomePanel')) {
+    $('welcomePanel').hidden = !show;
+  }
+}
+
+// =============================================
+// CHAT MANAGEMENT
+// =============================================
 
 function clearChat() {
   state.messages = [];
@@ -155,14 +199,10 @@ function clearChat() {
 
   $('messages')?.replaceChildren();
 
-  const welcomePanel = $('welcomePanel');
-
-  if (welcomePanel) {
-    welcomePanel.hidden = false;
-  }
+  showWelcome(true);
 }
 
-async function startNewChat() {
+function startNewChat() {
   if (state.busy) return;
 
   clearChat();
@@ -170,29 +210,79 @@ async function startNewChat() {
   $('messageInput')?.focus();
 }
 
+// =============================================
+// CONVERSATION SAVING
+// =============================================
+
 async function saveIfAllowed(role, content) {
   if (!state.consent || !state.conversationId) return;
 
-  await historyStore.saveMessage(state.conversationId, {
-    role,
-    content
-  });
+  await historyStore.saveMessage(
+    state.conversationId,
+    {
+      role,
+      content
+    }
+  );
 }
 
-/* =====================================
-   SEND MESSAGE TO MARIA AI
-===================================== */
+// =============================================
+// PENDING MESSAGE
+// =============================================
+
+function showPendingMessage() {
+  const pending = renderMessage('assistant', '');
+
+  const bubble = pending.querySelector('.ai-bubble');
+
+  if (bubble) {
+    bubble.innerHTML = `
+      <span class="ai-typing">
+        <i></i>
+        <i></i>
+        <i></i>
+      </span>
+    `;
+  }
+
+  return pending;
+}
+
+// =============================================
+// ERROR HANDLING
+// =============================================
+
+function showRequestError(pending, error) {
+  const message =
+    error?.message ||
+    'Maria AI could not complete that request. Please try again.';
+
+  const bubble = pending?.querySelector('.ai-bubble');
+
+  if (bubble) {
+    bubble.textContent = message;
+  }
+
+  updateConnectionStatus(
+    'disconnected',
+    'Connection issue · See error below'
+  );
+
+  toast('Maria AI could not respond. Please try again.');
+
+  console.error('Maria AI request failed:', error);
+}
+
+// =============================================
+// SEND MESSAGE TO MARIA AI
+// =============================================
 
 async function submitMessage(value) {
   const text = String(value || '').trim();
 
   if (!text || state.busy) return;
 
-  const welcomePanel = $('welcomePanel');
-
-  if (welcomePanel) {
-    welcomePanel.hidden = true;
-  }
+  showWelcome(false);
 
   state.messages.push({
     role: 'user',
@@ -201,57 +291,89 @@ async function submitMessage(value) {
 
   renderMessage('user', text);
 
-  const messageInput = $('messageInput');
+  const input = $('messageInput');
 
-  if (messageInput) {
-    messageInput.value = '';
+  if (input) {
+    input.value = '';
     autoResize();
   }
 
-  /* Save user message when consent is enabled. */
-
-  if (state.consent) {
+  // Create conversation only when saving is enabled.
+  if (state.consent && !state.conversationId) {
     try {
-      if (!state.conversationId) {
-        state.conversationId = await historyStore.createConversation(
+      state.conversationId =
+        await historyStore.createConversation(
           text.slice(0, 90)
         );
-      }
-
-      await saveIfAllowed('user', text);
 
     } catch (error) {
-      toast('Your message was sent, but conversation saving is unavailable.');
+      console.warn(
+        'Could not create saved conversation:',
+        error
+      );
 
-      console.warn('Maria AI history save failed:', error);
-
-      state.consent = false;
+      toast(
+        'Chat saving is temporarily unavailable. Your message can still be sent.'
+      );
     }
   }
 
-  const pending = renderMessage('assistant', '');
+  // Save user message when consent is enabled.
+  try {
+    if (state.consent) {
+      await saveIfAllowed('user', text);
+    }
+  } catch (error) {
+    console.warn('Could not save user message:', error);
 
-  pending.querySelector('.ai-bubble').innerHTML =
-    '<span class="ai-typing"><i></i><i></i><i></i></span>';
+    toast(
+      'Your message could not be saved, but Maria AI will still receive it.'
+    );
+  }
+
+  const pending = showPendingMessage();
 
   setBusy(true);
 
-  updateConnectionStatus('connecting', 'Connecting to Maria AI…');
+  updateConnectionStatus(
+    'connecting',
+    'Checking Maria AI connection…'
+  );
 
   try {
+    // Check the dedicated AI backend before sending.
+    await checkMariaAiConnection();
+
+    updateConnectionStatus(
+      'connecting',
+      'Maria AI is online · Sending message…'
+    );
+
     const result = await askMaria(
       text,
+
       state.messages.slice(0, -1),
+
       partial => {
-        pending.querySelector('.ai-bubble').innerHTML = formatText(partial);
+        const bubble = pending.querySelector('.ai-bubble');
+
+        if (bubble) {
+          bubble.innerHTML = formatText(partial);
+        }
 
         scrollToLatest();
       },
+
       state.conversationId
     );
 
-    pending.querySelector('.ai-bubble').innerHTML = formatText(result.text);
+    const bubble = pending.querySelector('.ai-bubble');
 
+    if (bubble) {
+      bubble.innerHTML = formatText(result.text);
+    }
+
+    // Render suggested navigation cards.
     renderNavigationCards(
       pending.querySelector('.ai-nav-cards'),
       result.pages
@@ -266,27 +388,25 @@ async function submitMessage(value) {
       content: result.text
     });
 
-    updateConnectionStatus('connected', 'Connected to Maria AI');
+    updateConnectionStatus(
+      'connected',
+      'Connected to Maria AI'
+    );
 
-    if (state.consent) {
-      try {
-        await saveIfAllowed('assistant', result.text);
-      } catch (error) {
-        console.warn('Assistant response history save failed:', error);
-      }
+    // Save assistant response.
+    try {
+      await saveIfAllowed('assistant', result.text);
+    } catch (error) {
+      console.warn(
+        'Could not save assistant response:',
+        error
+      );
     }
 
     bindMessageActions(pending, result.text);
 
   } catch (error) {
-    pending.querySelector('.ai-bubble').textContent =
-      error.message || 'Maria AI could not complete that request.';
-
-    updateConnectionStatus('disconnected', 'Connection issue');
-
-    toast('Maria AI could not respond. Please try again.');
-
-    console.error('Maria AI request failed:', error);
+    showRequestError(pending, error);
 
   } finally {
     setBusy(false);
@@ -297,21 +417,24 @@ async function submitMessage(value) {
   }
 }
 
-/* =====================================
-   MESSAGE ACTIONS
-===================================== */
+// =============================================
+// MESSAGE ACTIONS
+// =============================================
 
 function bindMessageActions(node, content) {
-  node.querySelector('[data-copy]')?.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(content);
+  node.querySelector('[data-copy]')?.addEventListener(
+    'click',
+    async () => {
+      try {
+        await navigator.clipboard.writeText(content);
 
-      toast('Response copied.');
+        toast('Response copied.');
 
-    } catch {
-      toast('Could not copy this response on your device.');
+      } catch {
+        toast('Could not copy this response on your device.');
+      }
     }
-  });
+  );
 
   node.querySelector('[data-regenerate]')?.addEventListener(
     'click',
@@ -319,9 +442,9 @@ function bindMessageActions(node, content) {
   );
 }
 
-/* =====================================
-   REGENERATE RESPONSE
-===================================== */
+// =============================================
+// REGENERATE RESPONSE
+// =============================================
 
 async function regenerate() {
   if (state.busy || !state.messages.length) return;
@@ -334,38 +457,56 @@ async function regenerate() {
 
   const latestUser = [...state.messages]
     .reverse()
-    .find(message => message.role === 'user');
+    .find(item => item.role === 'user');
 
   if (!latestUser) return;
 
   $('messages')?.replaceChildren();
 
-  state.messages.forEach(message => {
-    renderMessage(message.role, message.content, false);
+  state.messages.forEach(item => {
+    renderMessage(item.role, item.content, false);
   });
 
-  const pending = renderMessage('assistant', '');
-
-  pending.querySelector('.ai-bubble').innerHTML =
-    '<span class="ai-typing"><i></i><i></i><i></i></span>';
+  const pending = showPendingMessage();
 
   setBusy(true);
 
-  updateConnectionStatus('connecting', 'Connecting to Maria AI…');
+  updateConnectionStatus(
+    'connecting',
+    'Checking Maria AI connection…'
+  );
 
   try {
+    await checkMariaAiConnection();
+
+    updateConnectionStatus(
+      'connecting',
+      'Maria AI is online · Regenerating response…'
+    );
+
     const result = await askMaria(
       latestUser.content,
+
       state.messages.slice(0, -1),
+
       partial => {
-        pending.querySelector('.ai-bubble').innerHTML = formatText(partial);
+        const bubble = pending.querySelector('.ai-bubble');
+
+        if (bubble) {
+          bubble.innerHTML = formatText(partial);
+        }
 
         scrollToLatest();
       },
+
       state.conversationId
     );
 
-    pending.querySelector('.ai-bubble').innerHTML = formatText(result.text);
+    const bubble = pending.querySelector('.ai-bubble');
+
+    if (bubble) {
+      bubble.innerHTML = formatText(result.text);
+    }
 
     renderNavigationCards(
       pending.querySelector('.ai-nav-cards'),
@@ -381,36 +522,34 @@ async function regenerate() {
       content: result.text
     });
 
-    updateConnectionStatus('connected', 'Connected to Maria AI');
+    updateConnectionStatus(
+      'connected',
+      'Connected to Maria AI'
+    );
 
-    if (state.consent) {
-      try {
-        await saveIfAllowed('assistant', result.text);
-      } catch (error) {
-        console.warn('Assistant response history save failed:', error);
-      }
+    try {
+      await saveIfAllowed('assistant', result.text);
+    } catch (error) {
+      console.warn(
+        'Could not save regenerated response:',
+        error
+      );
     }
 
     bindMessageActions(pending, result.text);
 
   } catch (error) {
-    pending.querySelector('.ai-bubble').textContent =
-      error.message || 'Could not regenerate the response.';
-
-    updateConnectionStatus('disconnected', 'Connection issue');
-
-    console.error('Maria AI regeneration failed:', error);
+    showRequestError(pending, error);
 
   } finally {
     setBusy(false);
-
     scrollToLatest();
   }
 }
 
-/* =====================================
-   MESSAGE INPUT
-===================================== */
+// =============================================
+// MESSAGE INPUT AUTO RESIZE
+// =============================================
 
 function autoResize() {
   const input = $('messageInput');
@@ -419,12 +558,13 @@ function autoResize() {
 
   input.style.height = 'auto';
 
-  input.style.height = `${Math.min(input.scrollHeight, 150)}px`;
+  input.style.height =
+    `${Math.min(input.scrollHeight, 150)}px`;
 }
 
-/* =====================================
-   CONVERSATION HISTORY
-===================================== */
+// =============================================
+// CONVERSATION HISTORY
+// =============================================
 
 function renderHistory(rows) {
   const list = $('conversationList');
@@ -445,7 +585,10 @@ function renderHistory(rows) {
 
     button.type = 'button';
     button.className = 'ai-history-item';
-    button.textContent = row.title || 'Conversation';
+
+    button.textContent =
+      row.title || 'Conversation';
+
     button.title = button.textContent;
 
     button.addEventListener('click', () => {
@@ -455,6 +598,10 @@ function renderHistory(rows) {
     list.appendChild(button);
   });
 }
+
+// =============================================
+// OPEN SAVED CONVERSATION
+// =============================================
 
 async function openConversation(id) {
   try {
@@ -470,16 +617,15 @@ async function openConversation(id) {
       (a, b) => (a.timestamp || 0) - (b.timestamp || 0)
     );
 
-    const welcomePanel = $('welcomePanel');
-
-    if (welcomePanel) {
-      welcomePanel.hidden = true;
-    }
+    showWelcome(false);
 
     $('messages')?.replaceChildren();
 
     state.messages.forEach(message => {
-      const article = renderMessage(message.role, message.content);
+      const article = renderMessage(
+        message.role,
+        message.content
+      );
 
       if (message.role === 'assistant') {
         bindMessageActions(article, message.content);
@@ -489,9 +635,16 @@ async function openConversation(id) {
     closeSidebar();
 
   } catch (error) {
-    toast(error.message || 'Could not open this conversation.');
+    toast(
+      error.message ||
+      'Could not open this conversation.'
+    );
   }
 }
+
+// =============================================
+// LOAD CONVERSATION HISTORY
+// =============================================
 
 async function loadHistory() {
   if (!state.consent) return;
@@ -501,48 +654,48 @@ async function loadHistory() {
       state.historyUnsub();
     }
 
-    state.historyUnsub = await historyStore.listConversations(renderHistory);
+    state.historyUnsub =
+      await historyStore.listConversations(renderHistory);
 
-    const notice = $('consentNotice');
-
-    if (notice) {
-      notice.hidden = true;
+    if ($('consentNotice')) {
+      $('consentNotice').hidden = true;
     }
 
   } catch (error) {
-    const notice = $('consentNotice');
-
-    if (notice) {
-      notice.hidden = false;
+    if ($('consentNotice')) {
+      $('consentNotice').hidden = false;
     }
 
-    console.info('Conversation history is unavailable:', error.message);
+    console.info(
+      'Conversation history is unavailable:',
+      error.message
+    );
   }
 }
 
-/* =====================================
-   PRIVACY SETTINGS
-===================================== */
+// =============================================
+// PRIVACY SETTINGS
+// =============================================
 
 function showPrivacy() {
-  const checkbox = $('historyConsentCheck');
-  const status = $('privacyStatus');
-  const modal = $('privacyModal');
-
-  if (checkbox) {
-    checkbox.checked = state.consent;
+  if ($('historyConsentCheck')) {
+    $('historyConsentCheck').checked = state.consent;
   }
 
-  if (status) {
-    status.textContent = state.consent
+  if ($('privacyStatus')) {
+    $('privacyStatus').textContent = state.consent
       ? 'Conversation saving is enabled.'
       : 'Conversation saving is disabled.';
   }
 
-  if (modal) {
-    modal.hidden = false;
+  if ($('privacyModal')) {
+    $('privacyModal').hidden = false;
   }
 }
+
+// =============================================
+// SAVE PRIVACY PREFERENCE
+// =============================================
 
 async function savePrivacy() {
   const checkbox = $('historyConsentCheck');
@@ -556,14 +709,17 @@ async function savePrivacy() {
 
     state.consent = enabled;
 
-    const modal = $('privacyModal');
-    const notice = $('consentNotice');
+    if ($('privacyModal')) {
+      $('privacyModal').hidden = true;
+    }
 
-    if (modal) modal.hidden = true;
-    if (notice) notice.hidden = enabled;
+    if ($('consentNotice')) {
+      $('consentNotice').hidden = enabled;
+    }
 
     if (enabled) {
       await loadHistory();
+
     } else if (state.historyUnsub) {
       state.historyUnsub();
       state.historyUnsub = null;
@@ -576,20 +732,20 @@ async function savePrivacy() {
     );
 
   } catch (error) {
-    const status = $('privacyStatus');
-
-    if (status) {
-      status.textContent = error.message;
+    if ($('privacyStatus')) {
+      $('privacyStatus').textContent = error.message;
     }
   }
 }
 
+// =============================================
+// DELETE ALL CONVERSATIONS
+// =============================================
+
 async function deleteAll() {
-  if (
-    !confirm(
-      'Delete all your saved Maria AI conversations? This cannot be undone.'
-    )
-  ) {
+  if (!confirm(
+    'Delete all your saved Maria AI conversations? This cannot be undone.'
+  )) {
     return;
   }
 
@@ -603,17 +759,15 @@ async function deleteAll() {
     toast('Your saved conversations have been deleted.');
 
   } catch (error) {
-    const status = $('privacyStatus');
-
-    if (status) {
-      status.textContent = error.message;
+    if ($('privacyStatus')) {
+      $('privacyStatus').textContent = error.message;
     }
   }
 }
 
-/* =====================================
-   SIDEBAR
-===================================== */
+// =============================================
+// SIDEBAR
+// =============================================
 
 function closeSidebar() {
   $('aiSidebar')?.classList.remove('open');
@@ -657,9 +811,9 @@ function setupSidebarDismissal() {
   });
 }
 
-/* =====================================
-   THEME SETTINGS
-===================================== */
+// =============================================
+// THEME SETTINGS
+// =============================================
 
 function setupTheme() {
   const themeButton = $('themeBtn');
@@ -667,9 +821,11 @@ function setupTheme() {
   if (!themeButton) return;
 
   themeButton.addEventListener('click', () => {
-    const dark = document.documentElement.dataset.theme !== 'dark';
+    const dark =
+      document.documentElement.dataset.theme !== 'dark';
 
-    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    document.documentElement.dataset.theme =
+      dark ? 'dark' : 'light';
 
     const values = {
       '--ai-bg': dark ? '#151625' : '#f7f8fc',
@@ -680,79 +836,151 @@ function setupTheme() {
     };
 
     Object.entries(values).forEach(([key, value]) => {
-      document.documentElement.style.setProperty(key, value);
+      document.documentElement.style.setProperty(
+        key,
+        value
+      );
     });
   });
 }
 
-/* =====================================
-   INITIALIZE MARIA AI
-===================================== */
+// =============================================
+// INITIALIZE MARIA AI
+// =============================================
 
 async function initialize() {
-  updateConnectionStatus('connecting', 'Connecting to Maria AI…');
+  updateConnectionStatus(
+    'connecting',
+    'Checking your session and Maria AI…'
+  );
 
-  try {
-    state.identity = await getMariaIdentity();
+  // Verify both services independently.
+  const [identityResult, healthResult] =
+    await Promise.allSettled([
+      getMariaIdentity(),
+      checkMariaAiConnection()
+    ]);
 
-    const user = state.identity?.user || {};
+  // ===========================================
+  // AUTHENTICATION FAILURE
+  // ===========================================
 
-    const name =
-      user.username ||
-      user.fullname ||
-      user.name ||
-      'SMMARIA User';
+  if (identityResult.status === 'rejected') {
+    const error = identityResult.reason;
 
-    const userName = $('userName');
-    const userAvatar = $('userAvatar');
-    const userRole = $('userRole');
+    updateConnectionStatus(
+      'disconnected',
+      'SMMARIA session unavailable'
+    );
 
-    if (userName) userName.textContent = name;
-
-    if (userAvatar) {
-      userAvatar.textContent = name.slice(0, 1).toUpperCase();
-    }
-
-    if (userRole) {
-      userRole.textContent = user.role || 'Authenticated session';
-    }
-
-    updateConnectionStatus('connecting', 'Session verified · Ready to chat');
-
-  } catch (error) {
-    updateConnectionStatus('disconnected', 'Unable to connect');
-
-    const messages = $('messages');
-
-    if (messages) {
-      messages.innerHTML = `
+    if ($('messages')) {
+      $('messages').innerHTML = `
         <div class="ai-system-error">
-          ${escapeHtml(error.message || 'Your session could not be verified.')}
+          ${escapeHtml(
+            error.message ||
+            'Your SMMARIA session could not be verified.'
+          )}
           <a href="login.html">Sign in</a>
         </div>
       `;
     }
 
-    const input = $('messageInput');
-    const sendButton = $('sendBtn');
+    if ($('messageInput')) {
+      $('messageInput').disabled = true;
+    }
 
-    if (input) input.disabled = true;
-    if (sendButton) sendButton.disabled = true;
+    if ($('sendBtn')) {
+      $('sendBtn').disabled = true;
+    }
 
-    toast(error.message || 'Could not verify your session.');
+    toast(
+      error.message ||
+      'Could not verify your SMMARIA session.'
+    );
 
-    console.error('Maria AI initialization failed:', error);
+    console.error(
+      'SMMARIA session verification failed:',
+      error
+    );
 
     return;
   }
 
+  // ===========================================
+  // LOAD USER IDENTITY
+  // ===========================================
+
+  state.identity = identityResult.value;
+
+  const user = state.identity?.user || {};
+
+  const name =
+    user.username ||
+    user.fullname ||
+    user.name ||
+    'SMMARIA User';
+
+  if ($('userName')) {
+    $('userName').textContent = name;
+  }
+
+  if ($('userAvatar')) {
+    $('userAvatar').textContent =
+      name.slice(0, 1).toUpperCase();
+  }
+
+  if ($('userRole')) {
+    $('userRole').textContent =
+      user.role || 'Authenticated session';
+  }
+
+  // ===========================================
+  // MARIA AI BACKEND STATUS
+  // ===========================================
+
+  if (healthResult.status === 'fulfilled') {
+    updateConnectionStatus(
+      'connected',
+      'Connected to Maria AI'
+    );
+
+  } else {
+    updateConnectionStatus(
+      'disconnected',
+      'Maria AI unavailable · Retry when sending'
+    );
+
+    console.error(
+      'Maria AI health check failed:',
+      healthResult.reason
+    );
+
+    toast(
+      healthResult.reason?.message ||
+      'Maria AI is currently unavailable.'
+    );
+  }
+
+  // Keep the composer usable after a temporary
+  // AI outage. Sending a message retries the check.
+
+  if ($('messageInput')) {
+    $('messageInput').disabled = false;
+  }
+
+  if ($('sendBtn')) {
+    $('sendBtn').disabled = false;
+  }
+
+  // ===========================================
+  // PRIVACY AND CHAT HISTORY
+  // ===========================================
+
   try {
     state.consent = await historyStore.getConsent();
 
-    const notice = $('consentNotice');
-
-    if (notice) {
-      notice.hidden = state.consent;
+    if ($('consentNotice')) {
+      $('consentNotice').hidden = state.consent;
     }
 
     if (state.consent) {
@@ -760,59 +988,109 @@ async function initialize() {
     }
 
   } catch (error) {
-    console.warn('Could not load Maria AI privacy settings:', error);
+    console.warn(
+      'Could not load Maria AI privacy settings:',
+      error
+    );
   }
+
+  // ===========================================
+  // SUGGESTIONS
+  // ===========================================
 
   try {
     renderSuggestions(
       $('suggestionGrid'),
       prompt => submitMessage(prompt)
     );
+
   } catch (error) {
-    console.warn('Could not render Maria AI suggestions:', error);
+    console.warn(
+      'Could not render Maria AI suggestions:',
+      error
+    );
   }
 }
 
-/* =====================================
-   EVENT LISTENERS
-===================================== */
+// =============================================
+// CHAT FORM EVENTS
+// =============================================
 
 $('chatForm')?.addEventListener('submit', event => {
   event.preventDefault();
 
-  submitMessage($('messageInput')?.value);
+  submitMessage(
+    $('messageInput')?.value
+  );
 });
 
-$('messageInput')?.addEventListener('input', autoResize);
+// =============================================
+// MESSAGE INPUT EVENTS
+// =============================================
 
-$('messageInput')?.addEventListener('keydown', event => {
-  if (event.key === 'Enter' && !event.shiftKey) {
-    event.preventDefault();
+$('messageInput')?.addEventListener(
+  'input',
+  autoResize
+);
 
-    $('chatForm')?.requestSubmit();
+$('messageInput')?.addEventListener(
+  'keydown',
+  event => {
+    if (
+      event.key === 'Enter' &&
+      !event.shiftKey
+    ) {
+      event.preventDefault();
+
+      $('chatForm')?.requestSubmit();
+    }
   }
-});
+);
 
-$('newChatBtn')?.addEventListener('click', startNewChat);
+// =============================================
+// SIDEBAR AND PRIVACY EVENTS
+// =============================================
 
-$('privacyBtn')?.addEventListener('click', showPrivacy);
+$('newChatBtn')?.addEventListener(
+  'click',
+  startNewChat
+);
 
-$('closePrivacyBtn')?.addEventListener('click', () => {
-  const modal = $('privacyModal');
+$('privacyBtn')?.addEventListener(
+  'click',
+  showPrivacy
+);
 
-  if (modal) modal.hidden = true;
-});
+$('closePrivacyBtn')?.addEventListener(
+  'click',
+  () => {
+    if ($('privacyModal')) {
+      $('privacyModal').hidden = true;
+    }
+  }
+);
 
-$('savePrivacyBtn')?.addEventListener('click', savePrivacy);
+$('savePrivacyBtn')?.addEventListener(
+  'click',
+  savePrivacy
+);
 
-$('deleteAllChatsBtn')?.addEventListener('click', deleteAll);
+$('deleteAllChatsBtn')?.addEventListener(
+  'click',
+  deleteAll
+);
 
-$('enableHistoryBtn')?.addEventListener('click', showPrivacy);
+$('enableHistoryBtn')?.addEventListener(
+  'click',
+  showPrivacy
+);
 
-/* =====================================
-   START APPLICATION
-===================================== */
+// =============================================
+// START APPLICATION
+// =============================================
 
 setupSidebarDismissal();
+
 setupTheme();
+
 initialize();
