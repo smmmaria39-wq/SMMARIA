@@ -105,16 +105,133 @@ function setBusy(busy) {
 // MESSAGE FORMATTING
 // =============================================
 
+function isImageUrl(url) {
+  return /\.(?:png|jpe?g|gif|webp|avif|svg)(?:[?#]|$)/i.test(url) ||
+    /imagekit\.io|cloudinary\.com|images\.unsplash\.com/i.test(url);
+}
+
+function renderImage(url, alt = 'Related image') {
+  const safe = String(url || '').trim();
+  if (!/^https:\/\/[^\s"'<>]+$/i.test(safe)) return '';
+  return `<figure class="ai-answer-image">
+    <a href="${safe}" target="_blank" rel="noopener noreferrer">
+      <img src="${safe}" alt="${escapeHtml(alt)}" loading="lazy" />
+    </a>
+    <figcaption>${escapeHtml(alt)}</figcaption>
+  </figure>`;
+}
+
 function formatText(value) {
+  const lines = String(value ?? '').split(/\r?\n/);
+  const output = [];
+  let tableRows = [];
+
+  const flushTable = () => {
+    if (!tableRows.length) return;
+    const cells = row => row.trim().replace(/^\|/, '').replace(/\|$/, '')
+      .split('|').map(cell => cell.trim());
+    const rows = tableRows.map(cells);
+    const header = rows[0] || [];
+    const body = rows.slice(1).filter(row =>
+      !row.every(cell => /^:?-{3,}:?$/.test(cell))
+    );
+    output.push(`<div class="ai-table-wrap"><table class="ai-answer-table"><thead><tr>${
+      header.map(cell => `<th>${formatInline(cell)}</th>`).join('')
+    }</tr></thead><tbody>${
+      body.filter(row => !row.every(cell => /^:?-{3,}:?$/.test(cell)))
+        .map(row => `<tr>${header.map((_, i) =>
+          `<td>${formatInline(row[i] || '')}</td>`).join('')}</tr>`).join('')
+    }</tbody></table></div>`);
+    tableRows = [];
+  };
+
+  for (const line of lines) {
+    if (/^\s*\|.*\|\s*$/.test(line)) {
+      tableRows.push(line);
+      continue;
+    }
+    flushTable();
+    if (!line.trim()) {
+      output.push('<div class="ai-answer-spacer"></div>');
+    } else {
+      output.push(`<div class="ai-answer-line">${formatInline(line)}</div>`);
+    }
+  }
+  flushTable();
+  return output.join('');
+}
+
+function formatInline(value) {
   let text = escapeHtml(value);
 
-  text = text
-    .replace(/^### (.*)$/gm, '<strong>$1</strong>')
-    .replace(/^## (.*)$/gm, '<strong>$1</strong>')
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/`([^`]+)`/g, '<code>$1</code>');
+  // Protect markdown image markup while linkifying ordinary URLs.
+  const imageMarkup = [];
+  text = text.replace(/!\[([^\]]*)\]\((https:\/\/[^\s)]+)\)/gi,
+    (_, alt, url) => {
+      const token = `@@MARIA_IMAGE_${imageMarkup.length}@@`;
+      imageMarkup.push(renderImage(url, alt || 'Related image'));
+      return token;
+    });
 
-  return text.replace(/\n/g, '<br>');
+  // Render direct image URLs (including ImageKit URLs) as visible images.
+  text = text.replace(/https:\/\/[^\s<>"']+/gi, url => {
+    const clean = url.replace(/[.,;!?]+$/, '');
+    const suffix = url.slice(clean.length);
+    if (isImageUrl(clean)) {
+      return renderImage(clean) + escapeHtml(suffix);
+    }
+    return `<a href="${clean}" target="_blank" rel="noopener noreferrer">${clean}</a>${escapeHtml(suffix)}`;
+  });
+
+  text = text.replace(/@@MARIA_IMAGE_(\\d+)@@/g,
+    (_, index) => imageMarkup[Number(index)] || '');
+
+  text = text
+    .replace(/^### (.*)$/,'<strong>$1</strong>')
+    .replace(/^## (.*)$/,'<strong>$1</strong>')
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/`([^`]+)`/g,'<code>$1</code>')
+    .replace(/^\s*[-*]\s+/, '• ');
+
+  return text;
+}
+
+function renderAnswerExtras(node, result) {
+  const bubble = node?.querySelector('.ai-bubble');
+  if (!bubble) return;
+
+  const images = Array.isArray(result?.images) ? result.images : [];
+  const cards = Array.isArray(result?.cards) ? result.cards : [];
+
+  images.forEach((item, index) => {
+    const url = typeof item === 'string'
+      ? item
+      : item?.url || item?.imageUrl || item?.src;
+    const alt = typeof item === 'object'
+      ? item.alt || item.title || `Related image ${index + 1}`
+      : `Related image ${index + 1}`;
+    const markup = renderImage(url, alt);
+    if (markup) bubble.insertAdjacentHTML('beforeend', markup);
+  });
+
+  if (cards.length) {
+    const wrap = document.createElement('div');
+    wrap.className = 'ai-answer-cards';
+    cards.forEach(card => {
+      if (!card || typeof card !== 'object') return;
+      const title = card.title || card.name || '';
+      const description = card.description || card.subtitle || card.text || '';
+      const detail = card.detail || card.value || '';
+      if (!title && !description && !detail) return;
+      const element = document.createElement('section');
+      element.className = 'ai-answer-card';
+      element.innerHTML = `${title ? `<strong>${escapeHtml(title)}</strong>` : ''}${
+        description ? `<p>${escapeHtml(description)}</p>` : ''
+      }${detail ? `<small>${escapeHtml(detail)}</small>` : ''}`;
+      wrap.appendChild(element);
+    });
+    if (wrap.childElementCount) bubble.appendChild(wrap);
+  }
 }
 
 // =============================================
@@ -372,6 +489,7 @@ async function submitMessage(value) {
     if (bubble) {
       bubble.innerHTML = formatText(result.text);
     }
+    renderAnswerExtras(pending, result);
 
     // Render suggested navigation cards.
     renderNavigationCards(
@@ -507,6 +625,7 @@ async function regenerate() {
     if (bubble) {
       bubble.innerHTML = formatText(result.text);
     }
+    renderAnswerExtras(pending, result);
 
     renderNavigationCards(
       pending.querySelector('.ai-nav-cards'),
