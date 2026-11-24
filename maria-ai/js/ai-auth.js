@@ -6,12 +6,18 @@ import {
   MARIA_AI_REQUEST_TIMEOUT
 } from './ai-config.js';
 
+const TOKEN_KEY = 'smmmaria_token';
+
 // =============================================
-// JWT TOKEN
+// JWT TOKEN MANAGEMENT
 // =============================================
 
 export function getJwtToken() {
-  return localStorage.getItem('smmmaria_token');
+  try {
+    return localStorage.getItem(TOKEN_KEY);
+  } catch {
+    return null;
+  }
 }
 
 export function requireJwtToken() {
@@ -19,7 +25,7 @@ export function requireJwtToken() {
 
   if (!token) {
     throw new Error(
-      'Your session has expired. Please sign in to SMMARIA again.'
+      'Your SMMARIA session was not found. Please sign in again.'
     );
   }
 
@@ -27,145 +33,209 @@ export function requireJwtToken() {
 }
 
 // =============================================
-// SMMARIA BACKEND REQUEST
-// Used for authentication and user identity
+// URL MANAGEMENT
 // =============================================
 
-export async function smmariaApiRequest(path, options = {}) {
-  const token = requireJwtToken();
+function joinUrl(base, path) {
+  return `${String(base).replace(/\/+$/, '')}/${String(path).replace(/^\/+/, '')}`;
+}
+
+// =============================================
+// RESPONSE HANDLING
+// =============================================
+
+async function readPayload(response) {
+  const contentType = response.headers.get('content-type') || '';
+
+  if (contentType.includes('application/json')) {
+    return response.json().catch(() => ({}));
+  }
+
+  const text = await response.text().catch(() => '');
+
+  return text
+    ? { message: text.slice(0, 500) }
+    : {};
+}
+
+// =============================================
+// NETWORK ERROR HANDLING
+// =============================================
+
+function networkError(error, serviceName) {
+  if (error?.name === 'AbortError') {
+    return new Error(
+      `${serviceName} did not respond before the request timed out. Please try again.`
+    );
+  }
+
+  if (error instanceof TypeError) {
+    return new Error(
+      `Could not reach ${serviceName}. Check that the service is online and that its domain and CORS settings allow https://smmaria.site. Browser network errors can also be caused by DNS or an internet connection problem.`
+    );
+  }
+
+  return error instanceof Error
+    ? error
+    : new Error(`An unexpected ${serviceName} error occurred.`);
+}
+
+// =============================================
+// UNIVERSAL API REQUEST
+// =============================================
+
+async function request(
+  baseUrl,
+  path,
+  options,
+  serviceName,
+  needsAuth = true
+) {
+  const token = needsAuth
+    ? requireJwtToken()
+    : null;
+
   const controller = new AbortController();
 
-  const timeout = setTimeout(
+  const externalSignal = options.signal;
+
+  const timeoutId = setTimeout(
     () => controller.abort(),
     MARIA_AI_REQUEST_TIMEOUT
   );
 
+  let abortListener;
+
+  if (externalSignal) {
+    if (externalSignal.aborted) {
+      controller.abort();
+    } else {
+      abortListener = () => controller.abort();
+
+      externalSignal.addEventListener(
+        'abort',
+        abortListener,
+        { once: true }
+      );
+    }
+  }
+
+  const headers = new Headers(options.headers || {});
+
+  headers.set('Accept', 'application/json');
+
+  if (options.body && !headers.has('Content-Type')) {
+    headers.set('Content-Type', 'application/json');
+  }
+
+  if (needsAuth) {
+    headers.set('Authorization', `Bearer ${token}`);
+  }
+
   try {
     const response = await fetch(
-      `${SMMARIA_API_BASE_URL}${path}`,
+      joinUrl(baseUrl, path),
       {
         ...options,
-        signal: options.signal || controller.signal,
-
-        headers: {
-          Accept: 'application/json',
-          ...(options.body
-            ? { 'Content-Type': 'application/json' }
-            : {}),
-          ...(options.headers || {}),
-          Authorization: `Bearer ${token}`
-        }
+        headers,
+        signal: controller.signal,
+        cache: options.cache || 'no-store'
       }
     );
 
-    const payload = await response.json().catch(() => ({}));
+    const payload = await readPayload(response);
 
-    if (response.status === 401) {
-      localStorage.removeItem('smmmaria_token');
+    // Expired authentication
+    if (response.status === 401 && needsAuth) {
+      try {
+        localStorage.removeItem(TOKEN_KEY);
+      } catch {
+        // Storage may be unavailable.
+      }
 
       throw new Error(
-        'Your session has expired. Please sign in again.'
+        'Your SMMARIA session is invalid or expired. Please sign in again.'
       );
     }
 
+    // HTTP errors
     if (!response.ok) {
       throw new Error(
         payload.message ||
         payload.error ||
-        `SMMARIA request failed (${response.status}).`
+        `${serviceName} request failed (HTTP ${response.status}).`
+      );
+    }
+
+    if (payload && payload.success === false) {
+      throw new Error(
+        payload.message ||
+        `${serviceName} rejected the request.`
       );
     }
 
     return payload;
 
   } catch (error) {
-    if (error.name === 'AbortError') {
-      throw new Error(
-        'The SMMARIA authentication request took too long.'
-      );
+    if (
+      error instanceof TypeError ||
+      error?.name === 'AbortError'
+    ) {
+      throw networkError(error, serviceName);
     }
 
     throw error;
 
   } finally {
-    clearTimeout(timeout);
+    clearTimeout(timeoutId);
+
+    if (externalSignal && abortListener) {
+      externalSignal.removeEventListener(
+        'abort',
+        abortListener
+      );
+    }
   }
+}
+
+// =============================================
+// SMMMARIA BACKEND REQUEST
+// =============================================
+
+export function smmariaApiRequest(path, options = {}) {
+  return request(
+    SMMARIA_API_BASE_URL,
+    path,
+    options,
+    'SMMARIA authentication service',
+    true
+  );
 }
 
 // =============================================
 // MARIA AI BACKEND REQUEST
-// Used for chat, knowledge and conversations
 // =============================================
 
-export async function mariaAiApiRequest(path, options = {}) {
-  const token = requireJwtToken();
-  const controller = new AbortController();
-
-  const timeout = setTimeout(
-    () => controller.abort(),
-    MARIA_AI_REQUEST_TIMEOUT
+export function mariaAiApiRequest(path, options = {}) {
+  return request(
+    MARIA_AI_API_BASE_URL,
+    path,
+    options,
+    'Maria AI service',
+    true
   );
-
-  try {
-    const response = await fetch(
-      `${MARIA_AI_API_BASE_URL}${path}`,
-      {
-        ...options,
-        signal: options.signal || controller.signal,
-
-        headers: {
-          Accept: 'application/json',
-          ...(options.body
-            ? { 'Content-Type': 'application/json' }
-            : {}),
-          ...(options.headers || {}),
-          Authorization: `Bearer ${token}`
-        }
-      }
-    );
-
-    const payload = await response.json().catch(() => ({}));
-
-    if (response.status === 401) {
-      localStorage.removeItem('smmmaria_token');
-
-      throw new Error(
-        'Your SMMARIA session is no longer valid. Please sign in again.'
-      );
-    }
-
-    if (!response.ok) {
-      throw new Error(
-        payload.message ||
-        payload.error ||
-        `Maria AI request failed (${response.status}).`
-      );
-    }
-
-    return payload;
-
-  } catch (error) {
-    if (error.name === 'AbortError') {
-      throw new Error(
-        'Maria AI took too long to respond. Please try again.'
-      );
-    }
-
-    throw error;
-
-  } finally {
-    clearTimeout(timeout);
-  }
 }
 
 // =============================================
-// VERIFY SMMARIA USER SESSION
+// VERIFY SMMARIA SESSION
 // =============================================
 
 export async function getSmmariaSession() {
   const payload = await smmariaApiRequest(
     SMMARIA_ENDPOINTS.session,
-    { method: 'GET' }
+    {
+      method: 'GET'
+    }
   );
 
   return payload.data || payload.user || payload;
@@ -184,29 +254,65 @@ export async function getMariaIdentity() {
   };
 }
 
-// Check the dedicated Maria AI service before enabling chat. This endpoint is
-// public health metadata and does not require a user token.
+// =============================================
+// MARIA AI HEALTH CHECK
+// =============================================
+
 export async function checkMariaAiConnection() {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 10000);
+
+  const timeoutId = setTimeout(
+    () => controller.abort(),
+    10000
+  );
+
   try {
-    const response = await fetch(`${MARIA_AI_API_BASE_URL}/health`, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-      signal: controller.signal,
-      cache: 'no-store'
-    });
-    const payload = await response.json().catch(() => ({}));
-    if (!response.ok || payload.status !== 'healthy') {
-      throw new Error(payload.message || `Maria AI health check failed (${response.status}).`);
+    const response = await fetch(
+      joinUrl(MARIA_AI_API_BASE_URL, '/health'),
+      {
+        method: 'GET',
+
+        headers: {
+          Accept: 'application/json'
+        },
+
+        signal: controller.signal,
+
+        cache: 'no-store'
+      }
+    );
+
+    const payload = await readPayload(response);
+
+    if (!response.ok) {
+      throw new Error(
+        payload.message ||
+        `Maria AI health check failed (HTTP ${response.status}).`
+      );
     }
+
+    if (
+      payload.status !== 'healthy' ||
+      payload.service !== 'maria-ai'
+    ) {
+      throw new Error(
+        'The Maria AI server responded, but its health response was not the expected format.'
+      );
+    }
+
     return payload;
+
   } catch (error) {
-    if (error.name === 'AbortError') {
-      throw new Error('Maria AI server did not respond to its health check.');
+    if (
+      error?.name === 'AbortError' ||
+      error instanceof TypeError
+    ) {
+      throw networkError(error, 'Maria AI service');
     }
+
     throw error;
+
   } finally {
-    clearTimeout(timeout);
+    clearTimeout(timeoutId);
   }
 }
