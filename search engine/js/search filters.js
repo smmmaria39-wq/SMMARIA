@@ -1,0 +1,4 @@
+const ids={platform:"smm-platform",country:"smm-country",verification:"smm-verification",sort:"smm-sort",limit:"smm-limit"};
+export const getFilters=()=>Object.fromEntries(Object.entries(ids).map(([k,id])=>[k,document.getElementById(id)?.value||""]));
+export function populate(id,items){const s=document.getElementById(id);if(!s)return;const first=s.options[0];s.replaceChildren(first);items.forEach(x=>{const label=typeof x==="string"?x:x.name,value=typeof x==="string"?x:(x.id||x.name);if(!label||!value)return;const o=document.createElement("option");o.value=value;o.textContent=label;s.append(o)})}
+export function bindFilters(fn){Object.values(ids).forEach(id=>document.getElementById(id)?.addEventListener("change",fn));document.getElementById("smm-clear-filters")?.addEventListener("click",()=>{Object.entries(ids).forEach(([k,id])=>{const e=document.getElementById(id);if(e)e.value=k==="sort"?"relevance":k==="limit"?"10":""});fn()})}
