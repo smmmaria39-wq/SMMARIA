@@ -2,7 +2,7 @@
 // This service uses the authenticated SMMARIA session token (JWT).
 // Never place Firebase service-account credentials or admin passwords here.
 const defaults = {
-  baseUrl: "https://YOUR-SEARCH-BACKEND.up.railway.app",
+  baseUrl: "https://global-search-backend-production.up.railway.app",
   timeoutMs: 20000,
   tokenStorageKeys: ["token", "authToken", "smmaria_token", "smmariaToken"],
   endpoints: {
