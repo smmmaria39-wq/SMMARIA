@@ -2,6 +2,56 @@
 
 
 /* ==========================================
+   SEARCH TOKEN BILLING
+   ========================================== */
+#smmaria-global-search .smm-billing-panel{padding:19px;margin:0 0 17px;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+#smmaria-global-search .smm-billing-heading{display:flex;align-items:center;justify-content:space-between;gap:14px}
+#smmaria-global-search .smm-billing-heading small,#smmaria-global-search .smm-purchase-dialog>small{color:var(--gold);font-size:9px;font-weight:800;letter-spacing:.15em}
+#smmaria-global-search .smm-billing-heading h2{margin:5px 0 3px;font:600 17px Poppins,Inter,sans-serif;color:var(--ink)}
+#smmaria-global-search .smm-billing-heading p{margin:0;color:var(--muted);font-size:11px;line-height:1.5}
+#smmaria-global-search .smm-buy-token-btn,#smmaria-global-search .smm-confirm-purchase{border:0;border-radius:7px;padding:10px 14px;background:var(--gold);color:#151a23;font-size:11px;font-weight:800;white-space:nowrap}
+#smmaria-global-search .smm-token-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}
+#smmaria-global-search .smm-token-metric{min-width:0;padding:12px;border:1px solid var(--line);border-radius:8px;background:#0d192d}
+#smmaria-global-search .smm-token-metric span{display:block;color:var(--muted);font-size:10px;line-height:1.4}
+#smmaria-global-search .smm-token-metric strong{display:block;margin-top:6px;color:var(--ink);font-size:19px;font-weight:700;overflow-wrap:anywhere}
+#smmaria-global-search .smm-token-primary strong{color:var(--gold)}
+#smmaria-global-search .smm-token-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px}
+#smmaria-global-search .smm-token-foot span{color:var(--muted);font-size:10px;line-height:1.5}
+#smmaria-global-search .smm-token-foot button,#smmaria-global-search .smm-modal-close{border:0;background:transparent;color:var(--gold);font-size:11px;cursor:pointer}
+#smmaria-global-search .smm-invoice-list{margin-top:12px;border-top:1px solid var(--line)}
+#smmaria-global-search .smm-invoice-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;padding:10px 0;border-bottom:1px solid var(--line)}
+#smmaria-global-search .smm-invoice-row span{color:var(--ink);font-size:11px}
+#smmaria-global-search .smm-invoice-row small{color:var(--muted);font-size:9px}
+#smmaria-global-search .smm-invoice-row strong{grid-column:2;grid-row:1/3;align-self:center;color:var(--gold);font-size:10px}
+#smmaria-global-search .smm-invoice-empty{color:var(--muted);font-size:11px}
+#smmaria-global-search .smm-purchase-backdrop{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:18px;background:rgba(3,9,20,.72)}
+#smmaria-global-search .smm-purchase-backdrop[hidden]{display:none}
+#smmaria-global-search .smm-purchase-dialog{position:relative;width:min(100%,420px);padding:24px;border:1px solid #f2b54455;border-radius:12px;background:#111d33;box-shadow:0 22px 70px rgba(0,0,0,.35)}
+#smmaria-global-search .smm-modal-close{position:absolute;top:12px;right:15px;font-size:25px}
+#smmaria-global-search .smm-purchase-dialog h2{margin:7px 0;color:#fff;font:600 20px Poppins,Inter,sans-serif}
+#smmaria-global-search .smm-purchase-dialog p{color:#aebbd0;font-size:11px;line-height:1.6}
+#smmaria-global-search .smm-purchase-dialog p strong{color:var(--gold)}
+#smmaria-global-search .smm-purchase-dialog label{display:block;margin:16px 0 6px;color:#dce4f0;font-size:11px}
+#smmaria-global-search .smm-purchase-dialog input{width:100%;height:43px;padding:0 12px;border:1px solid #34445e;border-radius:7px;background:#0d192d;color:#fff;font-size:14px}
+#smmaria-global-search .smm-purchase-calculation{display:flex;justify-content:space-between;gap:10px;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:7px;color:#aebbd0;font-size:11px}
+#smmaria-global-search .smm-purchase-calculation strong{color:var(--gold);font-size:14px}
+#smmaria-global-search .smm-purchase-wallet{margin:10px 0}
+#smmaria-global-search .smm-purchase-feedback{min-height:18px;margin:8px 0}
+#smmaria-global-search .smm-purchase-feedback[data-type="error"]{color:#ff8e8e}
+#smmaria-global-search .smm-purchase-feedback[data-type="success"]{color:#70d6a3}
+#smmaria-global-search .smm-confirm-purchase{width:100%;margin-top:6px;padding:12px}
+#smmaria-global-search .smm-confirm-purchase:disabled{opacity:.6;cursor:wait}
+@media(max-width:600px){
+ #smmaria-global-search .smm-billing-panel{padding:14px}
+ #smmaria-global-search .smm-token-metrics{gap:7px}
+ #smmaria-global-search .smm-token-metric{padding:9px 8px}
+ #smmaria-global-search .smm-token-metric span{font-size:9px}
+ #smmaria-global-search .smm-token-metric strong{font-size:15px}
+ #smmaria-global-search .smm-billing-heading h2{font-size:15px}
+ #smmaria-global-search .smm-buy-token-btn{padding:9px 10px;font-size:10px}
+ #smmaria-global-search .smm-token-foot{align-items:flex-start}
+}
+/* ==========================================
    SMMARIA SEARCH FILTERS — COMPACT MOBILE UI
    ========================================== */
 
