@@ -340,10 +340,59 @@
             <!-- PAGE SPECIFIC CONTENT GOES HERE (id="page-content") -->
             <main class="content-area" id="page-content">
               <section id="smmaria-global-search" aria-labelledby="smm-search-title">
-                <div class="smm-search-hero"><div><div class="smm-search-eyebrow"><i></i> SMMARIA INTELLIGENCE-COMING SOON</div><h1 id="smm-search-title">Global Search <span>Engine</span></h1><p>Discover anyones public profiles,social media accounts, creators and digital identities across supported platforms — all from one place.</p></div><div class="smm-search-hero-art" aria-hidden="true"><span>⌕</span></div></div>
+                <div class="smm-search-hero"><div><div class="smm-search-eyebrow"><i></i> SMMARIA INTELLIGENCE</div><h1 id="smm-search-title">Global Search <span>Engine</span></h1><p>Discover public profiles, creators and digital identities across supported platforms — all from one place.</p></div><div class="smm-search-hero-art" aria-hidden="true"><span>⌕</span></div></div>
+
+                <section class="smm-billing-panel" aria-label="Search token account">
+                    <div class="smm-billing-heading">
+                        <div>
+                            <small>SEARCH ACCOUNT</small>
+                            <h2>Your search tokens</h2>
+                            <p>100 tokens per returned profile · no charge when no profiles are found.</p>
+                        </div>
+                        <button type="button" class="smm-buy-token-btn" id="smm-open-purchase">＋ Buy tokens</button>
+                    </div>
+                    <div class="smm-token-metrics">
+                        <div class="smm-token-metric smm-token-primary">
+                            <span>Available tokens</span>
+                            <strong id="smm-token-balance">—</strong>
+                        </div>
+                        <div class="smm-token-metric">
+                            <span>Tokens remaining</span>
+                            <strong id="smm-token-remaining">—</strong>
+                        </div>
+                        <div class="smm-token-metric">
+                            <span>Total used</span>
+                            <strong id="smm-token-used">—</strong>
+                        </div>
+                    </div>
+                    <div class="smm-token-foot">
+                        <span id="smm-token-reward-note">A one-time 250-token welcome reward is available to eligible new users.</span>
+                        <button type="button" id="smm-open-invoices">View invoices</button>
+                    </div>
+                    <div class="smm-invoice-list" id="smm-invoice-list" hidden></div>
+                </section>
+
+                <div class="smm-purchase-backdrop" id="smm-purchase-modal" hidden>
+                    <section class="smm-purchase-dialog" role="dialog" aria-modal="true" aria-labelledby="smm-purchase-title">
+                        <button type="button" class="smm-modal-close" id="smm-close-purchase" aria-label="Close">×</button>
+                        <small>ADD SEARCH CREDITS</small>
+                        <h2 id="smm-purchase-title">Purchase tokens</h2>
+                        <p>1,000 tokens cost <strong>$0.20</strong>. Payment is taken from your SMMARIA wallet.</p>
+                        <label for="smm-purchase-amount">Tokens to purchase</label>
+                        <input id="smm-purchase-amount" type="number" min="1000" step="1000" value="1000" inputmode="numeric">
+                        <div class="smm-purchase-calculation">
+                            <span>Estimated wallet deduction</span>
+                            <strong id="smm-purchase-cost">$0.20</strong>
+                        </div>
+                        <p class="smm-purchase-wallet">Your wallet balance: <strong id="smm-purchase-wallet-balance">—</strong></p>
+                        <p class="smm-purchase-feedback" id="smm-purchase-feedback" role="status" aria-live="polite"></p>
+                        <button type="button" class="smm-confirm-purchase" id="smm-confirm-purchase">Confirm purchase</button>
+                    </section>
+                </div>
+
                 <section class="smm-search-panel" aria-label="Global profile search"><form id="smm-search-form" class="smm-search-form" role="search"><label class="smm-sr-only" for="smm-search-query">Search usernames, names or profile URLs</label><span class="smm-search-icon">⌕</span><input id="smm-search-query" type="search" maxlength="240" placeholder="Search username, display name or profile URL..." autocomplete="off"><button id="smm-search-submit" type="submit">⌕ &nbsp; Search</button></form><div class="smm-search-under"><div><span>Try:</span><button type="button" data-suggest="creator">creator</button><button type="button" data-suggest="@username">@username</button><button type="button" data-suggest="profile URL">profile URL</button></div><button id="smm-clear-recent" type="button">Clear history</button></div><div id="smm-recent" class="smm-recent" hidden></div></section>
                 <section class="smm-search-panel"><div class="smm-panel-head"><div><small>REFINE DISCOVERY</small><h2>Search filters</h2></div><button type="button" id="smm-clear-filters">Reset filters</button></div><div class="smm-filters"><label>Platform<select id="smm-platform"><option value="">All platforms</option></select></label><label>Country / region<select id="smm-country"><option value="">All countries</option></select></label><label>Verification<select id="smm-verification"><option value="">Any status</option><option value="verified">Verified</option><option value="unverified">Unverified</option><option value="unknown">Unknown</option></select></label><label>Sort by<select id="smm-sort"><option value="relevance">Relevance</option><option value="recent">Recently updated</option></select></label><label>Results per page<select id="smm-limit"><option>10</option><option>20</option><option>50</option></select></label></div></section>
-                <section class="smm-search-panel"><div class="smm-panel-head"><div><small>DISCOVERY RESULTS</small><h2>Explore profiles</h2></div><span id="smm-result-meta">Ready when you are</span></div><div class="smm-tabs" id="smm-tabs" role="tablist" aria-label="Search categories"><button class="active" role="tab" aria-selected="true" data-category="all">All results</button><button role="tab" aria-selected="false" data-category="social">Social media</button><button role="tab" aria-selected="false" data-category="video">Video</button><button role="tab" aria-selected="false" data-category="professional">Professional</button><button role="tab" aria-selected="false" data-category="music">Music</button><button role="tab" aria-selected="false" data-category="messaging">Messaging</button><button role="tab" aria-selected="false" data-category="websites">Websites</button></div><div id="smm-state" class="smm-state"><div class="smm-empty-icon">⌕</div><h3>Your next discovery starts here</h3><p>Enter a username, name or public profile URL to search sources connected to SMMARIA.</p><small>Search coverage depends on connected data providers.</small></div><div id="smm-skeleton" class="smm-cards" hidden></div><div id="smm-cards" class="smm-cards"></div><div id="smm-table-wrap" class="smm-table-wrap" hidden><div class="smm-table-head"><h3>Structured results</h3><span>Public data returned by connected sources</span></div><div class="smm-table-scroll"><table><thead><tr><th>Profile</th><th>Platform</th><th>Category</th><th>Country</th><th>Description</th><th>Verification</th><th>Updated</th><th>Action</th></tr></thead><tbody id="smm-table-body"></tbody></table></div></div><div id="smm-pagination" class="smm-pagination" hidden><span id="smm-page-label"></span><div><button id="smm-prev" type="button">Previous</button><button id="smm-next" type="button">Next page</button></div></div></section>
+                  <section class="smm-search-panel"><div class="smm-panel-head"><div><small>DISCOVERY RESULTS</small><h2>Explore profiles</h2></div><span id="smm-result-meta">Ready when you are</span></div><div class="smm-tabs" id="smm-tabs" role="tablist" aria-label="Search categories"><button class="active" role="tab" aria-selected="true" data-category="all">All results</button><button role="tab" aria-selected="false" data-category="social">Social media</button><button role="tab" aria-selected="false" data-category="video">Video</button><button role="tab" aria-selected="false" data-category="professional">Professional</button><button role="tab" aria-selected="false" data-category="music">Music</button><button role="tab" aria-selected="false" data-category="messaging">Messaging</button><button role="tab" aria-selected="false" data-category="websites">Websites</button><button role="tab" aria-selected="false" data-category="locations">Locations</button><button role="tab" aria-selected="false" data-category="images">Images</button></div><div id="smm-state" class="smm-state"><div class="smm-empty-icon">⌕</div><h3>Your next discovery starts here</h3><p>Enter a username, name or public profile URL to search sources connected to SMMARIA.</p><small>Search coverage depends on connected data providers.</small></div><div id="smm-skeleton" class="smm-cards" hidden></div><div id="smm-cards" class="smm-cards"></div><div id="smm-table-wrap" class="smm-table-wrap" hidden><div class="smm-table-head"><h3>Structured results</h3><span>Public data returned by connected sources</span></div><div class="smm-table-scroll"><table><thead><tr><th>Profile</th><th>Platform</th><th>Category</th><th>Country</th><th>Description</th><th>Verification</th><th>Updated</th><th>Action</th></tr></thead><tbody id="smm-table-body"></tbody></table></div></div><div id="smm-pagination" class="smm-pagination" hidden><span id="smm-page-label"></span><div><button id="smm-prev" type="button">Previous</button><button id="smm-next" type="button">Next page</button></div></div></section>
                 <div class="smm-search-note"><b>i</b> Results are limited to public or authorized information supplied by connected data sources. SMMARIA does not bypass platform access controls.</div>
               </section>
             </main>
@@ -377,15 +426,15 @@
                 <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
                 <span>Wallet</span>
             </a>
-            <a href="updates.html" class="mobile-nav__link">
-    <svg viewBox="0 0 24 24"
-         width="22"
-         height="22"
-         fill="none"
-         stroke="currentColor"
-         stroke-width="2"
-         stroke-linecap="round"
-         stroke-linejoin="round">
+              <a href="updates.html" class="mobile-nav__link">
+                  <svg viewBox="0 0 24 24"
+                    width="22"
+                    height="22"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
 
         <!-- Updates / Announcement Icon -->
         <path d="M4 11V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4"></path>
