@@ -322,69 +322,273 @@
                 </div>
             </header>
 
- <!-- PAGE SPECIFIC CONTENT -->
+<!-- PAGE SPECIFIC CONTENT -->
 <main class="content-area" id="page-content">
-    <div class="page-header">
-        <h1 class="page-title">Buy Social Media Accounts</h1>
-        <div class="breadcrumbs"><a href="dashboard.html">Dashboard</a> / <span>Buy Account</span></div>
-    </div>
-    
-    <!-- ADVERTISEMENT CARDS SECTION -->
-    <div class="promo-grid">
-        <!-- Global Reach Ad -->
-        <div class="card promo-card">
-            <div class="promo-icon">🌍</div>
-            <h3 class="promo-title">Global Reach</h3>
-            <p class="promo-text">We provide premium accounts from top-tier regions tailored to your needs:</p>
-            <div class="country-tags">
-                <span>USA</span><span>UK</span><span>Canada</span><span>Germany</span><span>Russia</span><span>Spain</span><span>Brazil</span><span>China</span>
+
+  
+
+    <!-- PROMOTIONAL CARDS -->
+    <section class="promo-grid" aria-label="Marketplace highlights">
+
+        <!-- GLOBAL REACH -->
+        <article class="card promo-card">
+            <div class="promo-icon" aria-hidden="true">🌍</div>
+
+            <div class="promo-content">
+                <span class="promo-label">GLOBAL AVAILABILITY</span>
+                <h3 class="promo-title">Global Reach</h3>
+
+                <p class="promo-text">
+                    Explore accounts from different regions and markets.
+                </p>
+
+                <div class="country-tags">
+                    <span>USA</span>
+                    <span>UK</span>
+                    <span>Canada</span>
+                    <span>Germany</span>
+                    <span>Russia</span>
+                    <span>Spain</span>
+                    <span>Brazil</span>
+                    <span>China</span>
+                </div>
+            </div>
+        </article>
+
+        <!-- TIKTOK PROMOTION -->
+        <article class="card promo-card promo-card--accent">
+            <div class="promo-icon" aria-hidden="true">🎵</div>
+
+            <div class="promo-content">
+                <span class="promo-label">SOCIAL MEDIA ACCOUNTS</span>
+                <h3 class="promo-title">TikTok Accounts</h3>
+
+                <p class="promo-text">
+                    Browse available TikTok accounts with their listed
+                    account details, pricing and availability.
+                </p>
+            </div>
+        </article>
+
+    </section>
+
+    <!-- CATEGORY SECTION -->
+    <section class="marketplace-category-section"
+             aria-labelledby="marketplaceCategoriesTitle">
+
+        <div class="marketplace-section-heading">
+            <div>
+                <span class="marketplace-eyebrow">EXPLORE MARKETPLACE</span>
+
+                <h2 class="page-subtitle"
+                    id="marketplaceCategoriesTitle">
+                    Browse by Category
+                </h2>
+
+                <p>
+                    Select a category to explore available accounts.
+                </p>
             </div>
         </div>
 
-        <!-- TikTok Ad -->
-        <div class="card promo-card promo-card--accent">
-            <div class="promo-icon">🎵</div>
-            <h3 class="promo-title">TikTok Super Views</h3>
-            <p class="promo-text">Get TikTok accounts with super live view ordinance. Perfect for going viral, live streams, and immediate monetization!</p>
-        </div>
+        <!-- CATEGORY CARDS ARE RENDERED BY EXISTING JAVASCRIPT -->
+        <div class="categories-grid"
+             id="categoriesGrid"
+             aria-live="polite"
+             aria-busy="true">
 
-        <!-- PayPal Ad -->
-        <div class="card promo-card paypal-card">
-            <img src="assets/images/paypal-promo.png" alt="PayPal Accounts" class="paypal-img">
-            <div class="paypal-content">
-                <h3 class="promo-title">Verified PayPal Accounts</h3>
-                <p class="promo-text">Purchase fully verified PayPal accounts ready for transactions. Secure, reliable, and instantly available.</p>
-                <a href="https://wa.me/256770898186?text=Hello%20SMMMARIA,%20I%20want%20to%20buy%20a%20PayPal%20account" target="_blank" class="btn btn--success btn--block">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="margin-right: 5px;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
-                    Inbox to Buy PayPal
-                </a>
+            <!-- CATEGORY SKELETONS -->
+            <div class="category-skeleton card" aria-hidden="true">
+                <div class="skeleton-category-icon"></div>
+                <div class="skeleton-line skeleton-category-title"></div>
+                <div class="skeleton-line skeleton-category-count"></div>
+                <div class="skeleton-line skeleton-category-status"></div>
             </div>
-        </div>
-    </div>
 
-    <!-- Categories Section -->
-    <div class="page-header" style="margin-top: 30px; margin-bottom: 10px;">
-        <h2 class="page-subtitle">Browse by Category</h2>
-        <p style="color: var(--text-secondary); font-size: 14px;">Click a category to instantly filter accounts.</p>
-    </div>
-    <div class="categories-grid" id="categoriesGrid">
-        <div class="category-skeleton card">Loading Categories...</div>
-    </div>
-    
-    <div class="marketplace-layout">
-        <!-- Filters Sidebar (Injected by account-filters.js) -->
-        <aside class="marketplace-filters card" id="marketplaceFilters">
-            <!-- Filters will be dynamically injected here -->
+            <div class="category-skeleton card" aria-hidden="true">
+                <div class="skeleton-category-icon"></div>
+                <div class="skeleton-line skeleton-category-title"></div>
+                <div class="skeleton-line skeleton-category-count"></div>
+                <div class="skeleton-line skeleton-category-status"></div>
+            </div>
+
+            <div class="category-skeleton card" aria-hidden="true">
+                <div class="skeleton-category-icon"></div>
+                <div class="skeleton-line skeleton-category-title"></div>
+                <div class="skeleton-line skeleton-category-count"></div>
+                <div class="skeleton-line skeleton-category-status"></div>
+            </div>
+
+            <div class="category-skeleton card" aria-hidden="true">
+                <div class="skeleton-category-icon"></div>
+                <div class="skeleton-line skeleton-category-title"></div>
+                <div class="skeleton-line skeleton-category-count"></div>
+                <div class="skeleton-line skeleton-category-status"></div>
+            </div>
+
+            <div class="category-skeleton card" aria-hidden="true">
+                <div class="skeleton-category-icon"></div>
+                <div class="skeleton-line skeleton-category-title"></div>
+                <div class="skeleton-line skeleton-category-count"></div>
+                <div class="skeleton-line skeleton-category-status"></div>
+            </div>
+
+            <div class="category-skeleton card" aria-hidden="true">
+                <div class="skeleton-category-icon"></div>
+                <div class="skeleton-line skeleton-category-title"></div>
+                <div class="skeleton-line skeleton-category-count"></div>
+                <div class="skeleton-line skeleton-category-status"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- MARKETPLACE CONTENT -->
+    <section class="marketplace-layout"
+             aria-label="Available marketplace accounts">
+
+        <!-- FILTERS -->
+        <aside class="marketplace-filters card"
+               id="marketplaceFilters"
+               aria-label="Account filters">
+
+            <!-- Existing account-filters.js injects filters here -->
+
         </aside>
-        
-        <!-- Accounts Grid -->
+
+        <!-- ACCOUNT RESULTS -->
         <div class="marketplace-content">
-            <div class="accounts-grid" id="accountsGrid">
-                <div class="account-skeleton card">Loading Accounts...</div>
+
+            <div class="marketplace-results-heading">
+                <div>
+                    <span class="marketplace-eyebrow">AVAILABLE INVENTORY</span>
+                    <h2 class="page-subtitle">Available Accounts</h2>
+                    <p>Browse account details, availability and prices.</p>
+                </div>
+
+                <div class="marketplace-results-meta"
+                     id="marketplaceResultsMeta"
+                     aria-live="polite">
+                    Loading inventory...
+                </div>
+            </div>
+
+            <!-- ACCOUNT CARDS ARE RENDERED BY EXISTING JAVASCRIPT -->
+            <div class="accounts-grid"
+                 id="accountsGrid"
+                 aria-live="polite"
+                 aria-busy="true">
+
+                <!-- ACCOUNT SKELETON 1 -->
+                <article class="account-skeleton card" aria-hidden="true">
+                    <div class="skeleton-account-top">
+                        <div class="skeleton-account-avatar"></div>
+
+                        <div class="skeleton-account-identity">
+                            <div class="skeleton-line skeleton-account-name"></div>
+                            <div class="skeleton-line skeleton-account-handle"></div>
+                        </div>
+
+                        <div class="skeleton-account-badge"></div>
+                    </div>
+
+                    <div class="skeleton-account-details">
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line"></div>
+                    </div>
+
+                    <div class="skeleton-account-footer">
+                        <div class="skeleton-line skeleton-account-price"></div>
+                        <div class="skeleton-account-button"></div>
+                    </div>
+                </article>
+
+                <!-- ACCOUNT SKELETON 2 -->
+                <article class="account-skeleton card" aria-hidden="true">
+                    <div class="skeleton-account-top">
+                        <div class="skeleton-account-avatar"></div>
+
+                        <div class="skeleton-account-identity">
+                            <div class="skeleton-line skeleton-account-name"></div>
+                            <div class="skeleton-line skeleton-account-handle"></div>
+                        </div>
+
+                        <div class="skeleton-account-badge"></div>
+                    </div>
+
+                    <div class="skeleton-account-details">
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line"></div>
+                    </div>
+
+                    <div class="skeleton-account-footer">
+                        <div class="skeleton-line skeleton-account-price"></div>
+                        <div class="skeleton-account-button"></div>
+                    </div>
+                </article>
+
+                <!-- ACCOUNT SKELETON 3 -->
+                <article class="account-skeleton card" aria-hidden="true">
+                    <div class="skeleton-account-top">
+                        <div class="skeleton-account-avatar"></div>
+
+                        <div class="skeleton-account-identity">
+                            <div class="skeleton-line skeleton-account-name"></div>
+                            <div class="skeleton-line skeleton-account-handle"></div>
+                        </div>
+
+                        <div class="skeleton-account-badge"></div>
+                    </div>
+
+                    <div class="skeleton-account-details">
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line"></div>
+                    </div>
+
+                    <div class="skeleton-account-footer">
+                        <div class="skeleton-line skeleton-account-price"></div>
+                        <div class="skeleton-account-button"></div>
+                    </div>
+                </article>
+
+                <!-- ACCOUNT SKELETON 4 -->
+                <article class="account-skeleton card" aria-hidden="true">
+                    <div class="skeleton-account-top">
+                        <div class="skeleton-account-avatar"></div>
+
+                        <div class="skeleton-account-identity">
+                            <div class="skeleton-line skeleton-account-name"></div>
+                            <div class="skeleton-line skeleton-account-handle"></div>
+                        </div>
+
+                        <div class="skeleton-account-badge"></div>
+                    </div>
+
+                    <div class="skeleton-account-details">
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line"></div>
+                    </div>
+
+                    <div class="skeleton-account-footer">
+                        <div class="skeleton-line skeleton-account-price"></div>
+                        <div class="skeleton-account-button"></div>
+                    </div>
+                </article>
+
             </div>
         </div>
-    </div>
+    </section>
+
 </main>
+
 
               <!-- MOBILE BOTTOM NAVIGATION -->
         <nav class="mobile-nav">
