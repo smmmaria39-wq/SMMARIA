@@ -1,1 +1,40 @@
 @media(max-width:1000px){#smmaria-global-search .smm-filters{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:720px){#smmaria-global-search .smm-search-hero{min-height:155px;padding:23px 19px}#smmaria-global-search .smm-search-hero-art{width:80px;height:80px;font-size:48px;margin:0 8px}#smmaria-global-search .smm-search-panel{padding:15px;margin-bottom:13px}#smmaria-global-search .smm-filters{grid-template-columns:repeat(2,minmax(0,1fr))}#smmaria-global-search .smm-cards{grid-template-columns:1fr}#smmaria-global-search .smm-panel-head{align-items:flex-start}#smmaria-global-search .smm-search-form{gap:7px;padding-left:10px}#smmaria-global-search .smm-search-form button{padding:12px}#smmaria-global-search .smm-search-form input{font-size:11px}}@media(max-width:430px){#smmaria-global-search .smm-search-hero-art{display:none}#smmaria-global-search h1{font-size:27px}#smmaria-global-search .smm-search-under{align-items:flex-start;flex-direction:column}#smmaria-global-search .smm-filters{grid-template-columns:1fr 1fr}#smmaria-global-search .smm-table-head{flex-direction:column;gap:5px}#smmaria-global-search .smm-pagination{align-items:flex-start;flex-direction:column;gap:10px}}@media(max-width:350px){#smmaria-global-search .smm-filters{grid-template-columns:1fr}}
+
+
+/* Mobile filter overflow fix */
+#smmaria-global-search .smm-filters {
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+#smmaria-global-search .smm-filters > *,
+#smmaria-global-search .smm-filters label {
+  min-width: 0;
+  max-width: 100%;
+}
+#smmaria-global-search .smm-filters select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-overflow: ellipsis;
+}
+@media (max-width: 600px) {
+  #smmaria-global-search .smm-search-panel,
+  #smmaria-global-search .smm-filters {
+    min-width: 0;
+    max-width: 100%;
+  }
+  #smmaria-global-search .smm-filters { gap: 12px 10px; }
+  #smmaria-global-search .smm-filters label { overflow: hidden; }
+  #smmaria-global-search .smm-filters select {
+    padding-left: 9px !important;
+    padding-right: 25px !important;
+    font-size: 12px !important;
+  }
+}
+@media (max-width: 360px) {
+  #smmaria-global-search .smm-filters { grid-template-columns: minmax(0, 1fr); }
+}
