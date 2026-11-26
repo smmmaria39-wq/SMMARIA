@@ -59,7 +59,8 @@ export const SearchAPI = {
         category: params.category || "all",
         country: params.country || undefined,
         platforms: params.platform ? [params.platform] : undefined,
-        page: params.page || 1
+        page: params.page || 1,
+        limit: params.limit || 10
       },
       signal
     }));
@@ -68,7 +69,7 @@ export const SearchAPI = {
     return {
       ...payload,
       results,
-      total: Number(payload.total ?? results.length),
+      total: Number(payload.totalResults ?? payload.total ?? results.length),
       page: Number(payload.page) || params.page,
       limit: Number(payload.limit) || params.limit
     };
