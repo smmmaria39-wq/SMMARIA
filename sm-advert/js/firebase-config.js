@@ -2,13 +2,13 @@
 // Replace the placeholder values with your Firebase Web App configuration.
 // Firebase client config is public; protect all data with Realtime Database Rules.
 export const firebaseConfig = {
-  apiKey: "YOUR_FIREBASE_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_FIREBASE_APP_ID"
+  apiKey: "AIzaSyDIPHbWe5Z5oT4n3UZRs5bQy3haI__Fbrg",
+  authDomain: "smmarket-39bbf.firebaseapp.com",
+  projectId: "smmarket-39bbf",
+  storageBucket: "smmarket-39bbf.firebasestorage.app",
+  messagingSenderId: "175807183628",
+  appId: "1:175807183628:web:20de0ab2077531676fe729",
+  measurementId: "G-SZLQG41DB1"
 };
 
 export const SM_ADVERT_CONFIG = {
