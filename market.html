@@ -1,0 +1,952 @@
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <title>SM ADVERT | SMM-MARIA Panel</title>
+
+    <meta name="description" content="Discover ICT products, technology businesses, electronics and digital services on SM ADVERT by SMM-MARIA.">
+    <meta name="keywords" content="SM Advert, ICT Marketplace, Electronics, Technology, SMM-MARIA">
+    <meta name="author" content="SMM-MARIA">
+    <meta name="robots" content="index, follow">
+
+    <meta name="theme-color" content="#0f172a">
+    <meta name="msapplication-TileColor" content="#0f172a">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SMM-MARIA">
+
+    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
+    <link rel="shortcut icon" href="assets/icons/favicon.ico">
+
+    <link rel="manifest" href="manifest.json">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="SMM-MARIA">
+    <meta property="og:title" content="SM ADVERT | Technology Marketplace">
+    <meta property="og:description" content="Discover technology products and ICT businesses.">
+    <meta property="og:image" content="assets/images/og-image.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+ 
+<!-- EXISTING SMMARIA STYLES -->
+<link rel="stylesheet" href="assets/css/reset.css">
+<link rel="stylesheet" href="assets/css/variables.css">
+<link rel="stylesheet" href="assets/css/typography.css">
+<link rel="stylesheet" href="assets/css/layout.css">
+<link rel="stylesheet" href="assets/css/sidebar.css">
+<link rel="stylesheet" href="assets/css/navbar.css">
+<link rel="stylesheet" href="assets/css/cards.css">
+<link rel="stylesheet" href="assets/css/buttons.css">
+<link rel="stylesheet" href="assets/css/forms.css">
+<link rel="stylesheet" href="assets/css/tables.css">
+<link rel="stylesheet" href="assets/css/modal.css">
+<link rel="stylesheet" href="assets/css/notifications.css">
+<link rel="stylesheet" href="assets/css/dashboard.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+
+<!-- SM ADVERT MARKETPLACE -->
+<link rel="stylesheet" href="sm-advert/css/advert.css">
+<link rel="stylesheet" href="sm-advert/css/market.css">
+<link rel="stylesheet" href="sm-advert/css/responsive.css">
+
+</head>
+
+<body data-page="sm-advert">
+
+<div class="app-container">
+
+    <!-- =========================================
+         EXISTING SMMARIA SIDEBAR
+         ========================================= -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar__header">
+            <a href="dashboard.html" class="sidebar__logo">
+                <span class="logo-text">SMM<span class="text-gold">MARIA</span></span>
+            </a>
+
+            <button class="sidebar__collapse-btn" id="collapse-btn" aria-label="Collapse Sidebar">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <nav class="sidebar__nav">
+            <ul class="sidebar__menu">
+
+                <li class="sidebar__item">
+                    <a href="dashboard.html" class="sidebar__link">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <span class="link-text">Dashboard</span>
+                    </a>
+                </li>
+
+                <li class="sidebar__item">
+                    <a href="new-order.html" class="sidebar__link">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                        <span class="link-text">New Order</span>
+                    </a>
+                </li>
+
+                <li class="sidebar__item">
+                    <a href="mass-order.html" class="sidebar__link">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="9" y1="21" x2="9" y2="9"></line>
+                        </svg>
+                        <span class="link-text">Mass Order</span>
+                    </a>
+                </li>
+
+                <li class="sidebar__item">
+                    <a href="services.html" class="sidebar__link">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span class="link-text">Services</span>
+                    </a>
+                </li>
+
+                <li class="sidebar__item">
+                    <a href="orders.html" class="sidebar__link">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-4"></path>
+                            <polyline points="9 11 12 14 15 11"></polyline>
+                            <line x1="12" y1="2" x2="12" y2="14"></line>
+                        </svg>
+                        <span class="link-text">Orders</span>
+                    </a>
+                </li>
+
+                <li class="sidebar__item">
+                    <a href="buy-account.html" class="sidebar__link">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <path d="M16 10a4 4 0 0 1-8 0"></path>
+                        </svg>
+                        <span class="link-text">Buy Account</span>
+                    </a>
+                </li>
+
+                <li class="sidebar__item">
+                    <a href="my-accounts.html" class="sidebar__link">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span class="link-text">My Accounts</span>
+                    </a>
+                </li>
+
+                <li class="sidebar__item">
+                    <a href="tickets.html" class="sidebar__link">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <span class="link-text">Tickets</span>
+                    </a>
+                </li>
+
+                <li class="sidebar__item">
+                    <a href="wallet.html" class="sidebar__link">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                            <line x1="2" y1="10" x2="22" y2="10"></line>
+                        </svg>
+                        <span class="link-text">Wallet</span>
+                    </a>
+                </li>
+
+                <li class="sidebar__item">
+                    <a href="refill.html" class="sidebar__link">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <polyline points="1 20 1 14 7 14"></polyline>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                        <span class="link-text">Refill</span>
+                    </a>
+                </li>
+
+                <li class="sidebar__item">
+                    <a href="api.html" class="sidebar__link">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 18 22 12 16 6"></polyline>
+                            <polyline points="8 6 2 12 8 18"></polyline>
+                        </svg>
+                        <span class="link-text">API</span>
+                    </a>
+                </li>
+
+                <li class="sidebar__item">
+                    <a href="affiliate.html" class="sidebar__link">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                        <span class="link-text">Affiliate</span>
+                    </a>
+                </li>
+
+                <li class="sidebar__item">
+                    <a href="buy-child-panel.html" class="sidebar__link">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <span class="link-text">Child Panel</span>
+                    </a>
+                </li>
+
+                <li class="sidebar__item">
+                    <a href="documentation.html" class="sidebar__link">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg>
+                        <span class="link-text">Documentation</span>
+                    </a>
+                </li>
+
+                <li class="sidebar__item">
+                    <a href="settings.html" class="sidebar__link">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                        <span class="link-text">Settings</span>
+                    </a>
+                </li>
+
+                <li class="sidebar__item">
+                    <a href="invoice.html" class="sidebar__link">
+                        <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="8" y1="13" x2="16" y2="13"></line>
+                            <line x1="8" y1="17" x2="16" y2="17"></line>
+                        </svg>
+                        <span class="link-text">Invoice</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+        <!-- EXISTING SIDEBAR WIDGETS -->
+        <div class="sidebar__widgets">
+
+            <div class="sidebar__widget">
+                <span class="sidebar__widget-label">Account Balance</span>
+                <div class="widget-balance" data-widget="balance">
+                    <span class="widget-balance__amount" data-widget="balance-value">0.00</span>
+                    <a href="wallet.html" class="widget-balance__btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"></path>
+                        </svg>
+                        Add Funds
+                    </a>
+                </div>
+            </div>
+
+            <div class="sidebar__widget" data-widget-section="currency">
+                <span class="sidebar__widget-label">
+                    <svg class="widget-label__icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                    Currency
+                </span>
+
+                <div class="widget-currency" data-widget="currency">
+                    <button class="widget-currency__selected" id="currencySelectedBtn" type="button">
+                        <span class="widget-currency__flag" id="currencyFlag">USD</span>
+                        <span class="widget-currency__code" id="currencyCode">USD</span>
+                        <svg class="widget-currency__chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+
+                    <div class="widget-currency__dropdown" id="currencyDropdown">
+                        <div class="widget-currency__search">
+                            <input type="text" class="widget-currency__search-input" id="currencySearchInput" placeholder="Search currency..." autocomplete="off">
+                        </div>
+                        <div class="widget-currency__list" id="currencyList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar__widget" data-widget-section="statistics">
+                <span class="sidebar__widget-label">Statistics</span>
+                <div class="widget-stats">
+                    <div class="widget-stat">
+                        <span class="widget-stat__label">Total</span>
+                        <span class="widget-stat__value" data-stat="total-orders">0</span>
+                    </div>
+                    <div class="widget-stat">
+                        <span class="widget-stat__label">Completed</span>
+                        <span class="widget-stat__value" data-stat="completed-orders">0</span>
+                    </div>
+                    <div class="widget-stat">
+                        <span class="widget-stat__label">Processing</span>
+                        <span class="widget-stat__value" data-stat="processing-orders">0</span>
+                    </div>
+                    <div class="widget-stat">
+                        <span class="widget-stat__label">Success</span>
+                        <span class="widget-stat__value widget-stat__value--accent" data-stat="success-rate">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar__widget" data-widget-section="services">
+                <span class="sidebar__widget-label">Service Status</span>
+                <div class="widget-services">
+                    <div class="widget-service" data-service-status="instagram" data-status="online">
+                        <span class="widget-service__dot" data-status-indicator></span>
+                        <span class="widget-service__name">Instagram</span>
+                        <span class="widget-service__status">Online</span>
+                    </div>
+                    <div class="widget-service" data-service-status="tiktok" data-status="online">
+                        <span class="widget-service__dot" data-status-indicator></span>
+                        <span class="widget-service__name">TikTok</span>
+                        <span class="widget-service__status">Online</span>
+                    </div>
+                    <div class="widget-service" data-service-status="facebook" data-status="online">
+                        <span class="widget-service__dot" data-status-indicator></span>
+                        <span class="widget-service__name">Facebook</span>
+                        <span class="widget-service__status">Online</span>
+                    </div>
+                    <div class="widget-service" data-service-status="youtube" data-status="online">
+                        <span class="widget-service__dot" data-status-indicator></span>
+                        <span class="widget-service__name">YouTube</span>
+                        <span class="widget-service__status">Online</span>
+                    </div>
+                    <div class="widget-service" data-service-status="telegram" data-status="online">
+                        <span class="widget-service__dot" data-status-indicator></span>
+                        <span class="widget-service__name">Telegram</span>
+                        <span class="widget-service__status">Online</span>
+                    </div>
+                    <div class="widget-service" data-service-status="twitter" data-status="online">
+                        <span class="widget-service__dot" data-status-indicator></span>
+                        <span class="widget-service__name">Twitter/X</span>
+                        <span class="widget-service__status">Online</span>
+                    </div>
+                    <div class="widget-service" data-service-status="spotify" data-status="online">
+                        <span class="widget-service__dot" data-status-indicator></span>
+                        <span class="widget-service__name">Spotify</span>
+                        <span class="widget-service__status">Online</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar__widget" data-widget-section="help">
+                <span class="sidebar__widget-label">Help & Support</span>
+                <div class="widget-help">
+                    <a href="support.html" class="widget-help__btn widget-help__btn--chat">
+                        Live Chat
+                    </a>
+                    <button class="widget-help__btn widget-help__btn--ticket" data-widget="open-ticket">
+                        Open Ticket
+                    </button>
+                    <button class="widget-help__btn widget-help__btn--whatsapp" data-widget="whatsapp-support">
+                        WhatsApp Support
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar__widget" data-widget-section="community">
+                <span class="sidebar__widget-label">Community</span>
+                <div class="widget-community">
+                    <a href="#" class="widget-community__link" data-community="telegram" title="Telegram">T</a>
+                    <a href="#" class="widget-community__link" data-community="whatsapp" title="WhatsApp Group">W</a>
+                    <a href="#" class="widget-community__link" data-community="discord" title="Discord">D</a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="sidebar__footer">
+            <a href="login.html" class="sidebar__link sidebar__link--logout" onclick="handleLogout()">
+                <svg class="icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                <span class="link-text">Logout</span>
+            </a>
+        </div>
+
+    </aside>
+
+    <!-- =========================================
+         MAIN WRAPPER
+         ========================================= -->
+
+    <div class="main-wrapper">
+
+        <!-- EXISTING NAVBAR - PRESERVED -->
+        <header class="navbar">
+
+            <div class="navbar__left">
+
+                <button class="navbar__toggle" id="mobile-menu-toggle" aria-label="Open Menu">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+
+                <div class="navbar__search">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" placeholder="Search accounts..." class="navbar__search-input" aria-label="Search">
+                </div>
+
+            </div>
+
+            <div class="navbar__right">
+
+                <div class="navbar__balance">
+                    <span class="balance-label">Balance:</span>
+                    <span class="balance-amount text-gold">0.00</span>
+                </div>
+
+                <a href="notifications.html" class="navbar__icon-btn" id="notif-btn" aria-label="Notifications" style="position:relative;">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                </a>
+
+                <button class="navbar__icon-btn" id="theme-toggle" aria-label="Toggle Dark Mode">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+
+                <div class="navbar__profile">
+                    <div class="avatar">..</div>
+                    <div class="profile__info">
+                        <span class="profile__name">Guest</span>
+                        <span class="profile__role">User</span>
+                    </div>
+                </div>
+
+            </div>
+        </header>
+
+        <!-- =========================================
+             SM ADVERT PAGE CONTENT
+             ONLY THIS SECTION IS NEW
+             ========================================= -->
+
+        <main class="content-area sm-advert-page" id="page-content">
+
+            <!-- PAGE HEADING -->
+            <section class="advert-heading">
+
+                <div class="advert-heading__left">
+                    <div class="advert-eyebrow">
+                        <span class="advert-live-dot"></span>
+                        SMMARIA MARKETPLACE
+                    </div>
+
+                    <h1 class="advert-title">
+                        SM <span>ADVERT</span>
+                    </h1>
+
+                    <p class="advert-description">
+                        Discover technology products, electronics, ICT services
+                        and businesses from sellers around you.
+                    </p>
+                </div>
+
+                <a href="portfolio.html" class="advert-create-btn">
+                    <span>+</span>
+                    Create Business Portfolio
+                </a>
+
+            </section>
+
+            <!-- MARKETPLACE HERO -->
+            <section class="advert-hero">
+
+                <div class="advert-hero__content">
+
+                    <span class="advert-hero__tag">
+                        <span class="advert-live-dot"></span>
+                        YOUR ICT MARKETPLACE
+                    </span>
+
+                    <h2>
+                        Technology starts<br>
+                        <span>with the right connection.</span>
+                    </h2>
+
+                    <p>
+                        Explore products, discover innovative businesses
+                        and connect directly with technology sellers.
+                    </p>
+
+                    <div class="advert-hero__actions">
+                        <a href="#latestProducts" class="advert-btn advert-btn--primary">
+                            Explore Products
+                        </a>
+
+                        <a href="portfolio.html" class="advert-btn advert-btn--outline">
+                            Advertise Your Business
+                        </a>
+                    </div>
+
+                    <div class="advert-hero__trust">
+                        <span>✓</span>
+                        ICT products and digital services only
+                    </div>
+
+                </div>
+
+                <div class="advert-hero__visual">
+                    <div class="advert-visual-card advert-visual-card--one">
+                        <span>💻</span>
+                        <small>Technology</small>
+                    </div>
+
+                    <div class="advert-visual-card advert-visual-card--two">
+                        <span>📱</span>
+                        <small>Smart Devices</small>
+                    </div>
+
+                    <div class="advert-visual-card advert-visual-card--three">
+                        <span>🌐</span>
+                        <small>Digital Services</small>
+                    </div>
+
+                    <div class="advert-visual-main">
+                        <span>SM</span>
+                        <strong>ADVERT</strong>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- MARKETPLACE SEARCH -->
+            <section class="advert-search-section">
+
+                <div class="advert-search-box">
+
+                    <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+
+                    <input
+                        type="search"
+                        id="advertSearchInput"
+                        placeholder="Search laptops, phones, software, businesses..."
+                        autocomplete="off"
+                    >
+
+                    <button type="button" id="advertSearchBtn">
+                        Search
+                    </button>
+
+                </div>
+
+                <div class="advert-search-meta">
+                    <span>Popular searches:</span>
+                    <button type="button" data-search-term="Laptops">Laptops</button>
+                    <button type="button" data-search-term="Smartphones">Smartphones</button>
+                    <button type="button" data-search-term="CCTV">CCTV</button>
+                    <button type="button" data-search-term="Web Development">Web Development</button>
+                </div>
+
+            </section>
+
+            <!-- QUICK MARKETPLACE LINKS -->
+            <section class="advert-quick-links">
+
+                <a href="#advertCategories" class="advert-quick-link">
+                    <span>▦</span>
+                    Browse Categories
+                </a>
+
+                <a href="#featuredBusinesses" class="advert-quick-link">
+                    <span>♙</span>
+                    Businesses
+                </a>
+
+                <a href="messages.html" class="advert-quick-link">
+                    <span>✉</span>
+                    Messages
+                </a>
+
+                <a href="portfolio.html" class="advert-quick-link">
+                    <span>＋</span>
+                    My Portfolio
+                </a>
+
+            </section>
+
+            <!-- BUSINESS CATEGORIES -->
+            <section class="advert-section" id="advertCategories">
+
+                <div class="advert-section-heading">
+                    <div>
+                        <span class="advert-section-label">EXPLORE</span>
+                        <h2>Browse Categories</h2>
+                        <p>Discover businesses by their area of technology.</p>
+                    </div>
+
+                    <button type="button" class="advert-text-link" id="viewAllCategories">
+                        View all categories →
+                    </button>
+                </div>
+
+                <div class="advert-category-grid" id="advertCategoriesGrid">
+
+                    <!-- SKELETON CATEGORIES -->
+                    <div class="advert-category-skeleton">
+                        <div class="skeleton skeleton-category-icon"></div>
+                        <div class="skeleton skeleton-category-text"></div>
+                    </div>
+
+                    <div class="advert-category-skeleton">
+                        <div class="skeleton skeleton-category-icon"></div>
+                        <div class="skeleton skeleton-category-text"></div>
+                    </div>
+
+                    <div class="advert-category-skeleton">
+                        <div class="skeleton skeleton-category-icon"></div>
+                        <div class="skeleton skeleton-category-text"></div>
+                    </div>
+
+                    <div class="advert-category-skeleton">
+                        <div class="skeleton skeleton-category-icon"></div>
+                        <div class="skeleton skeleton-category-text"></div>
+                    </div>
+
+                    <div class="advert-category-skeleton">
+                        <div class="skeleton skeleton-category-icon"></div>
+                        <div class="skeleton skeleton-category-text"></div>
+                    </div>
+
+                    <div class="advert-category-skeleton">
+                        <div class="skeleton skeleton-category-icon"></div>
+                        <div class="skeleton skeleton-category-text"></div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ONGOING ADVERTISEMENTS -->
+            <section class="advert-section" id="ongoingAdvertisements">
+
+                <div class="advert-section-heading">
+
+                    <div>
+                        <span class="advert-section-label">DISCOVER</span>
+                        <h2>Ongoing Advertisements</h2>
+                        <p>Explore products and services currently being advertised.</p>
+                    </div>
+
+                    <a href="#latestProducts" class="advert-text-link">
+                        Explore all →
+                    </a>
+
+                </div>
+
+                <div class="advert-featured-grid" id="advertisementsGrid">
+
+                    <!-- ADVERTISEMENT SKELETONS -->
+                    <div class="advert-product-skeleton">
+                        <div class="skeleton skeleton-product-image"></div>
+                        <div class="advert-skeleton-content">
+                            <div class="skeleton skeleton-line skeleton-line--wide"></div>
+                            <div class="skeleton skeleton-line skeleton-line--medium"></div>
+                            <div class="skeleton skeleton-line skeleton-line--short"></div>
+                        </div>
+                    </div>
+
+                    <div class="advert-product-skeleton">
+                        <div class="skeleton skeleton-product-image"></div>
+                        <div class="advert-skeleton-content">
+                            <div class="skeleton skeleton-line skeleton-line--wide"></div>
+                            <div class="skeleton skeleton-line skeleton-line--medium"></div>
+                            <div class="skeleton skeleton-line skeleton-line--short"></div>
+                        </div>
+                    </div>
+
+                    <div class="advert-product-skeleton">
+                        <div class="skeleton skeleton-product-image"></div>
+                        <div class="advert-skeleton-content">
+                            <div class="skeleton skeleton-line skeleton-line--wide"></div>
+                            <div class="skeleton skeleton-line skeleton-line--medium"></div>
+                            <div class="skeleton skeleton-line skeleton-line--short"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- FEATURED BUSINESSES -->
+            <section class="advert-section" id="featuredBusinesses">
+
+                <div class="advert-section-heading">
+
+                    <div>
+                        <span class="advert-section-label">BUSINESS DIRECTORY</span>
+                        <h2>Featured Businesses</h2>
+                        <p>Discover technology businesses and service providers.</p>
+                    </div>
+
+                    <a href="portfolio.html" class="advert-text-link">
+                        View businesses →
+                    </a>
+
+                </div>
+
+                <div class="advert-business-grid" id="featuredBusinessesGrid">
+
+                    <!-- BUSINESS SKELETONS -->
+                    <div class="advert-business-skeleton">
+                        <div class="skeleton skeleton-business-cover"></div>
+                        <div class="advert-business-skeleton-info">
+                            <div class="skeleton skeleton-business-avatar"></div>
+                            <div class="skeleton skeleton-line skeleton-line--wide"></div>
+                            <div class="skeleton skeleton-line skeleton-line--medium"></div>
+                        </div>
+                    </div>
+
+                    <div class="advert-business-skeleton">
+                        <div class="skeleton skeleton-business-cover"></div>
+                        <div class="advert-business-skeleton-info">
+                            <div class="skeleton skeleton-business-avatar"></div>
+                            <div class="skeleton skeleton-line skeleton-line--wide"></div>
+                            <div class="skeleton skeleton-line skeleton-line--medium"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- LATEST PRODUCTS -->
+            <section class="advert-section" id="latestProducts">
+
+                <div class="advert-section-heading">
+
+                    <div>
+                        <span class="advert-section-label">JUST LISTED</span>
+                        <h2>Recently Added Products</h2>
+                        <p>Explore the latest ICT products and services.</p>
+                    </div>
+
+                    <button type="button" class="advert-text-link" id="viewAllProducts">
+                        View all products →
+                    </button>
+
+                </div>
+
+                <!-- PRODUCT FILTERS -->
+                <div class="advert-product-toolbar">
+
+                    <div class="advert-filter-tabs" id="advertFilterTabs">
+
+                        <button class="advert-filter-tab active" type="button" data-filter="all">
+                            All Products
+                        </button>
+
+                        <button class="advert-filter-tab" type="button" data-filter="products">
+                            Physical Products
+                        </button>
+
+                        <button class="advert-filter-tab" type="button" data-filter="services">
+                            Digital Services
+                        </button>
+
+                    </div>
+
+                    <select id="advertSortSelect" aria-label="Sort products">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                    </select>
+
+                </div>
+
+                <div class="advert-products-grid" id="latestProductsGrid">
+
+                    <!-- PRODUCT SKELETONS -->
+                    <div class="advert-product-skeleton">
+                        <div class="skeleton skeleton-product-image"></div>
+                        <div class="advert-skeleton-content">
+                            <div class="skeleton skeleton-line skeleton-line--wide"></div>
+                            <div class="skeleton skeleton-line skeleton-line--medium"></div>
+                            <div class="skeleton skeleton-line skeleton-line--short"></div>
+                        </div>
+                    </div>
+
+                    <div class="advert-product-skeleton">
+                        <div class="skeleton skeleton-product-image"></div>
+                        <div class="advert-skeleton-content">
+                            <div class="skeleton skeleton-line skeleton-line--wide"></div>
+                            <div class="skeleton skeleton-line skeleton-line--medium"></div>
+                            <div class="skeleton skeleton-line skeleton-line--short"></div>
+                        </div>
+                    </div>
+
+                    <div class="advert-product-skeleton">
+                        <div class="skeleton skeleton-product-image"></div>
+                        <div class="advert-skeleton-content">
+                            <div class="skeleton skeleton-line skeleton-line--wide"></div>
+                            <div class="skeleton skeleton-line skeleton-line--medium"></div>
+                            <div class="skeleton skeleton-line skeleton-line--short"></div>
+                        </div>
+                    </div>
+
+                    <div class="advert-product-skeleton">
+                        <div class="skeleton skeleton-product-image"></div>
+                        <div class="advert-skeleton-content">
+                            <div class="skeleton skeleton-line skeleton-line--wide"></div>
+                            <div class="skeleton skeleton-line skeleton-line--medium"></div>
+                            <div class="skeleton skeleton-line skeleton-line--short"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="advert-load-more-wrapper" id="advertLoadMoreWrapper" hidden>
+                    <button type="button" class="advert-load-more-btn" id="advertLoadMore">
+                        Load More Products
+                    </button>
+                </div>
+
+            </section>
+
+            <!-- SELLER CALL TO ACTION -->
+            <section class="advert-seller-banner">
+
+                <div class="advert-seller-banner__content">
+
+                    <span class="advert-section-label">FOR TECHNOLOGY BUSINESSES</span>
+
+                    <h2>
+                        Have a product to sell?
+                        <span>Put your business in the spotlight.</span>
+                    </h2>
+
+                    <p>
+                        Create your business portfolio, showcase your products
+                        and connect with potential customers.
+                    </p>
+
+                    <a href="portfolio.html" class="advert-btn advert-btn--primary">
+                        Create Your Business Portfolio →
+                    </a>
+
+                </div>
+
+                <div class="advert-seller-banner__icon">
+                    <span>🚀</span>
+                </div>
+
+            </section>
+
+            <!-- EMPTY STATE / GENERAL FEEDBACK -->
+            <div class="advert-notice" id="advertNotice" role="status" hidden></div>
+
+        </main>
+
+        <!-- =========================================
+             EXISTING MOBILE BOTTOM NAVIGATION
+             PRESERVED
+             ========================================= -->
+
+      <!-- MOBILE BOTTOM NAVIGATION -->
+        <nav class="mobile-nav">
+            <a href="dashboard.html" class="mobile-nav__link">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="services.html" class="mobile-nav__link">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <span>Services</span>
+            </a>
+            <a href="orders.html" class="mobile-nav__link">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-4"></path><polyline points="9 11 12 14 15 11"></polyline><line x1="12" y1="2" x2="12" y2="14"></line></svg>
+                <span>Orders</span>
+            </a>
+            <a href="wallet.html" class="mobile-nav__link">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+                <span>Wallet</span>
+            </a>
+              <a href="updates.html" class="mobile-nav__link">
+    <svg viewBox="0 0 24 24"
+         width="22"
+         height="22"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="2"
+         stroke-linecap="round"
+         stroke-linejoin="round">
+
+        <!-- Updates / Announcement Icon -->
+        <path d="M4 11V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4"></path>
+        <path d="M8 9h8"></path>
+        <path d="M8 13h5"></path>
+        <path d="M8 17h3"></path>
+        <path d="M2 11h4"></path>
+    </svg>
+
+    <span>Updates</span>
+</a>
+        </nav>
+
+        <!-- MOBILE OVERLAY -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    </div>
+
+</div>
+
+<!-- EXISTING SMMARIA APPLICATION -->
+<script type="module" src="assets/js/app.js"></script>
+
+<!-- SM ADVERT APPLICATION -->
+<script type="module" src="sm-advert/js/advert.js"></script>
+
+</body>
+</html>
