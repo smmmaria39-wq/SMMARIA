@@ -17,7 +17,7 @@ export const SM_ADVERT_CONFIG = {
   // This secure endpoint must validate smmmaria_token and return a Firebase custom token.
   // Expected JSON: { customToken: "...", uid: "...", displayName: "...", email: "..." }
   firebaseTokenEndpoint: "/sm-advert/auth/firebase-token",
-  imgbbKey: "YOUR_IMGBB_API_KEY",
+  imgbbKey: "47f7dff148164ff31a5947e6ee635363";
   maxUploadImages: 10,
   maxProductImages: 5
 };
