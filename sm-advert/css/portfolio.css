@@ -1,0 +1,582 @@
+
+/* =========================================================
+   SM ADVERT — BUSINESS PORTFOLIO PAGE
+   Professional card layout / Responsive mobile design
+   ========================================================= */
+
+@import url('./advert.css');
+
+.sm-advert-page {
+    --portfolio-navy: #08164A;
+    --portfolio-gold: #F5A623;
+    --portfolio-text: #172033;
+    --portfolio-muted: #718096;
+    --portfolio-border: #E5EAF1;
+    --portfolio-surface: #FFFFFF;
+    --portfolio-background: #F4F6FA;
+
+    width: 100%;
+    min-width: 0;
+    color: var(--portfolio-text);
+}
+
+/* PAGE HEADER */
+
+.sm-advert-page .page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 25px;
+}
+
+.sm-advert-page .sm-advert-eyebrow {
+    color: #73809A;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.sm-advert-page .page-title {
+    color: var(--portfolio-navy);
+    font-size: clamp(25px, 4vw, 36px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 10px;
+}
+
+.sm-advert-page .page-header p:not(.sm-advert-eyebrow) {
+    color: var(--portfolio-muted);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.sm-advert-page .breadcrumbs {
+    color: #929CAF;
+    font-size: 13px;
+}
+
+.sm-advert-page .breadcrumbs a {
+    color: var(--portfolio-navy);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* HERO CARD */
+
+.sm-advert-page .sm-advert-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 30px;
+    margin-bottom: 28px;
+    border: 0;
+    border-radius: 12px;
+    background: linear-gradient(120deg, #08164A 0%, #142B70 100%);
+    color: #FFFFFF;
+    box-shadow: 0 10px 30px rgba(8, 22, 74, 0.12);
+}
+
+.sm-advert-page .sm-advert-hero::after {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    right: -65px;
+    top: -90px;
+    border: 35px solid rgba(255,255,255,0.06);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.sm-advert-page .sm-advert-hero .sm-advert-kicker {
+    display: inline-block;
+    color: #FFC15C;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+}
+
+.sm-advert-page .sm-advert-hero h2 {
+    max-width: 600px;
+    color: #FFFFFF;
+    font-size: clamp(23px, 4vw, 32px);
+    font-weight: 800;
+    line-height: 1.3;
+    margin: 0 0 12px;
+}
+
+.sm-advert-page .sm-advert-hero p {
+    max-width: 600px;
+    color: rgba(255,255,255,0.78);
+    font-size: 15px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* SECTION HEADING */
+
+.sm-advert-page .sm-advert-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 28px 0 18px;
+}
+
+.sm-advert-page .sm-advert-section-heading h2 {
+    color: var(--portfolio-navy);
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0 0 6px;
+}
+
+.sm-advert-page .sm-advert-section-heading p {
+    color: var(--portfolio-muted);
+    font-size: 14px;
+    margin: 0;
+}
+
+.sm-advert-page #portfolioStatus {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 13px;
+    border-radius: 5px;
+    background: #FFF5E5;
+    color: #A96700;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* MAIN TWO-COLUMN LAYOUT */
+
+.sm-advert-page .sm-advert-portfolio-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(270px, 0.85fr);
+    align-items: start;
+    gap: 22px;
+}
+
+/* GENERAL CARDS */
+
+.sm-advert-page .sm-advert-panel {
+    min-width: 0;
+    padding: 25px;
+    background: var(--portfolio-surface);
+    border: 1px solid var(--portfolio-border);
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(20, 35, 70, 0.035);
+}
+
+/* FORM CARD */
+
+.sm-advert-page .sm-advert-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.sm-advert-page .sm-advert-form h3 {
+    color: var(--portfolio-navy);
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0;
+    padding: 0 0 17px;
+    border-bottom: 1px solid var(--portfolio-border);
+}
+
+.sm-advert-page .sm-advert-form h3:not(:first-child) {
+    margin-top: 27px;
+}
+
+/* FORM LABELS */
+
+.sm-advert-page .sm-advert-form > label {
+    display: block;
+    color: #26334B;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 18px 0 8px;
+}
+
+/* INPUTS */
+
+.sm-advert-page .sm-advert-form > input:not([type="checkbox"]),
+.sm-advert-page .sm-advert-form > select,
+.sm-advert-page .sm-advert-form > textarea {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 47px;
+    padding: 12px 14px;
+    border: 1px solid #DCE2EB;
+    border-radius: 6px;
+    outline: none;
+    background: #FFFFFF;
+    color: #172033;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    box-shadow: none;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.sm-advert-page .sm-advert-form > textarea {
+    min-height: 125px;
+    resize: vertical;
+}
+
+.sm-advert-page .sm-advert-form > input:focus,
+.sm-advert-page .sm-advert-form > select:focus,
+.sm-advert-page .sm-advert-form > textarea:focus {
+    border-color: #294A9B;
+    box-shadow: 0 0 0 3px rgba(41, 74, 155, 0.09);
+}
+
+.sm-advert-page .sm-advert-form input::placeholder,
+.sm-advert-page .sm-advert-form textarea::placeholder {
+    color: #A0A9B8;
+}
+
+/* IMAGE UPLOAD INPUTS */
+
+.sm-advert-page .sm-advert-form > input[type="file"] {
+    min-height: auto;
+    padding: 13px;
+    background: #F8FAFD;
+    border: 1px dashed #C9D2E0;
+    border-radius: 6px;
+    color: #647084;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.sm-advert-page .sm-advert-form > input[type="file"]::file-selector-button {
+    padding: 9px 13px;
+    margin-right: 12px;
+    border: 0;
+    border-radius: 4px;
+    background: #E9EEF9;
+    color: var(--portfolio-navy);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* IMAGE PREVIEWS */
+
+.sm-advert-page #businessProfilePreview,
+.sm-advert-page #businessCoverPreview {
+    display: block;
+    max-width: 100%;
+    object-fit: cover;
+    margin-top: 12px;
+    border: 1px solid var(--portfolio-border);
+    border-radius: 7px;
+    background: #F3F5F9;
+}
+
+.sm-advert-page #businessProfilePreview {
+    width: 105px;
+    height: 105px;
+    border-radius: 50%;
+}
+
+.sm-advert-page #businessCoverPreview {
+    width: 100%;
+    height: 160px;
+}
+
+/* PAYMENT METHODS CARD GRID */
+
+.sm-advert-page .sm-advert-choice-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 5px 0 24px;
+}
+
+.sm-advert-page .sm-advert-choice-grid label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    min-height: 49px;
+    padding: 12px;
+    margin: 0;
+    border: 1px solid #E2E7EF;
+    border-radius: 6px;
+    background: #FAFBFD;
+    color: #344057;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s, border-color .2s;
+}
+
+.sm-advert-page .sm-advert-choice-grid label:has(input:checked) {
+    background: #F0F4FF;
+    border-color: #8096CE;
+    color: var(--portfolio-navy);
+}
+
+.sm-advert-page .sm-advert-choice-grid input[type="checkbox"] {
+    appearance: auto;
+    -webkit-appearance: checkbox;
+    flex: 0 0 17px;
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+    min-height: 17px;
+    margin: 0;
+    accent-color: var(--portfolio-navy);
+    cursor: pointer;
+}
+
+/* SAVE BUTTON */
+
+.sm-advert-page #savePortfolioBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 51px;
+    margin-top: 5px;
+    padding: 13px 20px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--portfolio-navy);
+    color: #FFFFFF;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background .2s, transform .2s;
+}
+
+.sm-advert-page #savePortfolioBtn:hover {
+    background: #142B70;
+}
+
+.sm-advert-page #savePortfolioBtn:disabled {
+    opacity: .65;
+    cursor: wait;
+}
+
+.sm-advert-page #portfolioFormMessage,
+.sm-advert-page #portfolioNotice {
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* PORTFOLIO PREVIEW CARD */
+
+.sm-advert-page .sm-advert-preview-panel {
+    position: sticky;
+    top: 95px;
+    padding: 0;
+    overflow: hidden;
+}
+
+.sm-advert-page .sm-advert-preview-panel > h3 {
+    padding: 20px 20px 16px;
+    margin: 0;
+    color: var(--portfolio-navy);
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.sm-advert-page .sm-advert-preview-cover {
+    width: 100%;
+    height: 155px;
+    background: linear-gradient(120deg, #DCE5F5, #EEF1F7);
+    background-position: center;
+    background-size: cover;
+}
+
+.sm-advert-page .sm-advert-preview-business {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 0 19px;
+    margin-top: -35px;
+    position: relative;
+}
+
+.sm-advert-page #portfolioPreviewAvatar {
+    display: flex;
+    flex: 0 0 68px;
+    align-items: center;
+    justify-content: center;
+    width: 68px;
+    height: 68px;
+    border: 4px solid #FFFFFF;
+    border-radius: 50%;
+    background: var(--portfolio-navy);
+    color: #FFFFFF;
+    font-size: 22px;
+    font-weight: 800;
+    overflow: hidden;
+}
+
+.sm-advert-page .sm-advert-preview-business h3 {
+    color: var(--portfolio-navy);
+    font-size: 16px;
+    font-weight: 800;
+    margin: 0 0 4px;
+    overflow-wrap: anywhere;
+}
+
+.sm-advert-page #portfolioPreviewUsername {
+    color: #8792A5;
+    font-size: 12px;
+}
+
+.sm-advert-page .sm-advert-preview-panel > p {
+    padding: 0 20px;
+    margin: 15px 0;
+    color: #66738A;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.sm-advert-page #portfolioPreviewPayments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 0 20px 20px;
+}
+
+.sm-advert-page #portfolioPreviewPayments span {
+    display: inline-flex;
+    padding: 7px 10px;
+    border: 1px solid #E4E9F1;
+    border-radius: 4px;
+    background: #F7F9FC;
+    color: #47546A;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* NOTICE */
+
+.sm-advert-page #portfolioNotice {
+    margin-top: 16px;
+    color: #344057;
+}
+
+/* TABLET */
+
+@media (max-width: 1000px) {
+    .sm-advert-page .sm-advert-portfolio-layout {
+        grid-template-columns: minmax(0, 1fr) 280px;
+        gap: 15px;
+    }
+
+    .sm-advert-page .sm-advert-panel {
+        padding: 20px;
+    }
+
+    .sm-advert-page .sm-advert-preview-panel {
+        padding: 0;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 760px) {
+    .sm-advert-page .page-header {
+        display: block;
+        margin-bottom: 20px;
+    }
+
+    .sm-advert-page .breadcrumbs {
+        margin-top: 12px;
+    }
+
+    .sm-advert-page .sm-advert-hero {
+        padding: 23px 20px;
+        margin-bottom: 22px;
+    }
+
+    .sm-advert-page .sm-advert-section-heading {
+        align-items: flex-start;
+        margin: 22px 0 14px;
+    }
+
+    .sm-advert-page .sm-advert-portfolio-layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .sm-advert-page .sm-advert-panel {
+        padding: 19px;
+        border-radius: 8px;
+    }
+
+    .sm-advert-page .sm-advert-preview-panel {
+        position: static;
+        padding: 0;
+    }
+
+    .sm-advert-page .sm-advert-preview-panel > h3 {
+        padding: 18px 18px 14px;
+    }
+
+    .sm-advert-page .sm-advert-preview-cover {
+        height: 135px;
+    }
+
+    .sm-advert-page .sm-advert-form > input:not([type="checkbox"]),
+    .sm-advert-page .sm-advert-form > select,
+    .sm-advert-page .sm-advert-form > textarea {
+        font-size: 14px;
+        min-height: 46px;
+    }
+
+    .sm-advert-page .sm-advert-choice-grid {
+        gap: 8px;
+    }
+
+    .sm-advert-page .sm-advert-choice-grid label {
+        min-height: 47px;
+        padding: 10px;
+        font-size: 12px;
+    }
+}
+
+/* SMALL PHONES */
+
+@media (max-width: 420px) {
+    .sm-advert-page .sm-advert-hero {
+        padding: 20px 17px;
+    }
+
+    .sm-advert-page .sm-advert-panel {
+        padding: 16px;
+    }
+
+    .sm-advert-page .sm-advert-choice-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .sm-advert-page .sm-advert-form h3 {
+        font-size: 16px;
+    }
+
+    .sm-advert-page .sm-advert-preview-business {
+        padding: 0 15px;
+    }
+
+    .sm-advert-page .sm-advert-preview-panel > p {
+        padding: 0 16px;
+    }
+
+    .sm-advert-page #portfolioPreviewPayments {
+        padding: 0 16px 18px;
+    }
+}

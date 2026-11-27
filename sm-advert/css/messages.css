@@ -1,0 +1,592 @@
+
+/* =========================================================
+   SM ADVERT — MESSAGES PAGE
+   Selectors matched to messages.html and messages.js
+   ========================================================= */
+
+@import url('./advert.css');
+
+.sm-advert-page {
+    --msg-navy: #08164A;
+    --msg-gold: #F5A623;
+    --msg-text: #172033;
+    --msg-muted: #718096;
+    --msg-border: #E5EAF1;
+    --msg-bg: #F5F7FB;
+    --msg-white: #FFFFFF;
+}
+
+/* MAIN PAGE */
+
+.sm-advert-page {
+    min-width: 0;
+    font-family: Inter, Arial, sans-serif;
+}
+
+.sm-advert-page .page-header {
+    margin-bottom: 25px;
+}
+
+.sm-advert-page .page-title {
+    color: var(--msg-navy);
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.sm-advert-page .page-header p {
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.sm-advert-page .breadcrumbs {
+    color: #8994A7;
+    font-size: 12px;
+}
+
+/* MESSAGES PANEL */
+
+.sm-advert-page .sm-advert-panel {
+    background: var(--msg-white);
+    border: 1px solid var(--msg-border);
+    border-radius: 9px;
+    box-shadow: 0 4px 18px rgba(20,35,70,.045);
+}
+
+/* MAIN TWO-COLUMN LAYOUT */
+
+.sm-advert-page .sm-advert-messages-shell {
+    display: grid;
+    grid-template-columns: 310px minmax(0,1fr);
+    min-height: 590px;
+    overflow: hidden;
+}
+
+/* INBOX */
+
+.sm-advert-page .sm-advert-inbox {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: #FFFFFF;
+    border-right: 1px solid var(--msg-border);
+}
+
+/* INBOX HEADER */
+
+.sm-advert-page .sm-advert-inbox-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 20px;
+    border-bottom: 1px solid var(--msg-border);
+}
+
+.sm-advert-page .sm-advert-inbox-header h2 {
+    color: var(--msg-navy);
+    font-size: 19px;
+    font-weight: 800;
+    margin: 0 0 4px;
+}
+
+.sm-advert-page .sm-advert-inbox-header p {
+    color: var(--msg-muted);
+    font-size: 12px;
+    margin: 0;
+}
+
+.sm-advert-page #conversationCount {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 26px;
+    padding: 0 7px;
+    border-radius: 20px;
+    background: #EDF2FC;
+    color: var(--msg-navy);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+/* SEARCH */
+
+.sm-advert-page .sm-advert-inbox-search {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--msg-border);
+}
+
+.sm-advert-page #conversationSearch {
+    width: 100%;
+    min-width: 0;
+    height: 43px;
+    padding: 10px 13px;
+    border: 1px solid #DCE2EB;
+    border-radius: 6px;
+    outline: none;
+    background: #F9FAFC;
+    color: var(--msg-text);
+    font-size: 13px;
+}
+
+.sm-advert-page #conversationSearch:focus {
+    border-color: #8295C2;
+    background: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(41,74,155,.08);
+}
+
+/* CONVERSATION LIST */
+
+.sm-advert-page .sm-advert-conversation-list {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.sm-advert-page .sa-inbox-item {
+    display: block;
+    padding: 15px 17px;
+    border-bottom: 1px solid #EEF0F4;
+    color: var(--msg-navy);
+    text-decoration: none;
+    transition: background .2s;
+}
+
+.sm-advert-page .sa-inbox-item:hover {
+    background: #F5F7FC;
+}
+
+.sm-advert-page .sa-inbox-item small {
+    display: block;
+    margin-top: 5px;
+    color: #8791A2;
+    font-size: 11px;
+}
+
+/* CONVERSATION LOADING SKELETON */
+
+.sm-advert-page .sm-advert-conversation-skeleton {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid #EEF0F4;
+}
+
+.sm-advert-page .sm-advert-skeleton {
+    display: block;
+    background: linear-gradient(
+        90deg,
+        #EEF1F6 25%,
+        #F8F9FB 50%,
+        #EEF1F6 75%
+    );
+    background-size: 200% 100%;
+    animation: smAdvertLoading 1.5s infinite;
+}
+
+.sm-advert-page .sm-advert-conversation-skeleton > i {
+    width: 43px;
+    height: 43px;
+    flex: 0 0 43px;
+    border-radius: 50%;
+}
+
+.sm-advert-page .sm-advert-skeleton-line {
+    width: 145px;
+    height: 10px;
+    margin: 7px 0;
+    border-radius: 5px;
+}
+
+@keyframes smAdvertLoading {
+    to {
+        background-position: -200% 0;
+    }
+}
+
+/* CHAT PANEL */
+
+.sm-advert-page .sm-advert-chat-panel {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 590px;
+    background: #FFFFFF;
+}
+
+/* EMPTY CHAT */
+
+.sm-advert-page .sm-advert-chat-empty {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 480px;
+    padding: 35px 25px;
+    text-align: center;
+    background: #FAFBFD;
+}
+
+.sm-advert-page .sm-advert-chat-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 65px;
+    height: 65px;
+    margin-bottom: 17px;
+    border-radius: 50%;
+    background: #EDF2FC;
+    color: var(--msg-navy);
+    font-size: 27px;
+}
+
+.sm-advert-page .sm-advert-chat-empty h2 {
+    color: var(--msg-navy);
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0 0 10px;
+}
+
+.sm-advert-page .sm-advert-chat-empty p {
+    max-width: 410px;
+    color: var(--msg-muted);
+    font-size: 13px;
+    line-height: 1.8;
+    margin: 0 0 20px;
+}
+
+.sm-advert-page .sm-advert-chat-empty .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 11px 18px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+/* ACTIVE CHAT HEADER */
+
+.sm-advert-page .sm-advert-chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 76px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--msg-border);
+}
+
+.sm-advert-page .sm-advert-chat-header > div {
+    display: grid;
+    grid-template-columns: 43px minmax(0,1fr);
+    align-items: center;
+    column-gap: 12px;
+    min-width: 0;
+}
+
+.sm-advert-page #chatAvatar {
+    display: flex;
+    grid-row: span 2;
+    align-items: center;
+    justify-content: center;
+    width: 43px;
+    height: 43px;
+    border-radius: 50%;
+    background: #EDF2FC;
+    color: var(--msg-navy);
+    font-weight: 800;
+}
+
+.sm-advert-page #chatContactName {
+    overflow: hidden;
+    color: var(--msg-navy);
+    font-size: 14px;
+    font-weight: 800;
+    margin: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sm-advert-page #chatContactStatus {
+    color: var(--msg-muted);
+    font-size: 11px;
+}
+
+.sm-advert-page #chatBusinessLink {
+    color: var(--msg-navy);
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+/* CHAT CONTEXT */
+
+.sm-advert-page #chatContext {
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--msg-border);
+    background: #F8FAFD;
+    color: var(--msg-muted);
+    font-size: 12px;
+}
+
+/* MESSAGE AREA */
+
+.sm-advert-page .sm-advert-chat-messages {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 350px;
+    max-height: 570px;
+    overflow-y: auto;
+    padding: 22px;
+    background: #FAFBFD;
+}
+
+/* MESSAGE BUBBLES */
+
+.sm-advert-page .sa-message {
+    width: fit-content;
+    max-width: 76%;
+    padding: 11px 15px;
+    margin: 5px 0;
+    border: 1px solid #E8ECF2;
+    border-radius: 10px 10px 10px 2px;
+    background: #FFFFFF;
+    box-shadow: 0 2px 5px rgba(20,35,70,.025);
+}
+
+.sm-advert-page .sa-message.mine {
+    align-self: flex-end;
+    margin-left: auto;
+    border-color: #DCE5FF;
+    border-radius: 10px 10px 2px 10px;
+    background: #EAF0FF;
+}
+
+.sm-advert-page .sa-message p {
+    color: #26334B;
+    font-size: 13px;
+    line-height: 1.65;
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.sm-advert-page .sa-message small {
+    display: block;
+    margin-top: 6px;
+    color: #8994A7;
+    font-size: 10px;
+    text-align: right;
+}
+
+/* MESSAGE LOADING BUBBLES */
+
+.sm-advert-page .sm-advert-chat-bubble {
+    width: 65%;
+    height: 48px;
+    border-radius: 9px;
+}
+
+.sm-advert-page .sm-advert-chat-bubble.outgoing {
+    align-self: flex-end;
+    width: 48%;
+}
+
+/* COMPOSE MESSAGE */
+
+.sm-advert-page .sm-advert-chat-compose {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 14px 17px;
+    border-top: 1px solid var(--msg-border);
+    background: #FFFFFF;
+}
+
+.sm-advert-page .sm-advert-chat-compose textarea {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    min-height: 45px;
+    max-height: 120px;
+    padding: 12px 13px;
+    border: 1px solid #DCE2EB;
+    border-radius: 6px;
+    outline: none;
+    background: #FAFBFD;
+    color: var(--msg-text);
+    font-family: inherit;
+    font-size: 13px;
+    resize: vertical;
+}
+
+.sm-advert-page .sm-advert-chat-compose textarea:focus {
+    border-color: #8295C2;
+    background: #FFFFFF;
+}
+
+.sm-advert-page .sm-advert-chat-compose button {
+    flex: 0 0 auto;
+    min-height: 45px;
+    padding: 10px 18px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--msg-navy);
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.sm-advert-page .sm-advert-chat-compose button:hover {
+    background: #142B70;
+}
+
+.sm-advert-page .sm-advert-chat-panel > p {
+    padding: 9px 15px;
+    margin: 0;
+    border-top: 1px solid #EEF0F4;
+    background: #FFFFFF;
+    color: #8994A7;
+    font-size: 10px;
+    text-align: center;
+}
+
+/* ACCESSIBILITY */
+
+.sm-advert-page .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* EMPTY AND ERROR STATES */
+
+.sm-advert-page .sa-empty {
+    padding: 24px 16px;
+    border: 0;
+    background: #FFFFFF;
+    color: var(--msg-muted);
+    font-size: 12px;
+    text-align: center;
+}
+
+/* HIDDEN ELEMENTS */
+
+.sm-advert-page [hidden] {
+    display: none !important;
+}
+
+/* TABLET */
+
+@media (max-width: 850px) {
+    .sm-advert-page .sm-advert-messages-shell {
+        grid-template-columns: 265px minmax(0,1fr);
+    }
+
+    .sm-advert-page .sm-advert-inbox-header {
+        padding: 16px;
+    }
+
+    .sm-advert-page .sm-advert-chat-messages {
+        padding: 16px;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+    .sm-advert-page .sm-advert-messages-shell {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .sm-advert-page .sm-advert-inbox {
+        width: 100%;
+        border-right: 0;
+        border-bottom: 1px solid var(--msg-border);
+    }
+
+    .sm-advert-page .sm-advert-inbox-header {
+        padding: 15px;
+    }
+
+    .sm-advert-page .sm-advert-conversation-list {
+        max-height: 220px;
+        overflow-y: auto;
+    }
+
+    .sm-advert-page .sm-advert-chat-panel {
+        min-height: 430px;
+    }
+
+    .sm-advert-page .sm-advert-chat-empty {
+        min-height: 330px;
+        padding: 25px 17px;
+    }
+
+    .sm-advert-page .sm-advert-chat-empty h2 {
+        font-size: 19px;
+    }
+
+    .sm-advert-page .sm-advert-chat-header {
+        min-height: 66px;
+        padding: 11px 14px;
+    }
+
+    .sm-advert-page .sm-advert-chat-messages {
+        min-height: 300px;
+        max-height: 430px;
+        padding: 14px;
+    }
+
+    .sm-advert-page .sa-message {
+        max-width: 88%;
+    }
+
+    .sm-advert-page .sm-advert-chat-compose {
+        gap: 7px;
+        padding: 10px;
+    }
+
+    .sm-advert-page .sm-advert-chat-compose textarea {
+        font-size: 16px;
+    }
+
+    .sm-advert-page .sm-advert-chat-compose button {
+        padding: 10px 13px;
+    }
+}
+
+/* SMALL PHONES */
+
+@media (max-width: 380px) {
+    .sm-advert-page .page-title {
+        font-size: 25px;
+    }
+
+    .sm-advert-page .sm-advert-chat-empty {
+        padding: 20px 13px;
+    }
+
+    .sm-advert-page .sm-advert-chat-empty h2 {
+        font-size: 17px;
+    }
+
+    .sm-advert-page #chatBusinessLink {
+        font-size: 10px;
+    }
+}

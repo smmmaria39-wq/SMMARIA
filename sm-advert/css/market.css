@@ -1,0 +1,1192 @@
+
+/* =========================================================
+   SM ADVERT MARKETPLACE — market.css
+   Built for the actual market.html markup.
+   Keeps all styles scoped to .sm-advert-page.
+   ========================================================= */
+
+.sm-advert-page {
+    --market-navy: #08164A;
+    --market-navy-2: #10265F;
+    --market-gold: #F5A623;
+    --market-text: #172033;
+    --market-muted: #718096;
+    --market-border: #E4E9F1;
+    --market-soft: #F5F7FB;
+    --market-white: #FFFFFF;
+    width: 100%;
+    min-width: 0;
+    color: var(--market-text);
+    font-family: Inter, Arial, sans-serif;
+}
+
+.sm-advert-page,
+.sm-advert-page * {
+    box-sizing: border-box;
+}
+
+.sm-advert-page .advert-heading,
+.sm-advert-page .advert-hero,
+.sm-advert-page .advert-search-section,
+.sm-advert-page .advert-quick-links,
+.sm-advert-page .advert-section,
+.sm-advert-page .advert-seller-banner {
+    width: 100%;
+    max-width: 1240px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* PAGE HEADING */
+
+.sm-advert-page .advert-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 22px;
+    padding: 25px 30px 18px;
+}
+
+.sm-advert-page .advert-heading__left {
+    min-width: 0;
+}
+
+.sm-advert-page .advert-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 10px;
+    color: #718096;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+}
+
+.sm-advert-page .advert-live-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    flex: 0 0 8px;
+    border-radius: 50%;
+    background: #20B779;
+    box-shadow: 0 0 0 4px rgba(32,183,121,.12);
+}
+
+.sm-advert-page .advert-title {
+    margin: 0;
+    color: var(--market-navy);
+    font-family: Poppins, Inter, sans-serif;
+    font-size: clamp(30px, 4vw, 43px);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -.035em;
+}
+
+.sm-advert-page .advert-title span {
+    color: var(--market-gold);
+}
+
+.sm-advert-page .advert-description {
+    max-width: 680px;
+    margin: 12px 0 0;
+    color: var(--market-muted);
+    font-size: 15px;
+    line-height: 1.75;
+}
+
+.sm-advert-page .advert-create-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    flex: 0 0 auto;
+    min-height: 45px;
+    padding: 0 17px;
+    border: 1px solid var(--market-navy);
+    border-radius: 5px;
+    background: var(--market-navy);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 750;
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.sm-advert-page .advert-create-btn:hover {
+    background: var(--market-navy-2);
+    transform: translateY(-1px);
+}
+
+.sm-advert-page .advert-create-btn span {
+    color: var(--market-gold);
+    font-size: 19px;
+    line-height: 1;
+}
+
+/* HERO */
+
+.sm-advert-page .advert-hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(250px, .85fr);
+    align-items: center;
+    gap: 30px;
+    min-height: 300px;
+    margin-top: 8px;
+    padding: 38px 42px;
+    overflow: hidden;
+    border-radius: 10px;
+    background: radial-gradient(circle at 85% 15%, rgba(245,166,35,.20), transparent 32%), linear-gradient(120deg, #071541 0%, #10265F 58%, #183778 100%);
+    box-shadow: 0 12px 30px rgba(8,22,74,.13);
+}
+
+.sm-advert-page .advert-hero__content {
+    position: relative;
+    z-index: 2;
+    min-width: 0;
+}
+
+.sm-advert-page .advert-hero__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 17px;
+    color: #F6C56F;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .12em;
+}
+
+.sm-advert-page .advert-hero__tag .advert-live-dot {
+    width: 7px;
+    height: 7px;
+    flex-basis: 7px;
+}
+
+.sm-advert-page .advert-hero h2 {
+    max-width: 650px;
+    margin: 0 0 13px;
+    color: #fff;
+    font-family: Poppins, Inter, sans-serif;
+    font-size: clamp(27px, 3.6vw, 39px);
+    font-weight: 800;
+    line-height: 1.22;
+    letter-spacing: -.035em;
+}
+
+.sm-advert-page .advert-hero h2 span {
+    color: #F7B84E;
+}
+
+.sm-advert-page .advert-hero__content > p {
+    max-width: 550px;
+    margin: 0;
+    color: #D7E0F2;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.sm-advert-page .advert-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.sm-advert-page .advert-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 43px;
+    padding: 0 17px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.sm-advert-page .advert-btn--primary {
+    background: var(--market-gold);
+    color: #101D42;
+}
+
+.sm-advert-page .advert-btn--primary:hover {
+    background: #FFC15B;
+    transform: translateY(-1px);
+}
+
+.sm-advert-page .advert-btn--outline {
+    border-color: rgba(255,255,255,.45);
+    background: rgba(255,255,255,.06);
+    color: #fff;
+}
+
+.sm-advert-page .advert-btn--outline:hover {
+    background: rgba(255,255,255,.14);
+}
+
+.sm-advert-page .advert-hero__trust {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    color: #DCE5F5;
+    font-size: 12px;
+}
+
+.sm-advert-page .advert-hero__trust > span {
+    color: #F7B84E;
+    font-size: 17px;
+    font-weight: 900;
+}
+
+/* HERO VISUAL */
+
+.sm-advert-page .advert-hero__visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 215px;
+}
+
+.sm-advert-page .advert-visual-main {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 155px;
+    height: 155px;
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 50%;
+    background: linear-gradient(145deg, rgba(255,255,255,.18), rgba(255,255,255,.045));
+    box-shadow: 0 15px 45px rgba(0,0,0,.18), inset 0 0 25px rgba(255,255,255,.08);
+    color: #fff;
+}
+
+.sm-advert-page .advert-visual-main span {
+    color: var(--market-gold);
+    font-family: Poppins, sans-serif;
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.sm-advert-page .advert-visual-main strong {
+    margin-top: 5px;
+    font-size: 13px;
+    letter-spacing: .16em;
+}
+
+.sm-advert-page .advert-visual-card {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 13px;
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 7px;
+    background: rgba(255,255,255,.12);
+    box-shadow: 0 8px 22px rgba(0,0,0,.13);
+    color: #fff;
+    backdrop-filter: blur(8px);
+}
+
+.sm-advert-page .advert-visual-card span {
+    font-size: 22px;
+}
+
+.sm-advert-page .advert-visual-card small {
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.sm-advert-page .advert-visual-card--one {
+    top: 8px;
+    left: 0;
+}
+
+.sm-advert-page .advert-visual-card--two {
+    right: -5px;
+    top: 75px;
+}
+
+.sm-advert-page .advert-visual-card--three {
+    bottom: 3px;
+    left: 12px;
+}
+
+/* SEARCH */
+
+.sm-advert-page .advert-search-section {
+    padding: 27px 30px 10px;
+}
+
+.sm-advert-page .advert-search-box {
+    display: grid;
+    grid-template-columns: 23px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 13px;
+    min-height: 62px;
+    padding: 7px 8px 7px 18px;
+    border: 1px solid #DCE3ED;
+    border-radius: 7px;
+    background: #fff;
+    box-shadow: 0 5px 18px rgba(20,35,70,.045);
+}
+
+.sm-advert-page .advert-search-box > svg {
+    color: #78869B;
+}
+
+.sm-advert-page .advert-search-box input {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--market-text);
+    font: inherit;
+    font-size: 14px;
+}
+
+.sm-advert-page .advert-search-box input::placeholder {
+    color: #9AA4B3;
+}
+
+.sm-advert-page .advert-search-box button {
+    min-height: 44px;
+    padding: 0 23px;
+    border: 0;
+    border-radius: 5px;
+    background: var(--market-navy);
+    color: #fff;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.sm-advert-page .advert-search-box button:hover {
+    background: var(--market-navy-2);
+}
+
+.sm-advert-page .advert-search-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 12px 2px 0;
+    color: #8994A5;
+    font-size: 11px;
+}
+
+.sm-advert-page .advert-search-meta button {
+    padding: 5px 9px;
+    border: 1px solid #E5EAF1;
+    border-radius: 20px;
+    background: #fff;
+    color: #53627A;
+    font: inherit;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.sm-advert-page .advert-search-meta button:hover {
+    border-color: var(--market-navy);
+    color: var(--market-navy);
+}
+
+/* QUICK LINKS */
+
+.sm-advert-page .advert-quick-links {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    gap: 11px;
+    padding: 18px 30px 8px;
+}
+
+.sm-advert-page .advert-quick-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 48px;
+    padding: 10px;
+    border: 1px solid var(--market-border);
+    border-radius: 5px;
+    background: #fff;
+    color: var(--market-navy);
+    font-size: 12px;
+    font-weight: 750;
+    text-align: center;
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.sm-advert-page .advert-quick-link > span {
+    color: #C1841D;
+    font-size: 17px;
+}
+
+.sm-advert-page .advert-quick-link:hover {
+    border-color: #BCC9DD;
+    background: #F8FAFD;
+    transform: translateY(-2px);
+}
+
+/* SECTION HEADINGS AND SECTIONS */
+
+.sm-advert-page .advert-section {
+    padding: 28px 30px 8px;
+}
+
+.sm-advert-page .advert-section-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 17px;
+}
+
+.sm-advert-page .advert-section-label {
+    display: inline-block;
+    margin-bottom: 6px;
+    color: #B77916;
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: .13em;
+}
+
+.sm-advert-page .advert-section-heading h2 {
+    margin: 0;
+    color: var(--market-navy);
+    font-family: Poppins, Inter, sans-serif;
+    font-size: 21px;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.sm-advert-page .advert-section-heading p {
+    margin: 6px 0 0;
+    color: var(--market-muted);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.sm-advert-page .advert-text-link {
+    padding: 5px 0;
+    border: 0;
+    background: transparent;
+    color: var(--market-navy);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.sm-advert-page .advert-text-link:hover {
+    color: #B77916;
+}
+
+/* CATEGORY GRID — includes initial loading skeletons */
+
+.sm-advert-page .advert-category-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0,1fr));
+    gap: 12px;
+}
+
+.sm-advert-page .advert-category-skeleton,
+.sm-advert-page .advert-category-card {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+    min-height: 76px;
+    padding: 13px;
+    border: 1px solid var(--market-border);
+    border-radius: 6px;
+    background: #fff;
+}
+
+.sm-advert-page .advert-category-skeleton .skeleton-category-icon {
+    width: 39px;
+    height: 39px;
+    flex: 0 0 39px;
+    border-radius: 6px;
+}
+
+.sm-advert-page .advert-category-skeleton .skeleton-category-text {
+    width: 65%;
+    height: 11px;
+    border-radius: 5px;
+}
+
+.sm-advert-page .advert-category-card {
+    color: var(--market-navy);
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.sm-advert-page .advert-category-card:hover,
+.sm-advert-page .advert-category-card.active {
+    border-color: #AEBBD2;
+    background: #F7F9FD;
+    transform: translateY(-2px);
+}
+
+.sm-advert-page .advert-category-card__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 39px;
+    height: 39px;
+    flex: 0 0 39px;
+    border-radius: 6px;
+    background: #EEF2FA;
+    font-size: 19px;
+}
+
+.sm-advert-page .advert-category-card__name {
+    overflow: hidden;
+    color: var(--market-navy);
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.4;
+    text-overflow: ellipsis;
+}
+
+/* ADVERTISEMENTS / PRODUCTS GRIDS */
+
+.sm-advert-page .advert-featured-grid,
+.sm-advert-page .advert-products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 17px;
+}
+
+.sm-advert-page .advert-product-skeleton {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--market-border);
+    border-radius: 7px;
+    background: #fff;
+}
+
+.sm-advert-page .skeleton-product-image {
+    width: 100%;
+    height: 185px;
+}
+
+.sm-advert-page .advert-skeleton-content {
+    padding: 15px;
+}
+
+.sm-advert-page .skeleton-line {
+    height: 10px;
+    margin: 9px 0;
+    border-radius: 5px;
+}
+
+.sm-advert-page .skeleton-line--wide {
+    width: 90%;
+}
+
+.sm-advert-page .skeleton-line--medium {
+    width: 65%;
+}
+
+.sm-advert-page .skeleton-line--short {
+    width: 38%;
+}
+
+.sm-advert-page .skeleton {
+    display: block;
+    background: linear-gradient(90deg,#EEF1F6 25%,#F8F9FB 50%,#EEF1F6 75%);
+    background-size: 200% 100%;
+    animation: smAdvertMarketShimmer 1.45s ease infinite;
+}
+
+@keyframes smAdvertMarketShimmer {
+    to {
+        background-position: -200% 0;
+    }
+}
+
+/* PRODUCT CARDS GENERATED BY advert.js */
+
+.sm-advert-page .sa-product {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--market-border);
+    border-radius: 7px;
+    background: #fff;
+    color: var(--market-text);
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.sm-advert-page .sa-product:hover {
+    border-color: #C8D2E2;
+    box-shadow: 0 9px 24px rgba(20,35,70,.08);
+    transform: translateY(-3px);
+}
+
+.sm-advert-page .sa-product > img {
+    display: block;
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    background: #F0F2F6;
+}
+
+.sm-advert-page .sa-product-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 15px;
+}
+
+.sm-advert-page .sa-product-body h3 {
+    margin: 0 0 7px;
+    color: var(--market-navy);
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.45;
+}
+
+.sm-advert-page .sa-product-body p {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 0 0 10px;
+    color: var(--market-muted);
+    font-size: 11px;
+    line-height: 1.65;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.sm-advert-page .sa-product-body .sa-kicker {
+    margin-bottom: 7px;
+    color: #B77916;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+}
+
+.sm-advert-page .sa-product-price {
+    margin-top: auto;
+    color: var(--market-navy);
+    font-size: 15px;
+    font-weight: 850;
+}
+
+/* BUSINESS CARDS GENERATED BY advert.js */
+
+.sm-advert-page .advert-business-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 16px;
+}
+
+.sm-advert-page .advert-business-skeleton {
+    overflow: hidden;
+    border: 1px solid var(--market-border);
+    border-radius: 7px;
+    background: #fff;
+}
+
+.sm-advert-page .skeleton-business-cover {
+    height: 105px;
+}
+
+.sm-advert-page .advert-business-skeleton-info {
+    position: relative;
+    min-height: 100px;
+    padding: 40px 15px 15px;
+}
+
+.sm-advert-page .skeleton-business-avatar {
+    position: absolute;
+    top: -27px;
+    left: 15px;
+    width: 55px;
+    height: 55px;
+    border: 4px solid #fff;
+    border-radius: 50%;
+}
+
+.sm-advert-page .sa-business {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    min-width: 0;
+    padding: 15px;
+    border: 1px solid var(--market-border);
+    border-radius: 7px;
+    background: #fff;
+    color: inherit;
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.sm-advert-page .sa-business:hover {
+    border-color: #C8D2E2;
+    box-shadow: 0 7px 20px rgba(20,35,70,.07);
+}
+
+.sm-advert-page .sa-business img {
+    width: 55px;
+    height: 55px;
+    flex: 0 0 55px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #EEF1F5;
+}
+
+.sm-advert-page .sa-business h3 {
+    margin: 0 0 5px;
+    color: var(--market-navy);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.sm-advert-page .sa-business p {
+    margin: 0;
+    color: var(--market-muted);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* PRODUCT FILTER BAR */
+
+.sm-advert-page .advert-product-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin: 0 0 17px;
+}
+
+.sm-advert-page .advert-filter-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.sm-advert-page .advert-filter-tab {
+    min-height: 36px;
+    padding: 0 13px;
+    border: 1px solid var(--market-border);
+    border-radius: 5px;
+    background: #fff;
+    color: #647084;
+    font: inherit;
+    font-size: 11px;
+    font-weight: 750;
+    cursor: pointer;
+}
+
+.sm-advert-page .advert-filter-tab:hover {
+    border-color: #AAB8D0;
+    color: var(--market-navy);
+}
+
+.sm-advert-page .advert-filter-tab.active {
+    border-color: var(--market-navy);
+    background: var(--market-navy);
+    color: #fff;
+}
+
+.sm-advert-page #advertSortSelect {
+    min-width: 165px;
+    height: 38px;
+    padding: 0 10px;
+    border: 1px solid var(--market-border);
+    border-radius: 5px;
+    background: #fff;
+    color: var(--market-text);
+    font: inherit;
+    font-size: 11px;
+    outline: none;
+}
+
+.sm-advert-page .advert-load-more-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 23px 0 5px;
+}
+
+.sm-advert-page .advert-load-more-btn {
+    min-height: 42px;
+    padding: 0 20px;
+    border: 1px solid var(--market-navy);
+    border-radius: 5px;
+    background: #fff;
+    color: var(--market-navy);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.sm-advert-page .advert-load-more-btn:hover {
+    background: var(--market-navy);
+    color: #fff;
+}
+
+/* SELLER CTA */
+
+.sm-advert-page .advert-seller-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    margin-top: 35px;
+    margin-bottom: 30px;
+    padding: 29px 32px;
+    border: 1px solid #E6EAF1;
+    border-radius: 8px;
+    background: linear-gradient(110deg,#F7F9FD,#EEF2FA);
+}
+
+.sm-advert-page .advert-seller-banner__content {
+    max-width: 690px;
+}
+
+.sm-advert-page .advert-seller-banner h2 {
+    margin: 0 0 9px;
+    color: var(--market-navy);
+    font-family: Poppins,Inter,sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.sm-advert-page .advert-seller-banner h2 span {
+    display: block;
+    color: #B77916;
+}
+
+.sm-advert-page .advert-seller-banner p {
+    margin: 0 0 17px;
+    color: var(--market-muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.sm-advert-page .advert-seller-banner__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    height: 90px;
+    flex: 0 0 90px;
+    border-radius: 50%;
+    background: #fff;
+    font-size: 39px;
+    box-shadow: 0 5px 18px rgba(20,35,70,.06);
+}
+
+/* GENERAL STATES */
+
+.sm-advert-page .sa-empty {
+    grid-column: 1 / -1;
+    padding: 28px 18px;
+    border: 1px dashed #D5DDE9;
+    border-radius: 6px;
+    background: #FAFBFD;
+    color: var(--market-muted);
+    font-size: 12px;
+    text-align: center;
+}
+
+.sm-advert-page .advert-notice {
+    margin: 18px 30px;
+    padding: 13px 15px;
+    border: 1px solid #DCE5F3;
+    border-radius: 5px;
+    background: #F4F7FC;
+    color: var(--market-navy);
+    font-size: 12px;
+}
+
+.sm-advert-page [hidden] {
+    display: none !important;
+}
+
+/* TABLET */
+
+@media (max-width: 1000px) {
+    .sm-advert-page .advert-category-grid {
+        grid-template-columns: repeat(3,minmax(0,1fr));
+    }
+
+    .sm-advert-page .advert-featured-grid,
+    .sm-advert-page .advert-products-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+
+    .sm-advert-page .advert-hero {
+        grid-template-columns: minmax(0,1fr) minmax(210px,.7fr);
+        padding: 30px;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+    .sm-advert-page .advert-heading {
+        display: block;
+        padding: 22px 16px 15px;
+    }
+
+    .sm-advert-page .advert-title {
+        font-size: 34px;
+    }
+
+    .sm-advert-page .advert-description {
+        margin-top: 10px;
+        font-size: 13px;
+    }
+
+    .sm-advert-page .advert-create-btn {
+        margin-top: 15px;
+        min-height: 41px;
+    }
+
+    .sm-advert-page .advert-hero {
+        display: block;
+        min-height: 0;
+        margin: 8px 12px 0;
+        width: calc(100% - 24px);
+        padding: 25px 21px;
+        border-radius: 8px;
+    }
+
+    .sm-advert-page .advert-hero h2 {
+        font-size: 27px;
+    }
+
+    .sm-advert-page .advert-hero__content > p {
+        font-size: 12px;
+    }
+
+    .sm-advert-page .advert-hero__visual {
+        min-height: 170px;
+        max-width: 330px;
+        margin: 16px auto 0;
+    }
+
+    .sm-advert-page .advert-visual-main {
+        width: 120px;
+        height: 120px;
+    }
+
+    .sm-advert-page .advert-visual-main span {
+        font-size: 35px;
+    }
+
+    .sm-advert-page .advert-visual-card--two {
+        right: 0;
+    }
+
+    .sm-advert-page .advert-search-section {
+        padding: 22px 16px 8px;
+    }
+
+    .sm-advert-page .advert-search-box {
+        grid-template-columns: 19px minmax(0,1fr);
+        gap: 9px;
+        padding: 9px 11px;
+    }
+
+    .sm-advert-page .advert-search-box input {
+        height: 42px;
+        font-size: 13px;
+    }
+
+    .sm-advert-page .advert-search-box button {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-height: 40px;
+    }
+
+    .sm-advert-page .advert-search-meta {
+        gap: 6px;
+        font-size: 10px;
+    }
+
+    .sm-advert-page .advert-quick-links {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        gap: 8px;
+        padding: 14px 16px 4px;
+    }
+
+    .sm-advert-page .advert-quick-link {
+        min-height: 43px;
+        font-size: 11px;
+    }
+
+    .sm-advert-page .advert-section {
+        padding: 24px 16px 5px;
+    }
+
+    .sm-advert-page .advert-section-heading {
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .sm-advert-page .advert-section-heading h2 {
+        font-size: 18px;
+    }
+
+    .sm-advert-page .advert-section-heading p {
+        font-size: 11px;
+    }
+
+    .sm-advert-page .advert-text-link {
+        font-size: 10px;
+    }
+
+    .sm-advert-page .advert-category-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        gap: 8px;
+    }
+
+    .sm-advert-page .advert-category-skeleton,
+    .sm-advert-page .advert-category-card {
+        min-height: 64px;
+        padding: 9px;
+        gap: 8px;
+    }
+
+    .sm-advert-page .advert-category-skeleton .skeleton-category-icon,
+    .sm-advert-page .advert-category-card__icon {
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
+    }
+
+    .sm-advert-page .advert-category-card__name {
+        font-size: 10px;
+    }
+
+    .sm-advert-page .advert-featured-grid,
+    .sm-advert-page .advert-products-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        gap: 10px;
+    }
+
+    .sm-advert-page .skeleton-product-image {
+        height: 135px;
+    }
+
+    .sm-advert-page .advert-business-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .sm-advert-page .advert-product-toolbar {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .sm-advert-page .advert-filter-tabs {
+        display: grid;
+        grid-template-columns: repeat(3,minmax(0,1fr));
+        gap: 5px;
+    }
+
+    .sm-advert-page .advert-filter-tab {
+        min-height: 37px;
+        padding: 0 5px;
+        font-size: 9px;
+    }
+
+    .sm-advert-page #advertSortSelect {
+        width: 100%;
+        height: 40px;
+    }
+
+    .sm-advert-page .sa-product > img {
+        height: 135px;
+    }
+
+    .sm-advert-page .sa-product-body {
+        padding: 10px;
+    }
+
+    .sm-advert-page .sa-product-body h3 {
+        font-size: 11px;
+    }
+
+    .sm-advert-page .sa-product-body p {
+        font-size: 10px;
+    }
+
+    .sm-advert-page .sa-product-price {
+        font-size: 12px;
+    }
+
+    .sm-advert-page .advert-seller-banner {
+        width: calc(100% - 32px);
+        display: block;
+        margin: 25px 16px;
+        padding: 22px 18px;
+    }
+
+    .sm-advert-page .advert-seller-banner h2 {
+        font-size: 19px;
+    }
+
+    .sm-advert-page .advert-seller-banner__icon {
+        width: 62px;
+        height: 62px;
+        margin-top: 15px;
+        font-size: 28px;
+    }
+
+    .sm-advert-page .advert-notice {
+        margin: 15px 16px;
+    }
+}
+
+/* VERY SMALL PHONES */
+
+@media (max-width: 380px) {
+    .sm-advert-page .advert-featured-grid,
+    .sm-advert-page .advert-products-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sm-advert-page .sa-product > img,
+    .sm-advert-page .skeleton-product-image {
+        height: 185px;
+    }
+
+    .sm-advert-page .advert-section-heading {
+        display: block;
+    }
+
+    .sm-advert-page .advert-section-heading .advert-text-link {
+        margin-top: 8px;
+    }
+}
